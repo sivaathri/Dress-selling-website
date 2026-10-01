@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products — PondyVastra Admin</title>
+  <meta name="description" content="Manage your products, variants, pricing and inventory.">
+
+  <!-- Tailwind CSS Browser Runtime -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background-color: #f8fafc;
+      color: #1e293b;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    .brand-crimson {
+      color: #e11467;
+    }
+    .bg-brand-crimson {
+      background-color: #e11467;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[#f8fafc]">
+
+  <!-- ================= TOP HEADER BAR ================= -->
+  <header class="bg-white border-b border-stone-200/80 sticky top-0 z-40 h-16 flex items-center justify-between px-4 sm:px-6">
+    
+    <!-- Left: Brand Logo & Mobile Sidebar Toggle -->
+    <div class="flex items-center gap-3 w-64 flex-shrink-0">
+      <button onclick="toggleMobileSidebar()" class="lg:hidden text-stone-600 hover:text-stone-900 p-1.5 rounded-lg hover:bg-stone-100 cursor-pointer">
+        <i class="fa-solid fa-bars text-lg"></i>
+      </button>
+
+      <a href="../index.html" class="flex items-center gap-2 group" title="View Storefront">
+        <img src="../assets/images/logo-exact.png" alt="PondyVastra Logo" class="h-9 md:h-10 w-auto object-contain">
+      </a>
+    </div>
+
+    <!-- Center: Search Bar -->
+    <div class="flex-1 max-w-xl mx-4 relative hidden sm:block">
+      <div class="relative flex items-center">
+        <i class="fa-solid fa-magnifying-glass text-[#e11467] absolute left-3.5 text-sm pointer-events-none"></i>
+        <input 
+          id="global-search-input"
+          type="text" 
+          placeholder="Search anything... (products, orders, customers...)" 
+          class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-lg pl-10 pr-4 py-2 text-xs md:text-sm text-stone-700 placeholder:text-stone-400 focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition-all"
+        >
+      </div>
+    </div>
+
+    <!-- Right: Notifications & Admin Profile -->
+    <div class="flex items-center gap-4 sm:gap-6 flex-shrink-0">
+      
+      <!-- Storefront link -->
+      <a href="../index.html" target="_blank" class="hidden md:inline-flex items-center gap-1.5 text-xs font-semibold text-stone-600 hover:text-[#e11467] bg-stone-50 hover:bg-rose-50 border border-stone-200 px-3 py-1.5 rounded-lg transition">
+        <i class="fa-solid fa-store text-xs"></i>
+        <span>Storefront</span>
+      </a>
+
+      <!-- Notification Bell with Red Badge '5' -->
+      <div class="relative cursor-pointer group" onclick="toggleNotificationDropdown()">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-stone-100 transition text-stone-700">
+          <i class="fa-regular fa-bell text-lg"></i>
+        </div>
+        <span class="absolute top-0.5 right-0.5 bg-[#ef4444] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
+          5
+        </span>
+
+        <!-- Dropdown Notifications Menu -->
+        <div id="notifications-menu" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-stone-200 p-4 z-50">
+          <div class="flex items-center justify-between pb-3 border-b border-stone-100">
+            <span class="font-bold text-sm text-stone-900">Notifications</span>
+            <span class="text-[11px] bg-rose-50 text-[#e11467] font-semibold px-2 py-0.5 rounded-full">5 New</span>
+          </div>
+          <div class="divide-y divide-stone-100 text-xs">
+            <div class="py-2.5 flex items-start gap-2.5">
+              <span class="w-2 h-2 rounded-full bg-[#e11467] mt-1.5 flex-shrink-0"></span>
+              <div>
+                <p class="font-semibold text-stone-800">New Order #PV100324 received</p>
+                <span class="text-stone-400 text-[10px]">Just now • Priya S (₹1,299)</span>
+              </div>
+            </div>
+            <div class="py-2.5 flex items-start gap-2.5">
+              <span class="w-2 h-2 rounded-full bg-amber-500 mt-1.5 flex-shrink-0"></span>
+              <div>
+                <p class="font-semibold text-stone-800">Low Stock Alert: Cotton Kurta Set</p>
+                <span class="text-stone-400 text-[10px]">10 mins ago • Only 3 units left</span>
+              </div>
+            </div>
+            <div class="py-2.5 flex items-start gap-2.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 mt-1.5 flex-shrink-0"></span>
+              <div>
+                <p class="font-semibold text-stone-800">Payment captured via UPI</p>
+                <span class="text-stone-400 text-[10px]">25 mins ago • ₹3,199 from Ananya M</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Profile Pill -->
+      <div class="flex items-center gap-2 cursor-pointer group select-none relative" onclick="toggleAdminUserMenu()">
+        <img 
+          src="../assets/images/admin-avatar.png" 
+          alt="Admin Avatar" 
+          class="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover border border-stone-200 group-hover:ring-2 group-hover:ring-[#e11467]/30 transition"
+        >
+        <span class="text-xs sm:text-sm font-semibold text-stone-800 group-hover:text-[#e11467] transition">
+          Admin
+        </span>
+        <i class="fa-solid fa-chevron-down text-stone-400 text-[10px] group-hover:text-stone-600 transition"></i>
+
+        <!-- User Dropdown Menu -->
+        <div id="admin-user-menu" class="hidden absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-xl border border-stone-200 py-1.5 z-50 text-xs">
+          <div class="px-4 py-2 border-b border-stone-100">
+            <p class="font-bold text-stone-900">Pondicherry Admin</p>
+            <p class="text-stone-400 text-[10px]">admin@pondyvastra.com</p>
+          </div>
+          <a href="index.html#settings" class="flex items-center gap-2.5 px-4 py-2 text-stone-700 hover:bg-rose-50 hover:text-[#e11467]">
+            <i class="fa-solid fa-user text-xs text-stone-400"></i> My Profile
+          </a>
+          <a href="index.html#settings" class="flex items-center gap-2.5 px-4 py-2 text-stone-700 hover:bg-rose-50 hover:text-[#e11467]">
+            <i class="fa-solid fa-gear text-xs text-stone-400"></i> Store Settings
+          </a>
+          <div class="border-t border-stone-100 my-1"></div>
+          <a href="../index.html" class="flex items-center gap-2.5 px-4 py-2 text-rose-600 hover:bg-rose-50 font-semibold">
+            <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i> Sign Out
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </header>
+
+  <!-- ================= BODY CONTENT (Sidebar + Main) ================= -->
+  <div class="flex-1 flex overflow-hidden">
+
+    <!-- ================= LEFT SIDEBAR ================= -->
+    <aside id="admin-sidebar" class="fixed lg:static inset-y-0 left-0 top-16 lg:top-0 z-30 w-64 bg-[#fff9fa] border-r border-stone-200/80 flex flex-col justify-between overflow-y-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
+      
+      <!-- Navigation Menu List -->
+      <nav class="p-4 space-y-1">
+        
+        <!-- 1. Dashboard (Inactive) -->
+        <a href="index.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-house text-base w-5 text-center text-stone-400"></i>
+          <span>Dashboard</span>
+        </a>
+
+        <!-- 2. Products (ACTIVE Matching Screenshot) -->
+        <a href="products.html" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#e11467] text-white font-semibold text-sm shadow-xs transition cursor-pointer">
+          <i class="fa-solid fa-bag-shopping text-base w-5 text-center text-white"></i>
+          <span>Products</span>
+        </a>
+
+        <!-- 3. Filter Categories -->
+        <a href="categories.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-regular fa-folder-open text-base w-5 text-center text-stone-400"></i>
+          <span>Filter Categories</span>
+        </a>
+
+        <!-- 4. Orders -->
+        <a href="index.html#orders" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-regular fa-calendar-check text-base w-5 text-center text-stone-400"></i>
+          <span>Orders</span>
+        </a>
+
+        <!-- 5. Customers -->
+        <a href="index.html#customers" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-user-group text-base w-5 text-center text-stone-400"></i>
+          <span>Customers</span>
+        </a>
+
+        <!-- 6. Inventory -->
+        <a href="index.html#inventory" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-cube text-base w-5 text-center text-stone-400"></i>
+          <span>Inventory</span>
+        </a>
+
+        <!-- 7. Coupons & Offers -->
+        <a href="index.html#coupons" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-palette text-base w-5 text-center text-stone-400"></i>
+          <span>Coupons &amp; Offers</span>
+        </a>
+
+        <!-- 8. Banners & Homepage -->
+        <a href="index.html#banners" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-desktop text-base w-5 text-center text-stone-400"></i>
+          <span>Banners &amp; Homepage</span>
+        </a>
+
+        <!-- 9. Reviews -->
+        <a href="index.html#reviews" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-regular fa-star text-base w-5 text-center text-stone-400"></i>
+          <span>Reviews</span>
+        </a>
+
+        <!-- 10. Returns & Refunds -->
+        <a href="index.html#returns" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-rotate-left text-base w-5 text-center text-stone-400"></i>
+          <span>Returns &amp; Refunds</span>
+        </a>
+
+        <!-- 11. Marketing -->
+        <a href="index.html#marketing" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-rocket text-base w-5 text-center text-stone-400"></i>
+          <span>Marketing</span>
+        </a>
+
+        <!-- 12. Reports & Analytics -->
+        <a href="index.html#analytics" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-chart-line text-base w-5 text-center text-stone-400"></i>
+          <span>Reports &amp; Analytics</span>
+        </a>
+
+        <!-- 13. Shipping -->
+        <a href="index.html#shipping" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-truck text-base w-5 text-center text-stone-400"></i>
+          <span>Shipping</span>
+        </a>
+
+        <!-- 14. Payments -->
+        <a href="index.html#payments" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-regular fa-credit-card text-base w-5 text-center text-stone-400"></i>
+          <span>Payments</span>
+        </a>
+
+        <!-- 15. Users & Roles -->
+        <a href="index.html#users" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-users-gear text-base w-5 text-center text-stone-400"></i>
+          <span>Users &amp; Roles</span>
+        </a>
+
+        <!-- 16. Settings -->
+        <a href="index.html#settings" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-gear text-base w-5 text-center text-stone-400"></i>
+          <span>Settings</span>
+        </a>
+
+      </nav>
+
+      <!-- Sidebar Bottom Info -->
+      <div class="p-4 border-t border-stone-200/70 text-[11px] text-stone-400 text-center">
+        PondyVastra v2.4 • Pondicherry Store
+      </div>
+
+    </aside>
+
+    <!-- Overlay for mobile drawer -->
+    <div id="mobile-sidebar-backdrop" onclick="toggleMobileSidebar()" class="hidden fixed inset-0 bg-stone-900/40 z-20 lg:hidden"></div>
+
+    <!-- ================= MAIN PRODUCTS BODY ================= -->
+    <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
+      
+      <!-- Top Title & Action Buttons Header -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-bold text-stone-900">Products</h1>
+          <p class="text-xs sm:text-sm text-stone-500 mt-1">Manage your products, variants, pricing and inventory.</p>
+        </div>
+
+        <!-- Action Buttons Matching Screenshot -->
+        <div class="flex items-center gap-3">
+          <!-- Import Products button -->
+          <button onclick="handleImportClick()" class="inline-flex items-center gap-2 bg-white border border-stone-200/90 rounded-xl px-4 py-2 text-xs md:text-sm font-semibold text-stone-700 shadow-2xs hover:bg-stone-50 hover:border-stone-300 transition cursor-pointer">
+            <i class="fa-solid fa-arrow-up-from-bracket text-xs text-stone-600"></i>
+            <span>Import Products</span>
+          </button>
+
+          <!-- + Add Product button -->
+          <a href="add-product.html" class="inline-flex items-center gap-2 bg-[#e11467] hover:bg-[#be123c] text-white rounded-xl px-4 py-2 text-xs md:text-sm font-semibold shadow-xs hover:shadow-md transition cursor-pointer">
+            <i class="fa-solid fa-plus text-xs"></i>
+            <span>Add Product</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- ================= 4 METRIC CARDS ================= -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        
+        <!-- Card 1: Total Products -->
+        <div class="bg-white rounded-2xl p-5 border border-stone-200/80 shadow-2xs hover:shadow-md transition">
+          <div class="flex items-center gap-3.5">
+            <div class="w-12 h-12 rounded-full bg-rose-50 flex items-center justify-center flex-shrink-0">
+              <i class="fa-solid fa-cube text-lg text-[#e11467]"></i>
+            </div>
+            <div>
+              <p class="text-xs font-medium text-stone-500">Total Products</p>
+              <h3 id="stat-total-products" class="text-2xl font-bold text-stone-900 mt-0.5">487</h3>
+            </div>
+          </div>
+          <div class="mt-3.5 flex items-center gap-1.5 text-xs">
+            <span class="inline-flex items-center gap-0.5 font-bold text-emerald-600">
+              <i class="fa-solid fa-arrow-up text-[10px]"></i> 4.1%
+            </span>
+            <span class="text-stone-400">vs last week</span>
+          </div>
+        </div>
+
+        <!-- Card 2: Active Products -->
+        <div class="bg-white rounded-2xl p-5 border border-stone-200/80 shadow-2xs hover:shadow-md transition">
+          <div class="flex items-center gap-3.5">
+            <div class="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center flex-shrink-0">
+              <i class="fa-solid fa-store text-lg text-emerald-500"></i>
+            </div>
+            <div>
+              <p class="text-xs font-medium text-stone-500">Active Products</p>
+              <h3 id="stat-active-products" class="text-2xl font-bold text-stone-900 mt-0.5">432</h3>
+            </div>
+          </div>
+          <div class="mt-3.5 flex items-center gap-1.5 text-xs">
+            <span class="inline-flex items-center gap-0.5 font-bold text-emerald-600">
+              <i class="fa-solid fa-arrow-up text-[10px]"></i> 3.8%
+            </span>
+            <span class="text-stone-400">vs last week</span>
+          </div>
+        </div>
+
+        <!-- Card 3: Out of Stock -->
+        <div class="bg-white rounded-2xl p-5 border border-stone-200/80 shadow-2xs hover:shadow-md transition">
+          <div class="flex items-center gap-3.5">
+            <div class="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center flex-shrink-0">
+              <i class="fa-solid fa-pause text-lg text-amber-500"></i>
+            </div>
+            <div>
+              <p class="text-xs font-medium text-stone-500">Out of Stock</p>
+              <h3 id="stat-out-stock" class="text-2xl font-bold text-stone-900 mt-0.5">28</h3>
+            </div>
+          </div>
+          <div class="mt-3.5 flex items-center gap-1.5 text-xs">
+            <span class="inline-flex items-center gap-0.5 font-bold text-[#ef4444]">
+              <i class="fa-solid fa-arrow-up text-[10px]"></i> 12.5%
+            </span>
+            <span class="text-stone-400">vs last week</span>
+          </div>
+        </div>
+
+        <!-- Card 4: Low Stock -->
+        <div class="bg-white rounded-2xl p-5 border border-stone-200/80 shadow-2xs hover:shadow-md transition">
+          <div class="flex items-center gap-3.5">
+            <div class="w-12 h-12 rounded-full bg-rose-50 flex items-center justify-center flex-shrink-0">
+              <i class="fa-solid fa-tag text-lg text-[#e11467]"></i>
+            </div>
+            <div>
+              <p class="text-xs font-medium text-stone-500">Low Stock</p>
+              <h3 id="stat-low-stock" class="text-2xl font-bold text-stone-900 mt-0.5">27</h3>
+            </div>
+          </div>
+          <div class="mt-3.5 flex items-center gap-1.5 text-xs">
+            <span class="inline-flex items-center gap-0.5 font-bold text-[#ef4444]">
+              <i class="fa-solid fa-arrow-up text-[10px]"></i> 8.3%
+            </span>
+            <span class="text-stone-400">vs last week</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ================= PRODUCTS TABLE CONTAINER ================= -->
+      <div class="bg-white rounded-2xl border border-stone-200/80 shadow-2xs overflow-hidden">
+        
+        <!-- Filter Toolbar -->
+        <div class="p-4 sm:p-5 border-b border-stone-100 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+          
+          <!-- Search input -->
+          <div class="relative flex-1 max-w-md">
+            <i class="fa-solid fa-magnifying-glass text-stone-400 absolute left-3.5 top-3 text-xs pointer-events-none"></i>
+            <input 
+              id="product-search-input"
+              type="text" 
+              placeholder="Search products by name, SKU, category..." 
+              oninput="filterProductsTable()"
+              class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-xl pl-9 pr-4 py-2 text-xs sm:text-sm text-stone-700 placeholder:text-stone-400 focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition"
+            >
+          </div>
+
+          <!-- Dropdowns Group -->
+          <div class="flex items-center gap-2.5 flex-wrap">
+            
+            <!-- Category Filter -->
+            <select id="filter-category" onchange="filterProductsTable()" class="bg-white border border-stone-200/90 rounded-xl px-3 py-2 text-xs font-semibold text-stone-700 hover:border-stone-300 focus:outline-none focus:border-[#e11467] transition cursor-pointer">
+              <option value="All">All Categories</option>
+              <option value="Kurtis">Kurtis</option>
+              <option value="Sarees">Sarees</option>
+              <option value="Lehengas">Lehengas</option>
+              <option value="Dresses">Dresses</option>
+              <option value="Tops">Tops</option>
+              <option value="Bottom Wear">Bottom Wear</option>
+            </select>
+
+            <!-- Status Filter -->
+            <select id="filter-status" onchange="filterProductsTable()" class="bg-white border border-stone-200/90 rounded-xl px-3 py-2 text-xs font-semibold text-stone-700 hover:border-stone-300 focus:outline-none focus:border-[#e11467] transition cursor-pointer">
+              <option value="All">All Status</option>
+              <option value="Active">Active</option>
+              <option value="Low Stock">Low Stock</option>
+              <option value="Out of Stock">Out of Stock</option>
+            </select>
+
+            <!-- Stock Filter -->
+            <select id="filter-stock" onchange="filterProductsTable()" class="bg-white border border-stone-200/90 rounded-xl px-3 py-2 text-xs font-semibold text-stone-700 hover:border-stone-300 focus:outline-none focus:border-[#e11467] transition cursor-pointer">
+              <option value="All">All Stock</option>
+              <option value="InStock">In Stock (&gt; 0)</option>
+              <option value="LowStock">Low Stock (&lt; 10)</option>
+              <option value="OutOfStock">Out of Stock (0)</option>
+            </select>
+
+            <!-- Sort By -->
+            <select id="filter-sort" onchange="filterProductsTable()" class="bg-white border border-stone-200/90 rounded-xl px-3 py-2 text-xs font-semibold text-stone-700 hover:border-stone-300 focus:outline-none focus:border-[#e11467] transition cursor-pointer">
+              <option value="newest">Sort By</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="stock-desc">Stock: High to Low</option>
+              <option value="stock-asc">Stock: Low to High</option>
+            </select>
+
+          </div>
+
+        </div>
+
+        <!-- Products Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-stone-700 min-w-[760px]">
+            <thead>
+              <tr class="border-b border-stone-100 text-stone-400 font-semibold text-[11px] bg-stone-50/50">
+                <th class="py-3 px-4 w-10 text-center">
+                  <input type="checkbox" id="select-all-checkbox" onchange="toggleSelectAll(this)" class="w-3.5 h-3.5 rounded text-[#e11467] focus:ring-[#e11467] border-stone-300 cursor-pointer">
+                </th>
+                <th class="py-3 px-3">Product</th>
+                <th class="py-3 px-3">SKU</th>
+                <th class="py-3 px-3">Category</th>
+                <th class="py-3 px-3">Price</th>
+                <th class="py-3 px-3">Stock</th>
+                <th class="py-3 px-3">Status</th>
+                <th class="py-3 px-3">Created Date</th>
+                <th class="py-3 px-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="products-table-body" class="divide-y divide-stone-100 font-medium">
+              
+              <!-- Row 1: Floral Anarkali Kurta -->
+              <tr class="product-row hover:bg-stone-50/70 transition" data-category="Kurtis" data-status="Active" data-stock="25" data-price="1299">
+                <td class="py-3 px-4 text-center">
+                  <input type="checkbox" class="product-item-checkbox w-3.5 h-3.5 rounded text-[#e11467] focus:ring-[#e11467] border-stone-300 cursor-pointer">
+                </td>
+                <td class="py-3 px-3">
+                  <div class="flex items-center gap-3">
+                    <img src="../assets/images/prod-1-anarkali.png" alt="Floral Anarkali Kurta" class="w-9 h-9 rounded-xl object-cover border border-stone-200 bg-stone-50 flex-shrink-0">
+                    <div>
+                      <h4 class="font-bold text-stone-900 leading-snug">Floral Anarkali Kurta</h4>
+                      <p class="text-[11px] text-stone-400">3 variants • S, M, L</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-3 px-3 text-stone-500 whitespace-nowrap">FAK-PNK-M</td>
+                <td class="py-3 px-3 text-stone-600">Kurtis</td>
+                <td class="py-3 px-3 font-bold text-stone-900 whitespace-nowrap">₹1,299</td>
+                <td class="py-3 px-3 text-stone-700">25</td>
+                <td class="py-3 px-3">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#dcfce7] text-[#16a34a]">
+                    Active
+                  </span>
+                </td>
+                <td class="py-3 px-3 text-stone-500 whitespace-nowrap">25 Sep 2026</td>
+                <td class="py-3 px-4 text-right whitespace-nowrap">
+                  <div class="inline-flex items-center gap-1">
+                    <button onclick="editProduct('FAK-PNK-M')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition" title="Edit Product">
+                      <i class="fa-regular fa-pen-to-square text-xs"></i>
+                    </button>
+                    <button onclick="previewProduct('Floral Anarkali Kurta', 'FAK-PNK-M', '1299', '../assets/images/prod-1-anarkali.png')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition" title="View Product">
+                      <i class="fa-regular fa-eye text-xs"></i>
+                    </button>
+                    <button onclick="openRowActions(event, 'FAK-PNK-M')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition" title="More Actions">
+                      <i class="fa-solid fa-ellipsis-vertical text-xs"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 2: Cotton Kurta Set -->
+              <tr class="product-row hover:bg-stone-50/70 transition" data-category="Kurtis" data-status="Active" data-stock="18" data-price="2499">
+                <td class="py-3 px-4 text-center">
+                  <input type="checkbox" class="product-item-checkbox w-3.5 h-3.5 rounded text-[#e11467] focus:ring-[#e11467] border-stone-300 cursor-pointer">
+                </td>
+                <td class="py-3 px-3">
+                  <div class="flex items-center gap-3">
+                    <img src="../assets/images/prod-2-cottonkurta.png" alt="Cotton Kurta Set" class="w-9 h-9 rounded-xl object-cover border border-stone-200 bg-stone-50 flex-shrink-0">
+                    <div>
+                      <h4 class="font-bold text-stone-900 leading-snug">Cotton Kurta Set</h4>
+                      <p class="text-[11px] text-stone-400">2 variants • M, L</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-3 px-3 text-stone-500 whitespace-nowrap">CKS-BLU-L</td>
+                <td class="py-3 px-3 text-stone-600">Kurtis</td>
+                <td class="py-3 px-3 font-bold text-stone-900 whitespace-nowrap">₹2,499</td>
+                <td class="py-3 px-3 text-stone-700">18</td>
+                <td class="py-3 px-3">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#dcfce7] text-[#16a34a]">
+                    Active
+                  </span>
+                </td>
+                <td class="py-3 px-3 text-stone-500 whitespace-nowrap">22 Sep 2026</td>
+                <td class="py-3 px-4 text-right whitespace-nowrap">
+                  <div class="inline-flex items-center gap-1">
+                    <button onclick="editProduct('CKS-BLU-L')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition">
+                      <i class="fa-regular fa-pen-to-square text-xs"></i>
+                    </button>
+                    <button onclick="previewProduct('Cotton Kurta Set', 'CKS-BLU-L', '2499', '../assets/images/prod-2-cottonkurta.png')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition">
+                      <i class="fa-regular fa-eye text-xs"></i>
+                    </button>
+                    <button onclick="openRowActions(event, 'CKS-BLU-L')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition">
+                      <i class="fa-solid fa-ellipsis-vertical text-xs"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 3: Designer Saree -->
+              <tr class="product-row hover:bg-stone-50/70 transition" data-category="Sarees" data-status="Active" data-stock="7" data-price="3199">
+                <td class="py-3 px-4 text-center">
+                  <input type="checkbox" class="product-item-checkbox w-3.5 h-3.5 rounded text-[#e11467] focus:ring-[#e11467] border-stone-300 cursor-pointer">
+                </td>
+                <td class="py-3 px-3">
+                  <div class="flex items-center gap-3">
+                    <img src="../assets/images/prod-3-saree.png" alt="Designer Saree" class="w-9 h-9 rounded-xl object-cover border border-stone-200 bg-stone-50 flex-shrink-0">
+                    <div>
+                      <h4 class="font-bold text-stone-900 leading-snug">Designer Saree</h4>
+                      <p class="text-[11px] text-stone-400">4 variants • Free Size</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-3 px-3 text-stone-500 whitespace-nowrap">DSR-RED-FS</td>
+                <td class="py-3 px-3 text-stone-600">Sarees</td>
+                <td class="py-3 px-3 font-bold text-stone-900 whitespace-nowrap">₹3,199</td>
+                <td class="py-3 px-3 text-stone-700">7</td>
+                <td class="py-3 px-3">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#dcfce7] text-[#16a34a]">
+                    Active
+                  </span>
+                </td>
+                <td class="py-3 px-3 text-stone-500 whitespace-nowrap">20 Sep 2026</td>
+                <td class="py-3 px-4 text-right whitespace-nowrap">
+                  <div class="inline-flex items-center gap-1">
+                    <button onclick="editProduct('DSR-RED-FS')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition">
+                      <i class="fa-regular fa-pen-to-square text-xs"></i>
+                    </button>
+                    <button onclick="previewProduct('Designer Saree', 'DSR-RED-FS', '3199', '../assets/images/prod-3-saree.png')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition">
+                      <i class="fa-regular fa-eye text-xs"></i>
+                    </button>
+                    <button onclick="openRowActions(event, 'DSR-RED-FS')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition">
+                      <i class="fa-solid fa-ellipsis-vertical text-xs"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 4: Lehenga Choli -->
+              <tr class="product-row hover:bg-stone-50/70 transition" data-category="Lehengas" data-status="Low Stock" data-stock="4" data-price="4299">
+                <td class="py-3 px-4 text-center">
+                  <input type="checkbox" class="product-item-checkbox w-3.5 h-3.5 rounded text-[#e11467] focus:ring-[#e11467] border-stone-300 cursor-pointer">
+                </td>
+                <td class="py-3 px-3">
+                  <div class="flex items-center gap-3">
+                    <img src="../assets/images/prod-4-lehenga.png" alt="Lehenga Choli" class="w-9 h-9 rounded-xl object-cover border border-stone-200 bg-stone-50 flex-shrink-0">
+                    <div>
+                      <h4 class="font-bold text-stone-900 leading-snug">Lehenga Choli</h4>
+                      <p class="text-[11px] text-stone-400">3 variants • S, M, L</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-3 px-3 text-stone-500 whitespace-nowrap">LCH-GRN-FS</td>
+                <td class="py-3 px-3 text-stone-600">Lehengas</td>
+                <td class="py-3 px-3 font-bold text-stone-900 whitespace-nowrap">₹4,299</td>
+                <td class="py-3 px-3 text-stone-700">4</td>
+                <td class="py-3 px-3">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#fef3c7] text-[#d97706]">
+                    Low Stock
+                  </span>
+                </td>
+                <td class="py-3 px-3 text-stone-500 whitespace-nowrap">18 Sep 2026</td>
+                <td class="py-3 px-4 text-right whitespace-nowrap">
+                  <div class="inline-flex items-center gap-1">
+                    <button onclick="editProduct('LCH-GRN-FS')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition">
+                      <i class="fa-regular fa-pen-to-square text-xs"></i>
+                    </button>
+                    <button onclick="previewProduct('Lehenga Choli', 'LCH-GRN-FS', '4299', '../assets/images/prod-4-lehenga.png')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition">
+                      <i class="fa-regular fa-eye text-xs"></i>
+                    </button>
+                    <button onclick="openRowActions(event, 'LCH-GRN-FS')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition">
+                      <i class="fa-solid fa-ellipsis-vertical text-xs"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 5: Printed Midi Dress -->
+              <tr class="product-row hover:bg-stone-50/70 transition" data-category="Dresses" data-status="Out of Stock" data-stock="0" data-price="1899">
+                <td class="py-3 px-4 text-center">
+                  <input type="checkbox" class="product-item-checkbox w-3.5 h-3.5 rounded text-[#e11467] focus:ring-[#e11467] border-stone-300 cursor-pointer">
+                </td>
+                <td class="py-3 px-3">
+                  <div class="flex items-center gap-3">
+                    <img src="../assets/images/prod-5-mididress.png" alt="Printed Midi Dress" class="w-9 h-9 rounded-xl object-cover border border-stone-200 bg-stone-50 flex-shrink-0">
+                    <div>
+                      <h4 class="font-bold text-stone-900 leading-snug">Printed Midi Dress</h4>
+                      <p class="text-[11px] text-stone-400">3 variants • S, M, L</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-3 px-3 text-stone-500 whitespace-nowrap">PMD-YLW-M</td>
+                <td class="py-3 px-3 text-stone-600">Dresses</td>
+                <td class="py-3 px-3 font-bold text-stone-900 whitespace-nowrap">₹1,899</td>
+                <td class="py-3 px-3 text-[#ef4444] font-bold">0</td>
+                <td class="py-3 px-3">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#ffe4e6] text-[#e11467]">
+                    Out of Stock
+                  </span>
+                </td>
+                <td class="py-3 px-3 text-stone-500 whitespace-nowrap">15 Sep 2026</td>
+                <td class="py-3 px-4 text-right whitespace-nowrap">
+                  <div class="inline-flex items-center gap-1">
+                    <button onclick="editProduct('PMD-YLW-M')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition">
+                      <i class="fa-regular fa-pen-to-square text-xs"></i>
+                    </button>
+                    <button onclick="previewProduct('Printed Midi Dress', 'PMD-YLW-M', '1899', '../assets/images/prod-5-mididress.png')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition">
+                      <i class="fa-regular fa-eye text-xs"></i>
+                    </button>
+                    <button onclick="openRowActions(event, 'PMD-YLW-M')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition">
+                      <i class="fa-solid fa-ellipsis-vertical text-xs"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 6: Summer Top -->
+              <tr class="product-row hover:bg-stone-50/70 transition" data-category="Tops" data-status="Active" data-stock="32" data-price="999">
+                <td class="py-3 px-4 text-center">
+                  <input type="checkbox" class="product-item-checkbox w-3.5 h-3.5 rounded text-[#e11467] focus:ring-[#e11467] border-stone-300 cursor-pointer">
+                </td>
+                <td class="py-3 px-3">
+                  <div class="flex items-center gap-3">
+                    <img src="../assets/images/prod-6-top.png" alt="Summer Top" class="w-9 h-9 rounded-xl object-cover border border-stone-200 bg-stone-50 flex-shrink-0">
+                    <div>
+                      <h4 class="font-bold text-stone-900 leading-snug">Summer Top</h4>
+                      <p class="text-[11px] text-stone-400">4 variants • S, M, L, XL</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-3 px-3 text-stone-500 whitespace-nowrap">STP-WHT-L</td>
+                <td class="py-3 px-3 text-stone-600">Tops</td>
+                <td class="py-3 px-3 font-bold text-stone-900 whitespace-nowrap">₹999</td>
+                <td class="py-3 px-3 text-stone-700">32</td>
+                <td class="py-3 px-3">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#dcfce7] text-[#16a34a]">
+                    Active
+                  </span>
+                </td>
+                <td class="py-3 px-3 text-stone-500 whitespace-nowrap">12 Sep 2026</td>
+                <td class="py-3 px-4 text-right whitespace-nowrap">
+                  <div class="inline-flex items-center gap-1">
+                    <button onclick="editProduct('STP-WHT-L')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition">
+                      <i class="fa-regular fa-pen-to-square text-xs"></i>
+                    </button>
+                    <button onclick="previewProduct('Summer Top', 'STP-WHT-L', '999', '../assets/images/prod-6-top.png')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition">
+                      <i class="fa-regular fa-eye text-xs"></i>
+                    </button>
+                    <button onclick="openRowActions(event, 'STP-WHT-L')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition">
+                      <i class="fa-solid fa-ellipsis-vertical text-xs"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 7: Palazzo Set -->
+              <tr class="product-row hover:bg-stone-50/70 transition" data-category="Bottom Wear" data-status="Active" data-stock="9" data-price="1499">
+                <td class="py-3 px-4 text-center">
+                  <input type="checkbox" class="product-item-checkbox w-3.5 h-3.5 rounded text-[#e11467] focus:ring-[#e11467] border-stone-300 cursor-pointer">
+                </td>
+                <td class="py-3 px-3">
+                  <div class="flex items-center gap-3">
+                    <img src="../assets/images/prod-7-palazzo.png" alt="Palazzo Set" class="w-9 h-9 rounded-xl object-cover border border-stone-200 bg-stone-50 flex-shrink-0">
+                    <div>
+                      <h4 class="font-bold text-stone-900 leading-snug">Palazzo Set</h4>
+                      <p class="text-[11px] text-stone-400">3 variants • M, L, XL</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-3 px-3 text-stone-500 whitespace-nowrap">PLZ-PNK-L</td>
+                <td class="py-3 px-3 text-stone-600">Bottom Wear</td>
+                <td class="py-3 px-3 font-bold text-stone-900 whitespace-nowrap">₹1,499</td>
+                <td class="py-3 px-3 text-stone-700">9</td>
+                <td class="py-3 px-3">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#dcfce7] text-[#16a34a]">
+                    Active
+                  </span>
+                </td>
+                <td class="py-3 px-3 text-stone-500 whitespace-nowrap">10 Sep 2026</td>
+                <td class="py-3 px-4 text-right whitespace-nowrap">
+                  <div class="inline-flex items-center gap-1">
+                    <button onclick="editProduct('PLZ-PNK-L')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition">
+                      <i class="fa-regular fa-pen-to-square text-xs"></i>
+                    </button>
+                    <button onclick="previewProduct('Palazzo Set', 'PLZ-PNK-L', '1499', '../assets/images/prod-7-palazzo.png')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition">
+                      <i class="fa-regular fa-eye text-xs"></i>
+                    </button>
+                    <button onclick="openRowActions(event, 'PLZ-PNK-L')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition">
+                      <i class="fa-solid fa-ellipsis-vertical text-xs"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 8: Embroidered Kurti -->
+              <tr class="product-row hover:bg-stone-50/70 transition" data-category="Kurtis" data-status="Active" data-stock="11" data-price="2299">
+                <td class="py-3 px-4 text-center">
+                  <input type="checkbox" class="product-item-checkbox w-3.5 h-3.5 rounded text-[#e11467] focus:ring-[#e11467] border-stone-300 cursor-pointer">
+                </td>
+                <td class="py-3 px-3">
+                  <div class="flex items-center gap-3">
+                    <img src="../assets/images/prod-8-embkurti.png" alt="Embroidered Kurti" class="w-9 h-9 rounded-xl object-cover border border-stone-200 bg-stone-50 flex-shrink-0">
+                    <div>
+                      <h4 class="font-bold text-stone-900 leading-snug">Embroidered Kurti</h4>
+                      <p class="text-[11px] text-stone-400">3 variants • S, M, L</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-3 px-3 text-stone-500 whitespace-nowrap">EKU-MRN-M</td>
+                <td class="py-3 px-3 text-stone-600">Kurtis</td>
+                <td class="py-3 px-3 font-bold text-stone-900 whitespace-nowrap">₹2,299</td>
+                <td class="py-3 px-3 text-stone-700">11</td>
+                <td class="py-3 px-3">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#dcfce7] text-[#16a34a]">
+                    Active
+                  </span>
+                </td>
+                <td class="py-3 px-3 text-stone-500 whitespace-nowrap">08 Sep 2026</td>
+                <td class="py-3 px-4 text-right whitespace-nowrap">
+                  <div class="inline-flex items-center gap-1">
+                    <button onclick="editProduct('EKU-MRN-M')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition">
+                      <i class="fa-regular fa-pen-to-square text-xs"></i>
+                    </button>
+                    <button onclick="previewProduct('Embroidered Kurti', 'EKU-MRN-M', '2299', '../assets/images/prod-8-embkurti.png')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition">
+                      <i class="fa-regular fa-eye text-xs"></i>
+                    </button>
+                    <button onclick="openRowActions(event, 'EKU-MRN-M')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition">
+                      <i class="fa-solid fa-ellipsis-vertical text-xs"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Table Pagination Footer -->
+        <div class="p-4 sm:p-5 border-t border-stone-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          <p id="table-showing-text" class="text-stone-400">
+            Showing <span class="font-semibold text-stone-700">1</span> to <span class="font-semibold text-stone-700">8</span> of <span class="font-semibold text-stone-700">487</span> products
+          </p>
+
+          <!-- Pagination buttons matching screenshot -->
+          <div class="flex items-center gap-1.5 self-center sm:self-auto">
+            <button class="w-8 h-8 rounded-lg border border-stone-200 text-stone-400 hover:text-stone-700 hover:bg-stone-50 flex items-center justify-center transition">
+              <i class="fa-solid fa-chevron-left text-[10px]"></i>
+            </button>
+            <button class="w-8 h-8 rounded-lg bg-[#e11467] text-white font-bold flex items-center justify-center shadow-xs">
+              1
+            </button>
+            <button class="w-8 h-8 rounded-lg border border-stone-200 text-stone-600 hover:text-[#e11467] hover:border-[#e11467]/30 flex items-center justify-center transition">
+              2
+            </button>
+            <button class="w-8 h-8 rounded-lg border border-stone-200 text-stone-600 hover:text-[#e11467] hover:border-[#e11467]/30 flex items-center justify-center transition">
+              3
+            </button>
+            <button class="w-8 h-8 rounded-lg border border-stone-200 text-stone-600 hover:text-[#e11467] hover:border-[#e11467]/30 flex items-center justify-center transition">
+              4
+            </button>
+            <button class="w-8 h-8 rounded-lg border border-stone-200 text-stone-600 hover:text-[#e11467] hover:border-[#e11467]/30 flex items-center justify-center transition">
+              5
+            </button>
+            <span class="px-1 text-stone-400">...</span>
+            <button class="w-8 h-8 rounded-lg border border-stone-200 text-stone-600 hover:text-[#e11467] hover:border-[#e11467]/30 flex items-center justify-center transition">
+              61
+            </button>
+            <button class="w-8 h-8 rounded-lg border border-stone-200 text-stone-600 hover:text-stone-900 hover:bg-stone-50 flex items-center justify-center transition">
+              <i class="fa-solid fa-chevron-right text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- ================= ADD PRODUCT MODAL ================= -->
+  <div id="add-product-modal" class="hidden fixed inset-0 bg-stone-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl my-8 relative max-h-[90vh] flex flex-col">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-4 border-b border-stone-100">
+        <div>
+          <h3 class="text-xl font-bold text-stone-900">Add New Product</h3>
+          <p class="text-xs text-stone-500 mt-0.5">Enter product specifications, variants, pricing and images.</p>
+        </div>
+        <button onclick="closeAddProductModal()" class="w-8 h-8 rounded-full hover:bg-stone-100 flex items-center justify-center text-stone-400 hover:text-stone-700 cursor-pointer">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <!-- Form Content -->
+      <form id="new-product-form" onsubmit="handleAddNewProduct(event)" class="overflow-y-auto flex-1 py-4 space-y-4 text-xs pr-1">
+        
+        <!-- Product Name -->
+        <div>
+          <label class="block font-semibold text-stone-700 mb-1.5">Product Title *</label>
+          <input 
+            type="text" 
+            id="form-title" 
+            required 
+            placeholder="e.g. Pondicherry Pure Silk Saree" 
+            class="w-full bg-[#f8fafc] border border-stone-200 rounded-xl px-3.5 py-2.5 text-stone-800 text-xs sm:text-sm focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition"
+          >
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- SKU -->
+          <div>
+            <label class="block font-semibold text-stone-700 mb-1.5">SKU Code *</label>
+            <input 
+              type="text" 
+              id="form-sku" 
+              required 
+              placeholder="e.g. PPS-PNK-FS" 
+              class="w-full bg-[#f8fafc] border border-stone-200 rounded-xl px-3.5 py-2.5 text-stone-800 text-xs sm:text-sm focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition uppercase"
+            >
+          </div>
+
+          <!-- Category -->
+          <div>
+            <label class="block font-semibold text-stone-700 mb-1.5">Category *</label>
+            <select id="form-category" required class="w-full bg-[#f8fafc] border border-stone-200 rounded-xl px-3.5 py-2.5 text-stone-800 text-xs sm:text-sm focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition cursor-pointer">
+              <option value="Kurtis">Kurtis</option>
+              <option value="Sarees">Sarees</option>
+              <option value="Lehengas">Lehengas</option>
+              <option value="Dresses">Dresses</option>
+              <option value="Tops">Tops</option>
+              <option value="Bottom Wear">Bottom Wear</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <!-- Price -->
+          <div>
+            <label class="block font-semibold text-stone-700 mb-1.5">Price (₹) *</label>
+            <input 
+              type="number" 
+              id="form-price" 
+              required 
+              placeholder="1999" 
+              min="0"
+              class="w-full bg-[#f8fafc] border border-stone-200 rounded-xl px-3.5 py-2.5 text-stone-800 text-xs sm:text-sm focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition"
+            >
+          </div>
+
+          <!-- Stock Quantity -->
+          <div>
+            <label class="block font-semibold text-stone-700 mb-1.5">Stock Units *</label>
+            <input 
+              type="number" 
+              id="form-stock" 
+              required 
+              placeholder="20" 
+              min="0"
+              class="w-full bg-[#f8fafc] border border-stone-200 rounded-xl px-3.5 py-2.5 text-stone-800 text-xs sm:text-sm focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition"
+            >
+          </div>
+
+          <!-- Status -->
+          <div>
+            <label class="block font-semibold text-stone-700 mb-1.5">Status</label>
+            <select id="form-status" class="w-full bg-[#f8fafc] border border-stone-200 rounded-xl px-3.5 py-2.5 text-stone-800 text-xs sm:text-sm focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition cursor-pointer">
+              <option value="Active">Active</option>
+              <option value="Low Stock">Low Stock</option>
+              <option value="Out of Stock">Out of Stock</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Variants / Sizes -->
+        <div>
+          <label class="block font-semibold text-stone-700 mb-1.5">Available Size Variants</label>
+          <div class="flex items-center gap-2 flex-wrap">
+            <label class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-stone-50 border border-stone-200 rounded-lg cursor-pointer hover:bg-stone-100">
+              <input type="checkbox" name="sizes" value="XS" class="rounded text-[#e11467] focus:ring-[#e11467]">
+              <span>XS</span>
+            </label>
+            <label class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-stone-50 border border-stone-200 rounded-lg cursor-pointer hover:bg-stone-100">
+              <input type="checkbox" name="sizes" value="S" checked class="rounded text-[#e11467] focus:ring-[#e11467]">
+              <span>S</span>
+            </label>
+            <label class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-stone-50 border border-stone-200 rounded-lg cursor-pointer hover:bg-stone-100">
+              <input type="checkbox" name="sizes" value="M" checked class="rounded text-[#e11467] focus:ring-[#e11467]">
+              <span>M</span>
+            </label>
+            <label class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-stone-50 border border-stone-200 rounded-lg cursor-pointer hover:bg-stone-100">
+              <input type="checkbox" name="sizes" value="L" checked class="rounded text-[#e11467] focus:ring-[#e11467]">
+              <span>L</span>
+            </label>
+            <label class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-stone-50 border border-stone-200 rounded-lg cursor-pointer hover:bg-stone-100">
+              <input type="checkbox" name="sizes" value="XL" class="rounded text-[#e11467] focus:ring-[#e11467]">
+              <span>XL</span>
+            </label>
+            <label class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-stone-50 border border-stone-200 rounded-lg cursor-pointer hover:bg-stone-100">
+              <input type="checkbox" name="sizes" value="Free Size" class="rounded text-[#e11467] focus:ring-[#e11467]">
+              <span>Free Size</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Image Upload Selection -->
+        <div>
+          <label class="block font-semibold text-stone-700 mb-1.5">Product Image</label>
+          <div class="border-2 border-dashed border-stone-300 hover:border-[#e11467] rounded-2xl p-4 text-center cursor-pointer transition bg-stone-50/50" onclick="document.getElementById('product-image-upload').click()">
+            <input type="file" id="product-image-upload" accept="image/*" class="hidden" onchange="handleImageSelected(this)">
+            <div id="image-upload-preview" class="flex flex-col items-center justify-center gap-1.5">
+              <i class="fa-regular fa-image text-2xl text-stone-400"></i>
+              <span class="font-medium text-stone-600">Click to upload product image</span>
+              <span class="text-[10px] text-stone-400">PNG, JPG or WebP (recommended 800x1000px)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="pt-4 border-t border-stone-100 flex items-center justify-end gap-3">
+          <button type="button" onclick="closeAddProductModal()" class="px-4 py-2.5 rounded-xl border border-stone-200 text-stone-700 font-semibold hover:bg-stone-50 cursor-pointer">
+            Cancel
+          </button>
+          <button type="submit" class="px-5 py-2.5 rounded-xl bg-[#e11467] hover:bg-[#be123c] text-white font-semibold shadow-xs hover:shadow-md cursor-pointer flex items-center gap-2">
+            <i class="fa-solid fa-plus text-xs"></i>
+            <span>Add Product</span>
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
+
+  <!-- ================= JAVASCRIPT ================= -->
+  <script>
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('admin-sidebar');
+      const backdrop = document.getElementById('mobile-sidebar-backdrop');
+      sidebar.classList.toggle('-translate-x-full');
+      backdrop.classList.toggle('hidden');
+    }
+
+    function toggleNotificationDropdown() {
+      const menu = document.getElementById('notifications-menu');
+      menu.classList.toggle('hidden');
+      document.getElementById('admin-user-menu').classList.add('hidden');
+    }
+
+    function toggleAdminUserMenu() {
+      const menu = document.getElementById('admin-user-menu');
+      menu.classList.toggle('hidden');
+      document.getElementById('notifications-menu').classList.add('hidden');
+    }
+
+    // Modal logic
+    function openAddProductModal() {
+      document.getElementById('add-product-modal').classList.remove('hidden');
+    }
+
+    function closeAddProductModal() {
+      document.getElementById('add-product-modal').classList.add('hidden');
+    }
+
+    let uploadedImageUrl = '../assets/images/prod-1-anarkali.png';
+    function handleImageSelected(input) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          uploadedImageUrl = e.target.result;
+          document.getElementById('image-upload-preview').innerHTML = `
+            <img src="${e.target.result}" class="w-16 h-16 rounded-xl object-cover border border-stone-200 mx-auto">
+            <span class="text-[11px] text-emerald-600 font-bold mt-1">Image selected successfully!</span>
+          `;
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function handleAddNewProduct(event) {
+      event.preventDefault();
+      const title = document.getElementById('form-title').value.trim();
+      const sku = document.getElementById('form-sku').value.trim();
+      const category = document.getElementById('form-category').value;
+      const price = document.getElementById('form-price').value.trim();
+      const stock = parseInt(document.getElementById('form-stock').value) || 0;
+      const status = document.getElementById('form-status').value;
+
+      // Collect sizes
+      const sizeEls = document.querySelectorAll('input[name="sizes"]:checked');
+      const sizes = Array.from(sizeEls).map(el => el.value).join(', ') || 'S, M, L';
+      const variantCount = sizeEls.length || 3;
+
+      let statusBadge = '';
+      if (status === 'Active') {
+        statusBadge = '<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#dcfce7] text-[#16a34a]">Active</span>';
+      } else if (status === 'Low Stock' || stock < 10 && stock > 0) {
+        statusBadge = '<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#fef3c7] text-[#d97706]">Low Stock</span>';
+      } else {
+        statusBadge = '<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#ffe4e6] text-[#e11467]">Out of Stock</span>';
+      }
+
+      const today = new Date();
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const dateStr = `${String(today.getDate()).padStart(2,'0')} ${months[today.getMonth()]} ${today.getFullYear()}`;
+
+      const tbody = document.getElementById('products-table-body');
+      const newRow = document.createElement('tr');
+      newRow.className = 'product-row hover:bg-stone-50/70 transition';
+      newRow.setAttribute('data-category', category);
+      newRow.setAttribute('data-status', status);
+      newRow.setAttribute('data-stock', stock);
+      newRow.setAttribute('data-price', price);
+
+      newRow.innerHTML = `
+        <td class="py-3 px-4 text-center">
+          <input type="checkbox" class="product-item-checkbox w-3.5 h-3.5 rounded text-[#e11467] focus:ring-[#e11467] border-stone-300 cursor-pointer">
+        </td>
+        <td class="py-3 px-3">
+          <div class="flex items-center gap-3">
+            <img src="${uploadedImageUrl}" alt="${title}" class="w-9 h-9 rounded-xl object-cover border border-stone-200 bg-stone-50 flex-shrink-0">
+            <div>
+              <h4 class="font-bold text-stone-900 leading-snug">${title}</h4>
+              <p class="text-[11px] text-stone-400">${variantCount} variants • ${sizes}</p>
+            </div>
+          </div>
+        </td>
+        <td class="py-3 px-3 text-stone-500 whitespace-nowrap">${sku}</td>
+        <td class="py-3 px-3 text-stone-600">${category}</td>
+        <td class="py-3 px-3 font-bold text-stone-900 whitespace-nowrap">₹${parseInt(price).toLocaleString('en-IN')}</td>
+        <td class="py-3 px-3 ${stock === 0 ? 'text-[#ef4444] font-bold' : 'text-stone-700'}">${stock}</td>
+        <td class="py-3 px-3">${statusBadge}</td>
+        <td class="py-3 px-3 text-stone-500 whitespace-nowrap">${dateStr}</td>
+        <td class="py-3 px-4 text-right whitespace-nowrap">
+          <div class="inline-flex items-center gap-1">
+            <button onclick="editProduct('${sku}')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition">
+              <i class="fa-regular fa-pen-to-square text-xs"></i>
+            </button>
+            <button onclick="previewProduct('${title}', '${sku}', '${price}', '${uploadedImageUrl}')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition">
+              <i class="fa-regular fa-eye text-xs"></i>
+            </button>
+            <button onclick="openRowActions(event, '${sku}')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition">
+              <i class="fa-solid fa-ellipsis-vertical text-xs"></i>
+            </button>
+          </div>
+        </td>
+      `;
+
+      tbody.insertBefore(newRow, tbody.firstChild);
+
+      // Increment stats
+      const totalEl = document.getElementById('stat-total-products');
+      if (totalEl) totalEl.innerText = parseInt(totalEl.innerText) + 1;
+      if (status === 'Active') {
+        const actEl = document.getElementById('stat-active-products');
+        if (actEl) actEl.innerText = parseInt(actEl.innerText) + 1;
+      }
+
+      closeAddProductModal();
+      document.getElementById('new-product-form').reset();
+      showToast(`Product "${title}" added successfully!`);
+    }
+
+    // Filter Products Table
+    function filterProductsTable() {
+      const q = (document.getElementById('product-search-input')?.value || '').toLowerCase().trim();
+      const cat = document.getElementById('filter-category')?.value || 'All';
+      const status = document.getElementById('filter-status')?.value || 'All';
+      const stockFilter = document.getElementById('filter-stock')?.value || 'All';
+
+      const rows = document.querySelectorAll('#products-table-body .product-row');
+      let visibleCount = 0;
+
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        const rowCat = row.getAttribute('data-category');
+        const rowStatus = row.getAttribute('data-status');
+        const rowStock = parseInt(row.getAttribute('data-stock')) || 0;
+
+        const matchesQuery = !q || text.includes(q);
+        const matchesCat = cat === 'All' || rowCat === cat;
+        const matchesStatus = status === 'All' || rowStatus === status;
+
+        let matchesStock = true;
+        if (stockFilter === 'InStock') matchesStock = rowStock > 0;
+        else if (stockFilter === 'LowStock') matchesStock = rowStock > 0 && rowStock < 10;
+        else if (stockFilter === 'OutOfStock') matchesStock = rowStock === 0;
+
+        if (matchesQuery && matchesCat && matchesStatus && matchesStock) {
+          row.style.display = '';
+          visibleCount++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+
+      const showText = document.getElementById('table-showing-text');
+      if (showText) {
+        showText.innerHTML = `Showing <span class="font-semibold text-stone-700">1</span> to <span class="font-semibold text-stone-700">${visibleCount}</span> of <span class="font-semibold text-stone-700">487</span> products`;
+      }
+    }
+
+    // Select All
+    function toggleSelectAll(master) {
+      const checkboxes = document.querySelectorAll('.product-item-checkbox');
+      checkboxes.forEach(cb => {
+        cb.checked = master.checked;
+        const row = cb.closest('tr');
+        if (master.checked) row.classList.add('bg-rose-50/40');
+        else row.classList.remove('bg-rose-50/40');
+      });
+    }
+
+    // Actions
+    function editProduct(sku) {
+      showToast(`Opening product editor for SKU: ${sku}`, 'info');
+    }
+
+    function previewProduct(name, sku, price, img) {
+      showToast(`Previewing: ${name} (₹${price})`, 'info');
+    }
+
+    function openRowActions(event, sku) {
+      event.stopPropagation();
+      showToast(`Options for ${sku}: Edit, Duplicate, Archive, Delete`, 'info');
+    }
+
+    function handleImportClick() {
+      showToast('Import products CSV / Excel template opened!', 'info');
+    }
+
+    function showToast(msg, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `p-3 rounded-xl shadow-xl text-xs font-semibold flex items-center gap-2 transition transform duration-300 ${type === 'success' ? 'bg-stone-900 text-white' : 'bg-[#e11467] text-white'}`;
+      toast.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> <span>${msg}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // Close menus on outside click
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('#notifications-menu') && !e.target.closest('.fa-bell')) {
+        const notif = document.getElementById('notifications-menu');
+        if (notif) notif.classList.add('hidden');
+      }
+      if (!e.target.closest('#admin-user-menu') && !e.target.closest('.group')) {
+        const userMenu = document.getElementById('admin-user-menu');
+        if (userMenu) userMenu.classList.add('hidden');
+      }
+    });
+  </script>
+
+</body>
+</html>

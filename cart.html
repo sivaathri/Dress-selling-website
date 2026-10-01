@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Shopping Bag — PondyVastra</title>
+  <meta name="description" content="Review your selected handcrafted dresses, kurtis, and silk sarees before checkout.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Tailwind CSS v4 Browser CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-stone-50/40 text-stone-800 antialiased selection:bg-rose-100 selection:text-rose-900 min-h-screen flex flex-col justify-between">
+
+  <!-- ================= TOP ANNOUNCEMENT BAR ================= -->
+  <aside aria-label="Announcement" class="bg-[#b83250] text-white text-[12px] font-normal py-1.5 px-4 tracking-wide border-b border-rose-900/10">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2">
+      <div class="flex items-center gap-2 text-rose-50">
+        <span class="text-sm">📍</span>
+        <span>Pondicherry, India — Ethnic Roots, Modern Styles, Delivered Across India.</span>
+      </div>
+      <div class="flex items-center gap-5 text-rose-100">
+        <button onclick="openTrackOrder()" class="hover:text-white flex items-center gap-1.5 transition text-[12px]">
+          <i class="fa-solid fa-truck-fast text-[11px]"></i>
+          <span>Track Order</span>
+        </button>
+        <button onclick="openSupportModal()" class="hover:text-white flex items-center gap-1.5 transition text-[12px]">
+          <i class="fa-solid fa-headset text-[11px]"></i>
+          <span>Help &amp; Support</span>
+        </button>
+        <a href="shop.html?view=wishlist" class="hover:text-white flex items-center gap-1.5 transition text-[12px]">
+          <i class="fa-solid fa-heart text-[11px]"></i>
+          <span>Wishlist</span>
+          <span class="wishlist-count-badge bg-white/20 text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full ml-0.5">0</span>
+        </a>
+        <button onclick="openSupportModal()" class="hover:text-white flex items-center gap-1.5 transition text-[12px]">
+          <i class="fa-regular fa-user text-[11px]"></i>
+          <span>My Account</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN HEADER ================= -->
+  <header class="bg-white border-b border-stone-100 sticky top-0 z-40 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4 md:gap-8">
+      <!-- Brand Logo (Exact replica) -->
+      <a href="index.html" class="flex items-center flex-shrink-0 group">
+        <img src="assets/images/logo-exact.png" alt="PondyVastra - Women's Fashion from Pondicherry" class="h-10 md:h-12 w-auto object-contain">
+      </a>
+
+      <!-- Search Bar (Exact replica with clean inset button) -->
+      <div class="flex-1 max-w-2xl relative hidden md:block">
+        <div class="flex items-center rounded-lg border border-stone-300 bg-white hover:border-stone-400 focus-within:border-[#b81b4b] focus-within:ring-1 focus-within:ring-[#b81b4b] transition-all p-1">
+          <input 
+            type="text" 
+            placeholder="Search for kurtis, kurta sets, dresses, sarees, dupattas, ..." 
+            class="site-search-input w-full pl-3 pr-2 py-1.5 text-[13px] text-stone-800 placeholder:text-stone-400 bg-transparent focus:outline-none"
+          >
+          <button class="bg-[#b81b4b] hover:bg-[#9f1239] text-white w-10 h-8 rounded-md transition flex items-center justify-center flex-shrink-0 cursor-pointer" aria-label="Search">
+            <i class="fa-solid fa-magnifying-glass text-xs"></i>
+          </button>
+        </div>
+        <div id="search-autocomplete-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white rounded-xl shadow-2xl border border-stone-200 z-50 overflow-hidden"></div>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <button onclick="openCartDrawer()" class="flex items-center gap-2 group p-1.5 hover:bg-rose-50/50 rounded-xl transition">
+          <div class="relative">
+            <svg class="w-7 h-7 text-stone-800 group-hover:text-[#be123c] transition-colors" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.7 2.8-7.1H5.106m2.394 7.1L5.106 5.272M7.5 17.25a1.5 1.5 0 103 0 1.5 1.5 0 00-3 0zm9 0a1.5 1.5 0 103 0 1.5 1.5 0 00-3 0z" />
+            </svg>
+            <span class="cart-count-badge absolute -top-1.5 -right-1.5 bg-[#be123c] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-xs">0</span>
+          </div>
+          <span class="text-sm font-bold text-stone-800 group-hover:text-[#be123c]">Cart</span>
+          <span class="cart-count-badge bg-[#be123c] text-white text-[11px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-xs">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= CATEGORY BAR ================= -->
+  <nav class="bg-[#fdf6f2] border-b border-[#f3e8e2] relative z-30 overflow-x-auto shadow-2xs">
+    <div class="max-w-7xl mx-auto px-4 flex items-center justify-between gap-1 py-1 whitespace-nowrap min-w-max">
+      <div class="flex items-center space-x-1 lg:space-x-2">
+        <a href="shop.html?category=kurtis" class="cat-link"><span>Kurtis &amp; Kurta Sets</span></a>
+        <a href="shop.html?category=dresses" class="cat-link"><span>Dresses</span></a>
+        <a href="shop.html?category=sarees" class="cat-link"><span>Sarees</span></a>
+        <a href="shop.html?category=bottoms" class="cat-link"><span>Bottom Wear</span></a>
+        <a href="shop.html?category=dupattas" class="cat-link"><span>Dupattas &amp; Shawls</span></a>
+        <a href="shop.html?category=lehengas" class="cat-link"><span>Lehengas</span></a>
+        <a href="shop.html?category=coord-sets" class="cat-link"><span>Co-ord Sets</span></a>
+        <a href="shop.html?size=plus" class="cat-link"><span>Plus Size</span></a>
+        <a href="shop.html?filter=new" class="cat-link font-semibold text-rose-800">New Arrivals</a>
+        <a href="shop.html?filter=sale" class="cat-link font-semibold text-rose-600">Sale</a>
+      </div>
+      <div class="pl-2">
+        <button onclick="openSpecialOffers()" class="special-offers-btn cursor-pointer">
+          <i class="fa-solid fa-gift text-sm"></i>
+          <span>Special Offers</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ================= CART MAIN ================= -->
+  <main class="max-w-7xl mx-auto px-4 py-10 flex-1 w-full">
+    <div class="flex items-center justify-between mb-8 pb-4 border-b border-stone-200">
+      <div>
+        <h1 class="font-serif text-3xl font-bold text-stone-900">Your Shopping Bag</h1>
+        <p class="text-xs text-stone-500 mt-1">Direct dispatch from Pondicherry boutique atelier</p>
+      </div>
+      <a href="shop.html" class="text-xs font-bold text-rose-700 hover:underline flex items-center gap-1.5">
+        ← Continue Shopping
+      </a>
+    </div>
+
+    <!-- Empty State -->
+    <div id="cart-page-empty" class="hidden text-center py-20 bg-white rounded-3xl border border-stone-200 max-w-2xl mx-auto p-8 shadow-xs">
+      <div class="w-20 h-20 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center text-3xl mx-auto mb-4">
+        <i class="fa-solid fa-bag-shopping"></i>
+      </div>
+      <h2 class="font-serif text-2xl font-bold text-stone-900">Your bag is empty</h2>
+      <p class="text-xs text-stone-500 mt-2 max-w-sm mx-auto">Looks like you haven't added any handcrafted Pondicherry silks or kurtas to your bag yet.</p>
+      <a href="shop.html" class="mt-6 inline-block bg-[#be123c] hover:bg-[#9f1239] text-white text-xs font-bold px-6 py-3 rounded-xl transition shadow-md shadow-rose-700/20">
+        Start Shopping Now
+      </a>
+    </div>
+
+    <!-- Cart Layout -->
+    <div id="cart-page-content" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- Items Table (8 cols) -->
+      <div class="lg:col-span-8 bg-white rounded-3xl border border-stone-200 p-6 shadow-xs space-y-4">
+        <div class="hidden sm:grid grid-cols-12 text-xs font-bold text-stone-500 uppercase tracking-wider pb-3 border-b border-stone-100">
+          <div class="col-span-6">Product Details</div>
+          <div class="col-span-2 text-center">Price</div>
+          <div class="col-span-2 text-center">Quantity</div>
+          <div class="col-span-2 text-right">Subtotal</div>
+        </div>
+
+        <div id="cart-page-items" class="divide-y divide-stone-100">
+          <!-- Injected via renderCartPage() -->
+        </div>
+      </div>
+
+      <!-- Order Summary Card (4 cols) -->
+      <div class="lg:col-span-4 bg-white rounded-3xl border border-stone-200 p-6 shadow-xs space-y-5 sticky top-24">
+        <h3 class="font-serif text-xl font-bold text-stone-900 pb-3 border-b border-stone-100">
+          Order Summary
+        </h3>
+
+        <!-- Coupon input -->
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-stone-700">Have a Promo Coupon?</label>
+          <div class="flex gap-2">
+            <input type="text" id="coupon-code-input" placeholder="e.g. PONDY10" class="flex-1 uppercase font-mono px-3 py-2 border border-stone-300 rounded-xl text-xs focus:outline-none focus:border-rose-600">
+            <button onclick="applyCouponCode()" class="bg-stone-900 hover:bg-black text-white px-4 py-2 rounded-xl text-xs font-bold transition">
+              Apply
+            </button>
+          </div>
+          <div id="active-coupon-tag" class="hidden flex items-center justify-between p-2 rounded-lg bg-emerald-50 border border-emerald-200 text-xs text-emerald-800">
+            <span id="coupon-tag-text">✓ Coupon Applied</span>
+            <button onclick="removeCoupon()" class="text-rose-600 font-bold hover:underline">Remove</button>
+          </div>
+        </div>
+
+        <!-- Cost Breakdown -->
+        <div class="space-y-2.5 text-xs text-stone-600 pt-2 border-t border-stone-100">
+          <div class="flex justify-between">
+            <span>Bag Total</span>
+            <span id="cart-summary-subtotal" class="font-semibold text-stone-900">₹0</span>
+          </div>
+          <div class="flex justify-between text-emerald-700">
+            <span>Coupon Discount</span>
+            <span id="cart-summary-discount" class="font-semibold">-₹0</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Estimated Shipping</span>
+            <span id="cart-summary-shipping" class="font-semibold text-stone-900">FREE</span>
+          </div>
+          <div class="flex justify-between">
+            <span>GST (5% Apparel)</span>
+            <span id="cart-summary-gst" class="font-semibold text-stone-900">₹0</span>
+          </div>
+          <div class="pt-3 border-t border-stone-200 flex justify-between items-baseline">
+            <span class="text-base font-bold text-stone-900">Total Payable</span>
+            <span id="cart-summary-grandtotal" class="font-serif text-2xl font-bold text-rose-700">₹0</span>
+          </div>
+        </div>
+
+        <a href="checkout.html" class="w-full block text-center bg-[#be123c] hover:bg-[#9f1239] text-white text-sm font-bold py-3.5 rounded-xl shadow-lg shadow-rose-700/25 transition">
+          Proceed To Checkout →
+        </a>
+
+        <!-- Guarantees -->
+        <div class="pt-3 border-t border-stone-100 space-y-1.5 text-[11px] text-stone-500">
+          <p class="flex items-center gap-1.5"><i class="fa-solid fa-lock text-rose-700"></i> Bank-grade 256-bit encrypted checkout</p>
+          <p class="flex items-center gap-1.5"><i class="fa-solid fa-truck-fast text-rose-700"></i> Dispatched within 24 hours from Pondicherry</p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-stone-950 text-stone-400 py-8 border-t border-stone-800 text-center text-xs">
+    © 2026 PondyVastra. Women's Fashion from Pondicherry.
+  </footer>
+
+  <!-- Modals -->
+  <div id="cart-drawer-backdrop" class="fixed inset-0 drawer-backdrop z-50 hidden opacity-0 transition-opacity duration-300" onclick="closeCartDrawer()"></div>
+  <aside id="cart-drawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-white z-50 shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
+    <div class="p-4 border-b border-stone-200 flex items-center justify-between bg-stone-50/70">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-bag-shopping text-rose-700"></i>
+        <h3 class="font-serif font-bold text-lg text-stone-900">Your Shopping Bag</h3>
+        <span class="cart-count-badge bg-[#be123c] text-white text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+      </div>
+      <button onclick="closeCartDrawer()" class="p-2 text-stone-400 hover:text-stone-700 text-lg">✕</button>
+    </div>
+    <div id="cart-drawer-items" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
+  </aside>
+
+  <div id="offers-modal" class="fixed inset-0 drawer-backdrop z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 relative shadow-2xl border border-stone-200">
+      <button onclick="closeSpecialOffers()" class="absolute top-4 right-4 text-stone-400">✕</button>
+      <h3 class="font-serif text-xl font-bold text-stone-900 mb-2">PondyVastra Offers</h3>
+      <div class="space-y-3">
+        <div class="p-3 rounded-xl border border-dashed border-rose-300 bg-rose-50/60 flex items-center justify-between">
+          <span class="font-mono text-xs font-bold text-rose-800">PONDY10</span>
+          <button onclick="copyCoupon('PONDY10')" class="bg-[#be123c] text-white text-xs px-3 py-1 rounded-lg font-bold">Copy</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="track-order-modal" class="fixed inset-0 drawer-backdrop z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 relative shadow-2xl border border-stone-200">
+      <button onclick="closeTrackOrder()" class="absolute top-4 right-4 text-stone-400">✕</button>
+      <h3 class="font-serif text-xl font-bold text-stone-900 mb-2">Track Shipment</h3>
+      <input type="text" placeholder="Order ID or Phone" class="w-full px-4 py-2 border rounded-xl text-sm mb-3">
+      <button onclick="showToast('Tracking shipment from Pondicherry...', 'info'); closeTrackOrder();" class="w-full bg-[#be123c] text-white py-2 rounded-xl text-xs font-bold">Track Now</button>
+    </div>
+  </div>
+
+  <div id="support-modal" class="fixed inset-0 drawer-backdrop z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 relative shadow-2xl border border-stone-200">
+      <button onclick="closeSupportModal()" class="absolute top-4 right-4 text-stone-400">✕</button>
+      <h3 class="font-serif text-xl font-bold text-stone-900 mb-2">Help &amp; Support</h3>
+      <p class="text-xs text-stone-500 mb-4">Phone: +91 94880 12345 | Email: support@pondyvastra.com</p>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="assets/js/products.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script>
+    let activeCoupon = null;
+
+    function renderCartPage() {
+      const cart = getCart();
+      const emptyEl = document.getElementById("cart-page-empty");
+      const contentEl = document.getElementById("cart-page-content");
+      const itemsContainer = document.getElementById("cart-page-items");
+
+      if (cart.length === 0) {
+        if (emptyEl) emptyEl.classList.remove("hidden");
+        if (contentEl) contentEl.classList.add("hidden");
+        return;
+      }
+
+      if (emptyEl) emptyEl.classList.add("hidden");
+      if (contentEl) contentEl.classList.remove("hidden");
+
+      let subtotal = 0;
+      itemsContainer.innerHTML = cart.map((item, index) => {
+        const itemTotal = item.price * item.qty;
+        subtotal += itemTotal;
+
+        return `
+          <div class="py-4 grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
+            <div class="sm:col-span-6 flex gap-4 items-center">
+              <img src="${item.image}" alt="${item.name}" class="w-16 h-20 sm:w-20 sm:h-24 object-cover rounded-xl border border-stone-200 flex-shrink-0">
+              <div>
+                <h4 class="font-serif font-bold text-sm text-stone-900 hover:text-rose-700">
+                  <a href="product-details.html?id=${item.id}">${item.name}</a>
+                </h4>
+                <p class="text-xs text-stone-500 mt-0.5">Size: <span class="font-semibold text-stone-700">${item.size}</span> | Color: <span class="font-semibold text-stone-700">${item.color}</span></p>
+                <button onclick="removeFromCart(${index})" class="text-xs text-rose-600 hover:underline mt-2 font-medium flex items-center gap-1">
+                  <i class="fa-solid fa-trash-can text-[10px]"></i> Remove
+                </button>
+              </div>
+            </div>
+
+            <div class="sm:col-span-2 text-left sm:text-center text-xs font-semibold text-stone-700">
+              <span class="sm:hidden text-stone-400 font-normal">Price: </span>${formatPrice(item.price)}
+            </div>
+
+            <div class="sm:col-span-2 flex sm:justify-center items-center">
+              <div class="flex items-center border border-stone-300 rounded-lg bg-stone-50 overflow-hidden text-xs">
+                <button onclick="updateCartQty(${index}, -1)" class="px-2.5 py-1 hover:bg-stone-200 text-stone-700 font-bold">-</button>
+                <span class="px-2.5 font-bold text-stone-900">${item.qty}</span>
+                <button onclick="updateCartQty(${index}, 1)" class="px-2.5 py-1 hover:bg-stone-200 text-stone-700 font-bold">+</button>
+              </div>
+            </div>
+
+            <div class="sm:col-span-2 text-left sm:text-right font-serif font-bold text-sm text-rose-700">
+              <span class="sm:hidden text-stone-400 font-normal text-xs">Total: </span>${formatPrice(itemTotal)}
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      // Calculate totals
+      let discount = 0;
+      if (activeCoupon === "PONDY10") discount = Math.round(subtotal * 0.10);
+      else if (activeCoupon === "PONDY15") discount = Math.round(subtotal * 0.15);
+      else if (activeCoupon === "FESTIVE25") discount = Math.round(subtotal * 0.25);
+
+      const shipping = (subtotal >= 1499 || activeCoupon === "FREESHIP") ? 0 : 99;
+      const gst = Math.round((subtotal - discount) * 0.05);
+      const grandTotal = Math.max(0, subtotal - discount + shipping + gst);
+
+      document.getElementById("cart-summary-subtotal").textContent = formatPrice(subtotal);
+      document.getElementById("cart-summary-discount").textContent = `-${formatPrice(discount)}`;
+      document.getElementById("cart-summary-shipping").textContent = shipping === 0 ? "FREE" : formatPrice(shipping);
+      document.getElementById("cart-summary-gst").textContent = formatPrice(gst);
+      document.getElementById("cart-summary-grandtotal").textContent = formatPrice(grandTotal);
+    }
+
+    function applyCouponCode() {
+      const code = document.getElementById("coupon-code-input").value.trim().toUpperCase();
+      if (code === "PONDY10" || code === "PONDY15" || code === "FESTIVE25" || code === "FREESHIP") {
+        activeCoupon = code;
+        document.getElementById("active-coupon-tag").classList.remove("hidden");
+        document.getElementById("coupon-tag-text").textContent = `✓ Coupon "${code}" Applied!`;
+        showToast(`Coupon "${code}" applied successfully!`, "success");
+        renderCartPage();
+      } else {
+        showToast("Invalid coupon code. Try PONDY10 or FESTIVE25!", "info");
+      }
+    }
+
+    function removeCoupon() {
+      activeCoupon = null;
+      document.getElementById("active-coupon-tag").classList.add("hidden");
+      document.getElementById("coupon-code-input").value = "";
+      showToast("Coupon removed", "info");
+      renderCartPage();
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderCartPage();
+    });
+  </script>
+</body>
+</html>

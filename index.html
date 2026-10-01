@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PondyVastra — Women's Fashion from Pondicherry | Ethnic Wear, Kurtis, Sarees &amp; Dresses</title>
+  <meta name="description" content="Discover PondyVastra - Women's fashion crafted in Pondicherry. Shop exclusive handcrafted kurtis, kurta sets, silk sarees, Indo-Western dresses, and lehengas with pan-India delivery.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Tailwind CSS v4 Browser CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-white text-stone-800 antialiased selection:bg-rose-100 selection:text-rose-900">
+
+  <!-- ================= TOP ANNOUNCEMENT BAR (Exact match to image) ================= -->
+  <aside aria-label="Announcement" class="bg-[#b83250] text-white text-[12px] font-normal py-1.5 px-4 tracking-wide border-b border-rose-900/10">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2">
+      <!-- Left side: Location & Tagline -->
+      <div class="flex items-center gap-2 text-rose-50">
+        <span class="text-sm">📍</span>
+        <span>Pondicherry, India — Ethnic Roots, Modern Styles, Delivered Across India.</span>
+      </div>
+
+      <!-- Right side: Utility links -->
+      <div class="flex items-center gap-5 text-rose-100">
+        <button onclick="openTrackOrder()" class="hover:text-white flex items-center gap-1.5 transition text-[12px]">
+          <i class="fa-solid fa-truck-fast text-[11px]"></i>
+          <span>Track Order</span>
+        </button>
+        <button onclick="openSupportModal()" class="hover:text-white flex items-center gap-1.5 transition text-[12px]">
+          <i class="fa-solid fa-headset text-[11px]"></i>
+          <span>Help &amp; Support</span>
+        </button>
+        <a href="shop.html?view=wishlist" class="hover:text-white flex items-center gap-1.5 transition text-[12px]">
+          <i class="fa-solid fa-heart text-[11px]"></i>
+          <span>Wishlist</span>
+          <span class="wishlist-count-badge bg-white/20 text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full ml-0.5">0</span>
+        </a>
+        <button onclick="openSupportModal()" class="hover:text-white flex items-center gap-1.5 transition text-[12px]">
+          <i class="fa-regular fa-user text-[11px]"></i>
+          <span>My Account</span>
+        </button>
+        <a href="admin/index.html" class="hover:text-white flex items-center gap-1.5 transition text-[12px] bg-black/20 hover:bg-black/35 px-2.5 py-0.5 rounded-full font-semibold border border-white/20">
+          <i class="fa-solid fa-lock text-[10px]"></i>
+          <span>Admin</span>
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN HEADER (Exact match to image) ================= -->
+  <header class="bg-white border-b border-stone-200 sticky top-0 z-40 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-between gap-4 md:gap-8">
+      
+      <!-- Brand Logo (Exact replica) -->
+      <a href="index.html" class="flex items-center flex-shrink-0 group">
+        <img src="assets/images/logo-exact.png" alt="PondyVastra - Women's Fashion from Pondicherry" class="h-10 md:h-12 w-auto object-contain">
+      </a>
+
+      <!-- Search Bar (Exact replica with clean inset button) -->
+      <div class="flex-1 max-w-2xl relative hidden md:block">
+        <div class="flex items-center rounded-lg border border-stone-300 bg-white hover:border-stone-400 focus-within:border-[#b81b4b] focus-within:ring-1 focus-within:ring-[#b81b4b] transition-all p-1">
+          <input 
+            type="text" 
+            placeholder="Search for kurtis, kurta sets, dresses, sarees, dupattas, ..." 
+            class="site-search-input w-full pl-3 pr-2 py-1.5 text-[13px] text-stone-800 placeholder:text-stone-400 bg-transparent focus:outline-none"
+          >
+          <button class="bg-[#b81b4b] hover:bg-[#9f1239] text-white w-10 h-8 rounded-md transition flex items-center justify-center flex-shrink-0 cursor-pointer" aria-label="Search">
+            <i class="fa-solid fa-magnifying-glass text-xs"></i>
+          </button>
+        </div>
+
+        <!-- Search Autocomplete Dropdown -->
+        <div id="search-autocomplete-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white rounded-xl shadow-2xl border border-stone-200 z-50 overflow-hidden">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+
+      <!-- Right Side Actions: Cart Counter (Exact replica with dual badges) -->
+      <div class="flex items-center gap-4">
+        <!-- Mobile search toggle -->
+        <button class="md:hidden text-stone-700 p-2 text-lg hover:text-[#be123c]" onclick="document.querySelector('.site-search-input')?.focus()">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+
+        <!-- Cart Button (Matching the screenshot with dual 0 badges) -->
+        <button onclick="openCartDrawer()" class="flex items-center gap-1.5 group p-1.5 hover:bg-rose-50/50 rounded-lg transition">
+          <div class="relative">
+            <svg class="w-6 h-6 text-stone-800 group-hover:text-[#be123c] transition-colors" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.7 2.8-7.1H5.106m2.394 7.1L5.106 5.272M7.5 17.25a1.5 1.5 0 103 0 1.5 1.5 0 00-3 0zm9 0a1.5 1.5 0 103 0 1.5 1.5 0 00-3 0z" />
+            </svg>
+            <!-- Badge on cart icon -->
+            <span class="cart-count-badge absolute -top-1.5 -right-1.5 bg-[#be123c] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
+              0
+            </span>
+          </div>
+
+          <span class="text-sm font-bold text-stone-800 group-hover:text-[#be123c] transition-colors ml-0.5">
+            Cart
+          </span>
+
+          <!-- Badge next to Cart text (as shown in user image) -->
+          <span class="cart-count-badge bg-[#be123c] text-white text-[11px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
+            0
+          </span>
+        </button>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button onclick="toggleMobileMenu()" class="md:hidden text-stone-700 p-2 text-xl hover:text-[#be123c]" aria-label="Toggle Navigation">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= SUB-NAVIGATION / CATEGORY BAR (Exact match to image) ================= -->
+  <nav class="bg-[#fdf6f2] border-b border-[#f3e8e2] relative z-30  shadow-2xs">
+    <div class="max-w-7xl mx-auto px-4 flex items-center justify-between gap-1 py-1 whitespace-nowrap min-w-max">
+      
+      <!-- Category Links with dropdowns -->
+      <div class="flex items-center space-x-1 lg:space-x-2">
+        
+        <!-- Kurtis & Kurta Sets -->
+        <div class="nav-dropdown">
+          <a href="shop.html?category=kurtis" class="cat-link">
+            <span>Kurtis &amp; Kurta Sets</span>
+            <svg class="w-3 h-3 text-stone-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>
+          </a>
+          <div class="nav-dropdown-content p-4">
+            <h5 class="text-[11px] font-bold text-rose-800 uppercase tracking-wider mb-2">Kurtis &amp; Suits</h5>
+            <ul class="space-y-1.5 text-xs text-stone-600">
+              <li><a href="shop.html?category=kurtis&type=anarkali" class="hover:text-rose-700 block py-0.5">Anarkali Kurta Sets</a></li>
+              <li><a href="shop.html?category=kurtis&type=straight" class="hover:text-rose-700 block py-0.5">Straight Cut Kurtis</a></li>
+              <li><a href="shop.html?category=kurtis&type=chanderi" class="hover:text-rose-700 block py-0.5">Chanderi Silk Sets</a></li>
+              <li><a href="shop.html?category=kurtis&type=cotton" class="hover:text-rose-700 block py-0.5">Everyday Pure Cotton Kurtas</a></li>
+              <li><a href="shop.html?category=kurtis&type=festive" class="hover:text-rose-700 block py-0.5">Festive Gotta Patti Suits</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Dresses -->
+        <div class="nav-dropdown">
+          <a href="shop.html?category=dresses" class="cat-link">
+            <span>Dresses</span>
+            <svg class="w-3 h-3 text-stone-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>
+          </a>
+          <div class="nav-dropdown-content p-4">
+            <h5 class="text-[11px] font-bold text-rose-800 uppercase tracking-wider mb-2">Modern Dresses</h5>
+            <ul class="space-y-1.5 text-xs text-stone-600">
+              <li><a href="shop.html?category=dresses" class="hover:text-rose-700 block py-0.5">Indo-Western Tiered Dresses</a></li>
+              <li><a href="shop.html?category=dresses" class="hover:text-rose-700 block py-0.5">French Floral Maxi Dresses</a></li>
+              <li><a href="shop.html?category=dresses" class="hover:text-rose-700 block py-0.5">Flared Fusion Gowns</a></li>
+              <li><a href="shop.html?category=dresses" class="hover:text-rose-700 block py-0.5">Belted Fit &amp; Flare Dresses</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Sarees -->
+        <div class="nav-dropdown">
+          <a href="shop.html?category=sarees" class="cat-link">
+            <span>Sarees</span>
+            <svg class="w-3 h-3 text-stone-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>
+          </a>
+          <div class="nav-dropdown-content p-4">
+            <h5 class="text-[11px] font-bold text-rose-800 uppercase tracking-wider mb-2">Heritage Drapes</h5>
+            <ul class="space-y-1.5 text-xs text-stone-600">
+              <li><a href="shop.html?category=sarees" class="hover:text-rose-700 block py-0.5">Pondicherry Temple Silk Sarees</a></li>
+              <li><a href="shop.html?category=sarees" class="hover:text-rose-700 block py-0.5">Kanchipuram Zari Weaves</a></li>
+              <li><a href="shop.html?category=sarees" class="hover:text-rose-700 block py-0.5">Chanderi Handloom Sarees</a></li>
+              <li><a href="shop.html?category=sarees" class="hover:text-rose-700 block py-0.5">Pure Linen &amp; Organic Cotton</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Bottom Wear -->
+        <div class="nav-dropdown">
+          <a href="shop.html?category=bottoms" class="cat-link">
+            <span>Bottom Wear</span>
+            <svg class="w-3 h-3 text-stone-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>
+          </a>
+          <div class="nav-dropdown-content p-4">
+            <h5 class="text-[11px] font-bold text-rose-800 uppercase tracking-wider mb-2">Bottom Styles</h5>
+            <ul class="space-y-1.5 text-xs text-stone-600">
+              <li><a href="shop.html?category=bottoms" class="hover:text-rose-700 block py-0.5">Zari Embroidered Palazzos</a></li>
+              <li><a href="shop.html?category=bottoms" class="hover:text-rose-700 block py-0.5">Silk Straight Cigarette Pants</a></li>
+              <li><a href="shop.html?category=bottoms" class="hover:text-rose-700 block py-0.5">Cotton Shararas &amp; Skirts</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Dupattas & Shawls -->
+        <div class="nav-dropdown">
+          <a href="shop.html?category=dupattas" class="cat-link">
+            <span>Dupattas &amp; Shawls</span>
+            <svg class="w-3 h-3 text-stone-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>
+          </a>
+          <div class="nav-dropdown-content p-4">
+            <h5 class="text-[11px] font-bold text-rose-800 uppercase tracking-wider mb-2">Artisanal Stoles</h5>
+            <ul class="space-y-1.5 text-xs text-stone-600">
+              <li><a href="shop.html?category=dupattas" class="hover:text-rose-700 block py-0.5">Kashmiri Aari Organza Dupattas</a></li>
+              <li><a href="shop.html?category=dupattas" class="hover:text-rose-700 block py-0.5">Banarasi Brocade Dupattas</a></li>
+              <li><a href="shop.html?category=dupattas" class="hover:text-rose-700 block py-0.5">Tissue Gold Wedding Dupattas</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Lehengas -->
+        <div class="nav-dropdown">
+          <a href="shop.html?category=lehengas" class="cat-link">
+            <span>Lehengas</span>
+            <svg class="w-3 h-3 text-stone-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>
+          </a>
+          <div class="nav-dropdown-content p-4">
+            <h5 class="text-[11px] font-bold text-rose-800 uppercase tracking-wider mb-2">Bridal &amp; Festive</h5>
+            <ul class="space-y-1.5 text-xs text-stone-600">
+              <li><a href="shop.html?category=lehengas" class="hover:text-rose-700 block py-0.5">Maharani Bridal Velvet Lehengas</a></li>
+              <li><a href="shop.html?category=lehengas" class="hover:text-rose-700 block py-0.5">Pastel Silk Bridesmaid Lehengas</a></li>
+              <li><a href="shop.html?category=lehengas" class="hover:text-rose-700 block py-0.5">Georgette Party Lehengas</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Co-ord Sets -->
+        <div class="nav-dropdown">
+          <a href="shop.html?category=coord-sets" class="cat-link">
+            <span>Co-ord Sets</span>
+            <svg class="w-3 h-3 text-stone-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>
+          </a>
+          <div class="nav-dropdown-content p-4">
+            <h5 class="text-[11px] font-bold text-rose-800 uppercase tracking-wider mb-2">Trendy Sets</h5>
+            <ul class="space-y-1.5 text-xs text-stone-600">
+              <li><a href="shop.html?category=coord-sets" class="hover:text-rose-700 block py-0.5">Printed Cotton Tunics with Pants</a></li>
+              <li><a href="shop.html?category=coord-sets" class="hover:text-rose-700 block py-0.5">Festive Silk Jacket Sets</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Plus Size -->
+        <div class="nav-dropdown">
+          <a href="shop.html?size=plus" class="cat-link">
+            <span>Plus Size</span>
+            <svg class="w-3 h-3 text-stone-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>
+          </a>
+          <div class="nav-dropdown-content p-4">
+            <h5 class="text-[11px] font-bold text-rose-800 uppercase tracking-wider mb-2">Curve Collection</h5>
+            <ul class="space-y-1.5 text-xs text-stone-600">
+              <li><a href="shop.html?size=plus" class="hover:text-rose-700 block py-0.5">Kurtas in XXL to 5XL</a></li>
+              <li><a href="shop.html?size=plus" class="hover:text-rose-700 block py-0.5">Comfort Fit Dresses</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Maternity Wear -->
+        <a href="shop.html?filter=maternity" class="cat-link">Maternity Wear</a>
+
+        <!-- New Arrivals -->
+        <a href="shop.html?filter=new" class="cat-link font-semibold text-rose-800">New Arrivals</a>
+
+        <!-- Sale -->
+        <a href="shop.html?filter=sale" class="cat-link font-semibold text-rose-600">Sale</a>
+
+        <!-- Brands -->
+        <a href="shop.html" class="cat-link">Brands</a>
+      </div>
+
+      <!-- Right: Special Offers Pill Button -->
+      <div class="pl-2">
+        <button onclick="openSpecialOffers()" class="special-offers-btn cursor-pointer">
+          <i class="fa-solid fa-gift text-sm"></i>
+          <span>Special Offers</span>
+        </button>
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- Mobile Menu Drawer (Hidden by default) -->
+  <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-stone-200 px-4 py-4 space-y-3">
+    <div class="relative">
+      <input type="text" placeholder="Search kurtis, sarees, dresses..." class="site-search-input w-full px-4 py-2 border rounded-lg text-sm">
+    </div>
+    <div class="grid grid-cols-2 gap-2 text-sm font-medium">
+      <a href="shop.html?category=kurtis" class="p-2 bg-stone-50 rounded-lg text-stone-800 hover:text-rose-600">Kurtis &amp; Kurta Sets</a>
+      <a href="shop.html?category=dresses" class="p-2 bg-stone-50 rounded-lg text-stone-800 hover:text-rose-600">Dresses</a>
+      <a href="shop.html?category=sarees" class="p-2 bg-stone-50 rounded-lg text-stone-800 hover:text-rose-600">Sarees</a>
+      <a href="shop.html?category=coord-sets" class="p-2 bg-stone-50 rounded-lg text-stone-800 hover:text-rose-600">Co-ord Sets</a>
+      <a href="shop.html?category=lehengas" class="p-2 bg-stone-50 rounded-lg text-stone-800 hover:text-rose-600">Lehengas</a>
+      <a href="shop.html?filter=sale" class="p-2 bg-rose-50 text-rose-700 font-bold rounded-lg">Sale &amp; Offers</a>
+    </div>
+  </div>
+
+  <!-- ================= HERO BANNER SECTION (Exact match to image) ================= -->
+  <section class="relative w-full overflow-hidden bg-[#faf5f1] border-b border-stone-200">
+    <div id="hero-carousel-container" class="relative w-full">
+      
+      <!-- Slide 1: Exact PondyVastra Ethnic Wear Banner (From User Screenshot) -->
+      <div id="hero-slide-1" class="hero-slide relative w-full block transition-opacity duration-700 ease-in-out">
+        <div class="relative w-full">
+          <img 
+            src="assets/images/hero-banner-exact.png?v=4" 
+            alt="PondyVastra — Ethnic Wear for Every You. Trendy Kurtis, Elegant Kurta Sets, Stylish Dresses & More" 
+            fetchpriority="high"
+            decoding="sync"
+            class="w-full h-auto object-cover min-h-[170px] sm:min-h-[220px] md:min-h-[260px] lg:min-h-[300px] block"
+          >
+          
+          <!-- Left Calligraphy Quote (Exact match to reference) -->
+          <div class="absolute left-3 sm:left-6 md:left-10 lg:left-14 top-[50%] -translate-y-1/2 pointer-events-none select-none z-10 hidden sm:block">
+            <div class="font-handwriting text-stone-900 font-bold text-base sm:text-xl md:text-2xl lg:text-3xl -rotate-6 leading-tight drop-shadow-xs">
+              <span class="block">Inspired</span>
+              <span class="block font-bold">by Pondicherry</span>
+              <span class="inline-flex items-center gap-1">Made for You <span class="text-[#e11d48] text-sm sm:text-lg lg:text-xl">♥</span></span>
+            </div>
+          </div>
+
+          <!-- Interactive Clickable Hotspot on 'Shop Now ->' Button -->
+          <a href="shop.html" class="absolute left-1/2 -translate-x-1/2 top-[55%] sm:top-[56%] md:top-[57%] w-28 sm:w-36 md:w-44 h-8 sm:h-10 md:h-12 rounded-lg cursor-pointer z-10 transition-transform active:scale-95" aria-label="Shop Now"></a>
+
+          <!-- Right Calligraphy Quote (Exact match to reference) -->
+          <div class="absolute right-3 sm:right-6 md:right-10 lg:right-14 top-[50%] -translate-y-1/2 pointer-events-none select-none z-10 hidden sm:block text-right">
+            <div class="font-handwriting text-stone-900 font-bold text-base sm:text-xl md:text-2xl lg:text-3xl -rotate-3 leading-tight drop-shadow-xs">
+              <span class="block">Wear</span>
+              <span class="block">the Culture</span>
+              <span class="inline-flex items-center justify-end gap-1"><span class="font-bold">Live the Style</span> <span class="text-[#e11d48] text-sm sm:text-lg lg:text-xl">♥</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 2: High-Resolution Heritage Courtyard Edition -->
+      <div id="hero-slide-2" class="hero-slide relative w-full hidden transition-opacity duration-700 ease-in-out">
+        <div class="relative w-full bg-gradient-to-r from-stone-900 via-stone-800 to-rose-950 py-12 md:py-20 px-6 md:px-16 text-white flex flex-col md:flex-row items-center justify-between gap-8">
+          <div class="space-y-4 max-w-xl text-center md:text-left">
+            <span class="text-xs uppercase tracking-[0.2em] font-bold text-rose-300">- PONDICHERRY HERITAGE SILKS -</span>
+            <h2 class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold leading-tight">
+              Royal Chanderi &amp; <br>
+              <span class="text-rose-400 italic">Pondicherry Silk Sarees</span>
+            </h2>
+            <p class="text-stone-300 text-xs sm:text-sm">
+              Hand-embroidered Gotta Patti and Zari artisan crafts, woven with love in the French Quarter of Pondicherry.
+            </p>
+            <div class="pt-2">
+              <a href="shop.html?category=sarees" class="inline-block bg-[#be123c] hover:bg-[#9f1239] text-white font-bold text-xs sm:text-sm px-7 py-3 rounded-lg shadow-lg transition">
+                Explore Sarees &amp; Kurtas →
+              </a>
+            </div>
+          </div>
+          <div class="max-w-sm w-full rounded-2xl overflow-hidden border-2 border-white/20 shadow-2xl">
+            <img src="assets/images/hero-banner.jpg" alt="Pondicherry Heritage Collection" class="w-full h-auto object-cover">
+          </div>
+        </div>
+      </div>
+
+      <!-- Left Carousel Arrow (Exact match to reference) -->
+      <button 
+        type="button" 
+        onclick="prevHeroSlide()" 
+        class="absolute left-2 sm:left-4 md:left-5 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-white/95 hover:bg-white text-stone-700 hover:text-[#be123c] rounded-full shadow-md hover:shadow-lg flex items-center justify-center transition-all duration-200 z-20 cursor-pointer border border-stone-200/80"
+        aria-label="Previous Slide"
+      >
+        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-stone-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+
+      <!-- Right Carousel Arrow (Exact match to reference) -->
+      <button 
+        type="button" 
+        onclick="nextHeroSlide()" 
+        class="absolute right-2 sm:right-4 md:right-5 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-white/95 hover:bg-white text-stone-700 hover:text-[#be123c] rounded-full shadow-md hover:shadow-lg flex items-center justify-center transition-all duration-200 z-20 cursor-pointer border border-stone-200/80"
+        aria-label="Next Slide"
+      >
+        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-stone-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+
+    </div>
+  </section>
+
+  <!-- ================= CIRCULAR CATEGORIES NAVIGATION (Directly below Hero Banner) ================= -->
+  <section class="bg-white border-b border-stone-200/80 py-4 sm:py-5 shadow-2xs">
+    <div class="w-full max-w-[1400px] mx-auto px-2 sm:px-4 md:px-6">
+      <div class="flex items-start justify-between gap-3 sm:gap-4 md:gap-3 lg:gap-4 overflow-x-auto no-scrollbar scroll-smooth py-1">
+        
+        <!-- 1. Kurtis -->
+        <a href="shop.html?category=kurtis" class="flex flex-col items-center group flex-shrink-0 cursor-pointer text-center">
+          <div class="cat-avatar-wrap w-14 h-14 sm:w-16 sm:h-16 md:w-[70px] md:h-[70px] lg:w-[74px] lg:h-[74px] rounded-full overflow-hidden bg-transparent">
+            <img src="assets/images/cat-1-kurtis.png?v=4" alt="Kurtis" loading="eager" decoding="sync" class="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-300">
+          </div>
+          <span class="text-[11px] sm:text-xs md:text-[12.5px] font-semibold text-stone-900 group-hover:text-[#be123c] mt-2 transition-colors whitespace-nowrap">
+            Kurtis
+          </span>
+        </a>
+
+        <!-- 2. Kurta Sets -->
+        <a href="shop.html?category=kurtis" class="flex flex-col items-center group flex-shrink-0 cursor-pointer text-center">
+          <div class="cat-avatar-wrap w-14 h-14 sm:w-16 sm:h-16 md:w-[70px] md:h-[70px] lg:w-[74px] lg:h-[74px] rounded-full overflow-hidden bg-transparent">
+            <img src="assets/images/cat-2-kurta-sets.png?v=4" alt="Kurta Sets" loading="eager" decoding="sync" class="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-300">
+          </div>
+          <span class="text-[11px] sm:text-xs md:text-[12.5px] font-semibold text-stone-900 group-hover:text-[#be123c] mt-2 transition-colors whitespace-nowrap">
+            Kurta Sets
+          </span>
+        </a>
+
+        <!-- 3. Dresses -->
+        <a href="shop.html?category=dresses" class="flex flex-col items-center group flex-shrink-0 cursor-pointer text-center">
+          <div class="cat-avatar-wrap w-14 h-14 sm:w-16 sm:h-16 md:w-[70px] md:h-[70px] lg:w-[74px] lg:h-[74px] rounded-full overflow-hidden bg-transparent">
+            <img src="assets/images/cat-3-dresses.png?v=4" alt="Dresses" loading="eager" decoding="sync" class="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-300">
+          </div>
+          <span class="text-[11px] sm:text-xs md:text-[12.5px] font-semibold text-stone-900 group-hover:text-[#be123c] mt-2 transition-colors whitespace-nowrap">
+            Dresses
+          </span>
+        </a>
+
+        <!-- 4. Sarees -->
+        <a href="shop.html?category=sarees" class="flex flex-col items-center group flex-shrink-0 cursor-pointer text-center">
+          <div class="cat-avatar-wrap w-14 h-14 sm:w-16 sm:h-16 md:w-[70px] md:h-[70px] lg:w-[74px] lg:h-[74px] rounded-full overflow-hidden bg-transparent">
+            <img src="assets/images/cat-4-sarees.png?v=4" alt="Sarees" loading="eager" decoding="sync" class="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-300">
+          </div>
+          <span class="text-[11px] sm:text-xs md:text-[12.5px] font-semibold text-stone-900 group-hover:text-[#be123c] mt-2 transition-colors whitespace-nowrap">
+            Sarees
+          </span>
+        </a>
+
+        <!-- 5. Bottom Wear -->
+        <a href="shop.html?category=bottoms" class="flex flex-col items-center group flex-shrink-0 cursor-pointer text-center">
+          <div class="cat-avatar-wrap w-14 h-14 sm:w-16 sm:h-16 md:w-[70px] md:h-[70px] lg:w-[74px] lg:h-[74px] rounded-full overflow-hidden bg-transparent">
+            <img src="assets/images/cat-5-bottoms.png?v=4" alt="Bottom Wear" loading="eager" decoding="sync" class="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-300">
+          </div>
+          <span class="text-[11px] sm:text-xs md:text-[12.5px] font-semibold text-stone-900 group-hover:text-[#be123c] mt-2 transition-colors whitespace-nowrap">
+            Bottom Wear
+          </span>
+        </a>
+
+        <!-- 6. Dupattas & Shawls -->
+        <a href="shop.html?category=dupattas" class="flex flex-col items-center group flex-shrink-0 cursor-pointer text-center">
+          <div class="cat-avatar-wrap w-14 h-14 sm:w-16 sm:h-16 md:w-[70px] md:h-[70px] lg:w-[74px] lg:h-[74px] rounded-full overflow-hidden bg-transparent">
+            <img src="assets/images/cat-6-dupattas.png?v=4" alt="Dupattas & Shawls" loading="eager" decoding="sync" class="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-300">
+          </div>
+          <span class="text-[11px] sm:text-xs md:text-[12.5px] font-semibold text-stone-900 group-hover:text-[#be123c] mt-2 transition-colors whitespace-nowrap">
+            Dupattas &amp; Shawls
+          </span>
+        </a>
+
+        <!-- 7. Lehengas -->
+        <a href="shop.html?category=lehengas" class="flex flex-col items-center group flex-shrink-0 cursor-pointer text-center">
+          <div class="cat-avatar-wrap w-14 h-14 sm:w-16 sm:h-16 md:w-[70px] md:h-[70px] lg:w-[74px] lg:h-[74px] rounded-full overflow-hidden bg-transparent">
+            <img src="assets/images/cat-7-lehengas.png?v=4" alt="Lehengas" loading="eager" decoding="sync" class="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-300">
+          </div>
+          <span class="text-[11px] sm:text-xs md:text-[12.5px] font-semibold text-stone-900 group-hover:text-[#be123c] mt-2 transition-colors whitespace-nowrap">
+            Lehengas
+          </span>
+        </a>
+
+        <!-- 8. Co-ord Sets -->
+        <a href="shop.html?category=coord-sets" class="flex flex-col items-center group flex-shrink-0 cursor-pointer text-center">
+          <div class="cat-avatar-wrap w-14 h-14 sm:w-16 sm:h-16 md:w-[70px] md:h-[70px] lg:w-[74px] lg:h-[74px] rounded-full overflow-hidden bg-transparent">
+            <img src="assets/images/cat-8-coord-sets.png?v=4" alt="Co-ord Sets" loading="eager" decoding="sync" class="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-300">
+          </div>
+          <span class="text-[11px] sm:text-xs md:text-[12.5px] font-semibold text-stone-900 group-hover:text-[#be123c] mt-2 transition-colors whitespace-nowrap">
+            Co-ord Sets
+          </span>
+        </a>
+
+        <!-- 9. Plus Size -->
+        <a href="shop.html?size=plus" class="flex flex-col items-center group flex-shrink-0 cursor-pointer text-center">
+          <div class="cat-avatar-wrap w-14 h-14 sm:w-16 sm:h-16 md:w-[70px] md:h-[70px] lg:w-[74px] lg:h-[74px] rounded-full overflow-hidden bg-transparent">
+            <img src="assets/images/cat-9-plus-size.png?v=4" alt="Plus Size" loading="eager" decoding="sync" class="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-300">
+          </div>
+          <span class="text-[11px] sm:text-xs md:text-[12.5px] font-semibold text-stone-900 group-hover:text-[#be123c] mt-2 transition-colors whitespace-nowrap">
+            Plus Size
+          </span>
+        </a>
+
+        <!-- 10. Maternity Wear -->
+        <a href="shop.html?filter=maternity" class="flex flex-col items-center group flex-shrink-0 cursor-pointer text-center">
+          <div class="cat-avatar-wrap w-14 h-14 sm:w-16 sm:h-16 md:w-[70px] md:h-[70px] lg:w-[74px] lg:h-[74px] rounded-full overflow-hidden bg-transparent">
+            <img src="assets/images/cat-10-maternity.png?v=4" alt="Maternity Wear" loading="eager" decoding="sync" class="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-300">
+          </div>
+          <span class="text-[11px] sm:text-xs md:text-[12.5px] font-semibold text-stone-900 group-hover:text-[#be123c] mt-2 transition-colors whitespace-nowrap">
+            Maternity Wear
+          </span>
+        </a>
+
+        <!-- 11. Night Wear -->
+        <a href="shop.html?category=nightwear" class="flex flex-col items-center group flex-shrink-0 cursor-pointer text-center">
+          <div class="cat-avatar-wrap w-14 h-14 sm:w-16 sm:h-16 md:w-[70px] md:h-[70px] lg:w-[74px] lg:h-[74px] rounded-full overflow-hidden bg-transparent">
+            <img src="assets/images/cat-11-nightwear.png?v=4" alt="Night Wear" loading="eager" decoding="sync" class="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-300">
+          </div>
+          <span class="text-[11px] sm:text-xs md:text-[12.5px] font-semibold text-stone-900 group-hover:text-[#be123c] mt-2 transition-colors whitespace-nowrap">
+            Night Wear
+          </span>
+        </a>
+
+        <!-- 12. Accessories -->
+        <a href="shop.html?category=accessories" class="flex flex-col items-center group flex-shrink-0 cursor-pointer text-center">
+          <div class="cat-avatar-wrap w-14 h-14 sm:w-16 sm:h-16 md:w-[70px] md:h-[70px] lg:w-[74px] lg:h-[74px] rounded-full overflow-hidden bg-transparent">
+            <img src="assets/images/cat-12-accessories.png?v=4" alt="Accessories" loading="eager" decoding="sync" class="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-300">
+          </div>
+          <span class="text-[11px] sm:text-xs md:text-[12.5px] font-semibold text-stone-900 group-hover:text-[#be123c] mt-2 transition-colors whitespace-nowrap">
+            Accessories
+          </span>
+        </a>
+
+        <!-- 13. Sale -->
+        <a href="shop.html?filter=sale" class="flex flex-col items-center group flex-shrink-0 cursor-pointer text-center">
+          <div class="cat-avatar-wrap w-14 h-14 sm:w-16 sm:h-16 md:w-[70px] md:h-[70px] lg:w-[74px] lg:h-[74px] rounded-full overflow-hidden bg-transparent">
+            <img src="assets/images/cat-13-sale.png?v=4" alt="Sale" loading="eager" decoding="sync" class="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-300">
+          </div>
+          <span class="text-[11px] sm:text-xs md:text-[12.5px] font-semibold text-stone-900 group-hover:text-[#be123c] mt-2 transition-colors whitespace-nowrap">
+            Sale
+          </span>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CATEGORY SHOWCASE ================= -->
+  <section class="py-3 bg-white border-b border-stone-100">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center max-w-2xl mx-auto mb-10">
+        <span class="text-xs uppercase font-bold text-rose-700 tracking-widest">Handcrafted In Pondicherry</span>
+        <h2 class="font-serif text-3xl md:text-4xl font-bold text-stone-900 mt-1">Shop By Categories</h2>
+        <div class="w-16 h-1 bg-[#be123c] mx-auto mt-3 rounded-full"></div>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        
+        <!-- Category 1: Kurtis -->
+        <a href="shop.html?category=kurtis" class="group relative rounded-2xl overflow-hidden aspect-[3/4] bg-stone-100 shadow-sm border border-stone-200/80">
+          <img src="assets/images/kurta-set.jpg" alt="Kurtis & Kurta Sets" class="w-full h-full object-cover img-zoom">
+          <div class="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-stone-950/20 to-transparent flex flex-col justify-end p-4 text-white">
+            <span class="text-[11px] font-medium text-rose-300">Over 180+ Designs</span>
+            <h3 class="font-serif text-lg font-bold">Kurtis &amp; Sets</h3>
+            <span class="text-xs text-white/80 mt-1 group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+              Explore Now →
+            </span>
+          </div>
+        </a>
+
+        <!-- Category 2: Sarees -->
+        <a href="shop.html?category=sarees" class="group relative rounded-2xl overflow-hidden aspect-[3/4] bg-stone-100 shadow-sm border border-stone-200/80">
+          <img src="assets/images/saree.jpg" alt="Heritage Sarees" class="w-full h-full object-cover img-zoom">
+          <div class="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-stone-950/20 to-transparent flex flex-col justify-end p-4 text-white">
+            <span class="text-[11px] font-medium text-rose-300">Temple Silk &amp; Linen</span>
+            <h3 class="font-serif text-lg font-bold">Silk Sarees</h3>
+            <span class="text-xs text-white/80 mt-1 group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+              Explore Now →
+            </span>
+          </div>
+        </a>
+
+        <!-- Category 3: Dresses -->
+        <a href="shop.html?category=dresses" class="group relative rounded-2xl overflow-hidden aspect-[3/4] bg-stone-100 shadow-sm border border-stone-200/80">
+          <img src="assets/images/indowestern-dress.jpg" alt="Indo-Western Dresses" class="w-full h-full object-cover img-zoom">
+          <div class="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-stone-950/20 to-transparent flex flex-col justify-end p-4 text-white">
+            <span class="text-[11px] font-medium text-rose-300">French Floral Cuts</span>
+            <h3 class="font-serif text-lg font-bold">Fusion Dresses</h3>
+            <span class="text-xs text-white/80 mt-1 group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+              Explore Now →
+            </span>
+          </div>
+        </a>
+
+        <!-- Category 4: Lehengas -->
+        <a href="shop.html?category=lehengas" class="group relative rounded-2xl overflow-hidden aspect-[3/4] bg-stone-100 shadow-sm border border-stone-200/80">
+          <img src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80" alt="Bridal & Festive Lehengas" class="w-full h-full object-cover img-zoom">
+          <div class="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-stone-950/20 to-transparent flex flex-col justify-end p-4 text-white">
+            <span class="text-[11px] font-medium text-rose-300">Zardozi &amp; Velvet</span>
+            <h3 class="font-serif text-lg font-bold">Lehengas</h3>
+            <span class="text-xs text-white/80 mt-1 group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+              Explore Now →
+            </span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FEATURED PRODUCTS GRID ================= -->
+  <section class="py-14 bg-stone-50/50">
+    <div class="max-w-7xl mx-auto px-4">
+      
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+        <div>
+          <span class="text-xs font-bold text-rose-700 uppercase tracking-widest">Trending Now</span>
+          <h2 class="font-serif text-3xl font-bold text-stone-900 mt-1">Best of PondyVastra</h2>
+        </div>
+        
+        <div class="flex items-center gap-2">
+          <a href="shop.html" class="text-xs font-bold text-[#be123c] hover:underline flex items-center gap-1">
+            <span>View All Products</span>
+            <i class="fa-solid fa-arrow-right-long text-xs"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Products Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="home-products-container">
+        <!-- Rendered via JavaScript for real-time reactivity -->
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= SPECIAL FESTIVE PROMO BANNER ================= -->
+  <section class="py-12 bg-gradient-to-r from-[#9f1239] via-[#be123c] to-[#9f1239] text-white relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8">
+      <div class="space-y-3 text-center lg:text-left">
+        <span class="bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase inline-block">
+          Special Festive Clearance
+        </span>
+        <h2 class="font-serif text-3xl md:text-4xl font-bold">Flat 15% OFF On Your First Order</h2>
+        <p class="text-rose-100 text-sm max-w-xl">
+          Apply code <span class="font-mono bg-white text-rose-900 px-2 py-0.5 rounded font-bold">PONDY15</span> at checkout. Valid across all designer kurtis, sarees, and dresses.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-4 flex-wrap justify-center">
+        <button onclick="copyCoupon('PONDY15')" class="bg-white hover:bg-rose-50 text-rose-900 font-bold px-6 py-3 rounded-xl text-sm transition shadow-lg flex items-center gap-2">
+          <i class="fa-regular fa-copy"></i>
+          <span>Copy Code: PONDY15</span>
+        </button>
+        <a href="shop.html" class="border border-white/60 hover:bg-white/10 text-white font-semibold px-6 py-3 rounded-xl text-sm transition">
+          Shop The Sale
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= BRAND STORY & CRAFTSMANSHIP ================= -->
+  <section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div class="space-y-5">
+        <span class="text-xs uppercase font-bold text-rose-700 tracking-widest">Heritage &amp; Soul</span>
+        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-900 leading-tight">
+          Where French Promenade Chic Meets Indian Weaving Legacy
+        </h2>
+        <p class="text-stone-600 text-sm leading-relaxed">
+          Rooted on the charming coast of Pondicherry, <strong>PondyVastra</strong> was founded with a singular aspiration: celebrating the refined grace of modern Indian women. From our atelier in the French Quarter to master weavers across Tamil Nadu and Chanderi, every garment is thoughtfully conceived.
+        </p>
+        <p class="text-stone-600 text-sm leading-relaxed">
+          We pride ourselves on using breathable natural fibers, non-toxic vegetable dyes, authentic zari embroidery, and inclusive tailoring that feels like second skin.
+        </p>
+        <div class="grid grid-cols-2 gap-4 pt-2">
+          <div class="border-l-2 border-[#be123c] pl-4">
+            <h4 class="font-bold text-stone-900 text-base">50,000+</h4>
+            <p class="text-xs text-stone-500">Happy women dressed nationwide</p>
+          </div>
+          <div class="border-l-2 border-[#be123c] pl-4">
+            <h4 class="font-bold text-stone-900 text-base">100% Handcrafted</h4>
+            <p class="text-xs text-stone-500">Directly from artisan looms</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <img src="assets/images/saree.jpg" alt="Artisanal Silk Saree" class="rounded-2xl shadow-lg aspect-[3/4] object-cover">
+        <img src="assets/images/kurta-set.jpg" alt="Embroidered Kurta Set" class="rounded-2xl shadow-lg aspect-[3/4] object-cover mt-8">
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-stone-950 text-stone-300 pt-16 pb-8 border-t border-stone-800">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-stone-800">
+      
+      <!-- Column 1: Brand Info -->
+      <div class="lg:col-span-2 space-y-4">
+        <div class="flex items-center gap-3">
+          <img src="assets/images/lotus-logo.svg" alt="PondyVastra Logo" class="w-10 h-8 brightness-200">
+          <div>
+            <h3 class="font-serif text-2xl font-bold text-white">Pondy<span class="text-rose-500">Vastra</span></h3>
+            <p class="text-[9px] uppercase tracking-widest text-stone-400">Women's Fashion From Pondicherry</p>
+          </div>
+        </div>
+        <p class="text-xs text-stone-400 leading-relaxed max-w-sm">
+          Crafting timeless ethnic roots and contemporary grace. Authentic kurtis, handcrafted silk sarees, and modern fusion wear shipped directly from Pondicherry across India.
+        </p>
+        <div class="space-y-1.5 text-xs text-stone-400">
+          <p><i class="fa-solid fa-location-dot text-rose-500 mr-2"></i> Rue Suffren, White Town, Pondicherry 605001, India</p>
+          <p><i class="fa-solid fa-phone text-rose-500 mr-2"></i> +91 94880 12345 (Mon - Sat, 10am - 7pm IST)</p>
+          <p><i class="fa-solid fa-envelope text-rose-500 mr-2"></i> support@pondyvastra.com</p>
+        </div>
+      </div>
+
+      <!-- Column 2: Quick Links -->
+      <div class="space-y-3">
+        <h4 class="text-xs font-bold text-white uppercase tracking-wider">Categories</h4>
+        <ul class="space-y-2 text-xs text-stone-400">
+          <li><a href="shop.html?category=kurtis" class="hover:text-rose-400 transition">Kurtis &amp; Sets</a></li>
+          <li><a href="shop.html?category=sarees" class="hover:text-rose-400 transition">Heritage Silk Sarees</a></li>
+          <li><a href="shop.html?category=dresses" class="hover:text-rose-400 transition">Indo-Western Dresses</a></li>
+          <li><a href="shop.html?category=lehengas" class="hover:text-rose-400 transition">Festive Lehengas</a></li>
+          <li><a href="shop.html?category=coord-sets" class="hover:text-rose-400 transition">Co-ord Sets</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 3: Customer Care -->
+      <div class="space-y-3">
+        <h4 class="text-xs font-bold text-white uppercase tracking-wider">Customer Care</h4>
+        <ul class="space-y-2 text-xs text-stone-400">
+          <li><button onclick="openTrackOrder()" class="hover:text-rose-400 transition text-left">Track Your Order</button></li>
+          <li><button onclick="openSizeGuideModal()" class="hover:text-rose-400 transition text-left">Size Guide &amp; Chart</button></li>
+          <li><button onclick="openSupportModal()" class="hover:text-rose-400 transition text-left">Help &amp; FAQs</button></li>
+          <li><a href="cart.html" class="hover:text-rose-400 transition">My Shopping Bag</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 4: Newsletter -->
+      <div class="space-y-3">
+        <h4 class="text-xs font-bold text-white uppercase tracking-wider">Join The Club</h4>
+        <p class="text-xs text-stone-400">Get 10% off your next purchase and early access to Pondicherry handloom drops.</p>
+        <form onsubmit="event.preventDefault(); showToast('Thank you for subscribing to PondyVastra!', 'success'); this.reset();" class="space-y-2">
+          <input type="email" required placeholder="Enter your email address" class="w-full px-3 py-2 bg-stone-900 border border-stone-800 rounded-lg text-xs text-white placeholder:text-stone-500 focus:outline-none focus:border-rose-500">
+          <button type="submit" class="w-full bg-[#be123c] hover:bg-[#9f1239] text-white text-xs font-bold py-2 rounded-lg transition">
+            Subscribe Now
+          </button>
+        </form>
+      </div>
+
+    </div>
+
+    <!-- Bottom copyright -->
+    <div class="max-w-7xl mx-auto px-4 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-stone-500 gap-4">
+      <p>© 2026 PondyVastra. Handcrafted with love in Pondicherry, India. All rights reserved.</p>
+      <div class="flex items-center gap-4 text-lg text-stone-400">
+        <i class="fa-brands fa-cc-visa hover:text-white transition"></i>
+        <i class="fa-brands fa-cc-mastercard hover:text-white transition"></i>
+        <span class="text-xs font-bold border border-stone-700 px-1.5 py-0.5 rounded">UPI</span>
+        <span class="text-xs font-bold border border-stone-700 px-1.5 py-0.5 rounded">RuPay</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= SLIDE-OVER CART DRAWER ================= -->
+  <div id="cart-drawer-backdrop" class="fixed inset-0 drawer-backdrop z-50 hidden opacity-0 transition-opacity duration-300" onclick="closeCartDrawer()"></div>
+  <aside id="cart-drawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-white z-50 shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
+    <!-- Header -->
+    <div class="p-4 border-b border-stone-200 flex items-center justify-between bg-stone-50/70">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-bag-shopping text-rose-700"></i>
+        <h3 class="font-serif font-bold text-lg text-stone-900">Your Shopping Bag</h3>
+        <span class="cart-count-badge bg-[#be123c] text-white text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+      </div>
+      <button onclick="closeCartDrawer()" class="p-2 text-stone-400 hover:text-stone-700 text-lg transition">
+        ✕
+      </button>
+    </div>
+
+    <!-- Free shipping tracker bar -->
+    <div class="p-3 bg-rose-50/50 border-b border-rose-100 text-xs text-stone-700">
+      <p id="cart-free-shipping-text" class="mb-1.5">Add ₹1,499 more to unlock <strong>FREE Express Delivery</strong>!</p>
+      <div class="w-full bg-stone-200 h-1.5 rounded-full overflow-hidden">
+        <div id="cart-free-shipping-progress" class="bg-[#be123c] h-full w-0 transition-all duration-500"></div>
+      </div>
+    </div>
+
+    <!-- Items list -->
+    <div id="cart-drawer-items" class="flex-1 overflow-y-auto p-4 space-y-3">
+      <!-- Injected via main.js -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="cart-drawer-empty" class="hidden flex-1 flex flex-col items-center justify-center p-6 text-center">
+      <div class="w-16 h-16 rounded-full bg-rose-50 text-rose-400 flex items-center justify-center text-2xl mb-3">
+        <i class="fa-solid fa-basket-shopping"></i>
+      </div>
+      <h4 class="font-serif text-lg font-bold text-stone-800">Your bag is empty</h4>
+      <p class="text-xs text-stone-500 mt-1 max-w-xs">Explore our latest Pondicherry handcrafted silks, dresses, and kurtis to fill your bag.</p>
+      <a href="shop.html" onclick="closeCartDrawer()" class="mt-4 bg-[#be123c] text-white text-xs font-bold px-5 py-2.5 rounded-xl hover:bg-[#9f1239] transition">
+        Browse Collections
+      </a>
+    </div>
+
+    <!-- Footer summary -->
+    <div id="cart-drawer-footer" class="p-4 border-t border-stone-200 bg-stone-50/80 space-y-3">
+      <div class="flex justify-between items-center text-sm font-medium">
+        <span class="text-stone-600">Subtotal</span>
+        <span id="cart-drawer-subtotal" class="font-serif font-bold text-stone-900 text-base">₹0</span>
+      </div>
+      <p class="text-[11px] text-stone-500">Taxes and pan-India shipping calculated at checkout.</p>
+      <div class="grid grid-cols-2 gap-2">
+        <a href="cart.html" class="text-center border border-stone-300 hover:border-stone-400 text-stone-800 text-xs font-bold py-3 rounded-xl transition">
+          View Cart
+        </a>
+        <a href="checkout.html" class="text-center bg-[#be123c] hover:bg-[#9f1239] text-white text-xs font-bold py-3 rounded-xl transition shadow-md shadow-rose-700/20">
+          Checkout Now →
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ================= QUICK VIEW MODAL ================= -->
+  <div id="quickview-modal" class="fixed inset-0 drawer-backdrop z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto relative shadow-2xl border border-stone-200">
+      <button onclick="closeQuickView()" class="absolute top-4 right-4 z-10 w-9 h-9 bg-white/90 backdrop-blur rounded-full border border-stone-200 flex items-center justify-center text-stone-500 hover:text-stone-900 transition">
+        ✕
+      </button>
+      <div id="quickview-content"></div>
+    </div>
+  </div>
+
+  <!-- ================= SPECIAL OFFERS MODAL ================= -->
+  <div id="offers-modal" class="fixed inset-0 drawer-backdrop z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 relative shadow-2xl border border-stone-200">
+      <button onclick="closeSpecialOffers()" class="absolute top-4 right-4 text-stone-400 hover:text-stone-700 text-lg">✕</button>
+      
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center text-lg">
+          <i class="fa-solid fa-gift"></i>
+        </div>
+        <div>
+          <h3 class="font-serif text-xl font-bold text-stone-900">PondyVastra Exclusive Deals</h3>
+          <p class="text-xs text-stone-500">Apply these verified promo coupons during checkout</p>
+        </div>
+      </div>
+
+      <div class="space-y-3 mt-4">
+        <!-- Coupon 1 -->
+        <div class="p-3.5 rounded-xl border border-dashed border-rose-300 bg-rose-50/60 flex items-center justify-between">
+          <div>
+            <span class="font-mono text-sm font-bold text-rose-800 bg-white px-2 py-0.5 rounded border border-rose-200">PONDY10</span>
+            <p class="text-xs font-semibold text-stone-800 mt-1">Get 10% Flat Discount</p>
+            <p class="text-[11px] text-stone-500">Applicable on orders above ₹1,999</p>
+          </div>
+          <button onclick="copyCoupon('PONDY10')" class="bg-[#be123c] hover:bg-[#9f1239] text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">
+            Copy Code
+          </button>
+        </div>
+
+        <!-- Coupon 2 -->
+        <div class="p-3.5 rounded-xl border border-dashed border-amber-300 bg-amber-50/60 flex items-center justify-between">
+          <div>
+            <span class="font-mono text-sm font-bold text-amber-800 bg-white px-2 py-0.5 rounded border border-amber-200">FESTIVE25</span>
+            <p class="text-xs font-semibold text-stone-800 mt-1">Festive 25% OFF Heritage Sarees</p>
+            <p class="text-[11px] text-stone-500">Valid on Silk Sarees &amp; Lehengas</p>
+          </div>
+          <button onclick="copyCoupon('FESTIVE25')" class="bg-amber-700 hover:bg-amber-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">
+            Copy Code
+          </button>
+        </div>
+
+        <!-- Coupon 3 -->
+        <div class="p-3.5 rounded-xl border border-dashed border-emerald-300 bg-emerald-50/60 flex items-center justify-between">
+          <div>
+            <span class="font-mono text-sm font-bold text-emerald-800 bg-white px-2 py-0.5 rounded border border-emerald-200">FREESHIP</span>
+            <p class="text-xs font-semibold text-stone-800 mt-1">Free Pan-India Express Delivery</p>
+            <p class="text-[11px] text-stone-500">No minimum spend required</p>
+          </div>
+          <button onclick="copyCoupon('FREESHIP')" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">
+            Copy Code
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TRACK ORDER MODAL ================= -->
+  <div id="track-order-modal" class="fixed inset-0 drawer-backdrop z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 relative shadow-2xl border border-stone-200">
+      <button onclick="closeTrackOrder()" class="absolute top-4 right-4 text-stone-400 hover:text-stone-700">✕</button>
+      <div class="w-12 h-12 rounded-full bg-rose-50 text-rose-700 flex items-center justify-center text-xl mb-3">
+        <i class="fa-solid fa-truck-fast"></i>
+      </div>
+      <h3 class="font-serif text-xl font-bold text-stone-900">Track Your Shipment</h3>
+      <p class="text-xs text-stone-500 mt-1 mb-4">Enter your order ID (e.g. PV-8821) or phone number to view live tracking status from Pondicherry.</p>
+      
+      <form onsubmit="event.preventDefault(); showToast('Tracking order... Package in transit from Pondicherry!', 'info'); closeTrackOrder();" class="space-y-3">
+        <input type="text" required placeholder="Order ID or 10-digit Mobile Number" class="w-full px-4 py-2.5 border border-stone-300 rounded-xl text-sm focus:outline-none focus:border-[#be123c]">
+        <button type="submit" class="w-full bg-[#be123c] hover:bg-[#9f1239] text-white text-xs font-bold py-3 rounded-xl transition">
+          Track Live Status
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= SUPPORT MODAL ================= -->
+  <div id="support-modal" class="fixed inset-0 drawer-backdrop z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 relative shadow-2xl border border-stone-200">
+      <button onclick="closeSupportModal()" class="absolute top-4 right-4 text-stone-400 hover:text-stone-700">✕</button>
+      <div class="w-12 h-12 rounded-full bg-rose-50 text-rose-700 flex items-center justify-center text-xl mb-3">
+        <i class="fa-solid fa-headset"></i>
+      </div>
+      <h3 class="font-serif text-xl font-bold text-stone-900">PondyVastra Concierge</h3>
+      <p class="text-xs text-stone-500 mt-1 mb-4">We are here to assist you with sizing, styling, custom alterations, and orders.</p>
+      
+      <div class="space-y-2 text-xs">
+        <a href="https://wa.me/919488012345" target="_blank" class="flex items-center gap-3 p-3 bg-emerald-50 text-emerald-900 border border-emerald-200 rounded-xl hover:bg-emerald-100 transition font-semibold">
+          <i class="fa-brands fa-whatsapp text-lg text-emerald-600"></i>
+          <span>Chat on WhatsApp: +91 94880 12345</span>
+        </a>
+        <a href="mailto:support@pondyvastra.com" class="flex items-center gap-3 p-3 bg-stone-50 text-stone-800 border border-stone-200 rounded-xl hover:bg-stone-100 transition font-medium">
+          <i class="fa-regular fa-envelope text-lg text-rose-700"></i>
+          <span>Email: support@pondyvastra.com</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SIZE GUIDE MODAL ================= -->
+  <div id="size-guide-modal" class="fixed inset-0 drawer-backdrop z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 relative shadow-2xl border border-stone-200 max-h-[90vh] overflow-y-auto">
+      <button onclick="closeSizeGuideModal()" class="absolute top-4 right-4 text-stone-400 hover:text-stone-700">✕</button>
+      <h3 class="font-serif text-xl font-bold text-stone-900 mb-2">Standard Indian Women's Size Guide (Inches)</h3>
+      <p class="text-xs text-stone-500 mb-4">All PondyVastra kurtas &amp; dresses allow a 2-inch inner margin for easy tailoring.</p>
+      
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs text-left border-collapse">
+          <thead>
+            <tr class="bg-stone-100 text-stone-700 font-bold border-b border-stone-200">
+              <th class="p-2">Size</th>
+              <th class="p-2">Bust</th>
+              <th class="p-2">Waist</th>
+              <th class="p-2">Hip</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-stone-100 text-stone-600">
+            <tr><td class="p-2 font-bold text-rose-700">XS</td><td class="p-2">34"</td><td class="p-2">28"</td><td class="p-2">36"</td></tr>
+            <tr><td class="p-2 font-bold text-rose-700">S</td><td class="p-2">36"</td><td class="p-2">30"</td><td class="p-2">38"</td></tr>
+            <tr><td class="p-2 font-bold text-rose-700">M</td><td class="p-2">38"</td><td class="p-2">32"</td><td class="p-2">40"</td></tr>
+            <tr><td class="p-2 font-bold text-rose-700">L</td><td class="p-2">40"</td><td class="p-2">34"</td><td class="p-2">42"</td></tr>
+            <tr><td class="p-2 font-bold text-rose-700">XL</td><td class="p-2">42"</td><td class="p-2">36"</td><td class="p-2">44"</td></tr>
+            <tr><td class="p-2 font-bold text-rose-700">XXL</td><td class="p-2">44"</td><td class="p-2">38"</td><td class="p-2">46"</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="assets/js/products.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script>
+    // Automatic routing for /admin hash or path
+    if (window.location.hash.toLowerCase() === '#admin' || window.location.pathname.endsWith('/admin') || window.location.pathname.endsWith('/admin/')) {
+      window.location.replace('admin/index.html');
+    }
+
+    // Render featured products on Home Page
+    document.addEventListener("DOMContentLoaded", () => {
+      const container = document.getElementById("home-products-container");
+      if (container && typeof PONDY_PRODUCTS !== "undefined") {
+        container.innerHTML = PONDY_PRODUCTS.slice(0, 8).map(p => `
+          <div class="product-card bg-white rounded-2xl overflow-hidden border border-stone-200/80 shadow-xs flex flex-col justify-between group">
+            <div class="relative aspect-[3/4] bg-stone-100 overflow-hidden">
+              <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover img-zoom">
+              
+              <!-- Badge -->
+              <span class="absolute top-3 left-3 bg-white/95 backdrop-blur-md text-[#be123c] text-[10px] font-bold px-2.5 py-1 rounded-full shadow-xs">
+                ${p.badge || 'New'}
+              </span>
+
+              <!-- Wishlist Heart Button -->
+              <button onclick="toggleWishlist('${p.id}')" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur text-stone-600 hover:text-rose-600 hover:bg-white flex items-center justify-center shadow-xs transition" title="Add to Wishlist">
+                <i class="fa-regular fa-heart text-xs"></i>
+              </button>
+
+              <!-- Quick View Floating Button on Hover -->
+              <div class="absolute inset-x-3 bottom-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                <button onclick="openQuickView('${p.id}')" class="w-full bg-white/95 backdrop-blur hover:bg-[#be123c] hover:text-white text-stone-900 text-xs font-bold py-2.5 rounded-xl shadow-lg transition flex items-center justify-center gap-1.5">
+                  <i class="fa-regular fa-eye"></i> Quick View
+                </button>
+              </div>
+            </div>
+
+            <!-- Card Body -->
+            <div class="p-4 flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between text-[11px] text-stone-500 mb-1">
+                  <span>${p.category}</span>
+                  <div class="flex items-center text-amber-500 font-bold gap-1">
+                    <i class="fa-solid fa-star text-[10px]"></i>
+                    <span>${p.rating}</span>
+                  </div>
+                </div>
+                <h3 class="font-serif font-bold text-sm text-stone-900 group-hover:text-[#be123c] transition-colors line-clamp-1">
+                  <a href="product-details.html?id=${p.id}">${p.name}</a>
+                </h3>
+                <p class="text-[11px] text-stone-500 mt-1 line-clamp-1">${p.fabric}</p>
+              </div>
+
+              <div class="pt-3 mt-2 border-t border-stone-100 flex items-center justify-between">
+                <div>
+                  <div class="flex items-baseline gap-1.5">
+                    <span class="font-serif font-bold text-base text-rose-700">${formatPrice(p.price)}</span>
+                    <span class="text-[11px] line-through text-stone-400">${formatPrice(p.originalPrice)}</span>
+                  </div>
+                  <span class="text-[10px] font-bold text-emerald-700">${p.discount}</span>
+                </div>
+                <button onclick="addToCart('${p.id}', '${p.sizes[0]}', 1)" class="w-9 h-9 rounded-xl bg-rose-50 text-[#be123c] hover:bg-[#be123c] hover:text-white flex items-center justify-center transition shadow-xs" title="Add to Bag">
+                  <i class="fa-solid fa-bag-shopping text-xs"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        `).join("");
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 70" fill="none" class="w-12 h-10">
+  <!-- Lotus Center Petal -->
+  <path d="M50 8 C44 22 45 42 50 56 C55 42 56 22 50 8 Z" fill="none" stroke="#be123c" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Inner Left Petal -->
+  <path d="M48 18 C36 28 35 44 48 55 C42 42 42 30 48 18 Z" fill="none" stroke="#be123c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Inner Right Petal -->
+  <path d="M52 18 C64 28 65 44 52 55 C58 42 58 30 52 18 Z" fill="none" stroke="#be123c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Mid Left Petal -->
+  <path d="M44 26 C26 34 22 50 44 56 C33 46 34 36 44 26 Z" fill="none" stroke="#be123c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Mid Right Petal -->
+  <path d="M56 26 C74 34 78 50 56 56 C67 46 66 36 56 26 Z" fill="none" stroke="#be123c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Outer Far Left Petal -->
+  <path d="M38 38 C14 42 12 56 38 58 C22 54 22 46 38 38 Z" fill="none" stroke="#be123c" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Outer Far Right Petal -->
+  <path d="M62 38 C86 42 88 56 62 58 C78 54 78 46 62 38 Z" fill="none" stroke="#be123c" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Base Lotus Blossom Cradle Curve -->
+  <path d="M26 58 C38 64 62 64 74 58" stroke="#be123c" stroke-width="2.5" stroke-linecap="round" />
+</svg>

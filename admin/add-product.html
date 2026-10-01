@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Product — PondyVastra Admin</title>
+  <meta name="description" content="Add new product, variants, pricing, and inventory to PondyVastra store.">
+
+  <!-- Tailwind CSS Browser Runtime -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background-color: #f8fafc;
+      color: #1e293b;
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    .brand-crimson { color: #e11467; }
+    .bg-brand-crimson { background-color: #e11467; }
+
+    /* Custom radio styling */
+    input[type="radio"]:checked {
+      accent-color: #e11467;
+    }
+    input[type="checkbox"]:checked {
+      accent-color: #e11467;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[#f8fafc]">
+
+  <!-- ================= TOP HEADER BAR ================= -->
+  <header class="bg-white border-b border-stone-200/80 sticky top-0 z-40 h-16 flex items-center justify-between px-4 sm:px-6">
+    <!-- Left: Brand Logo & Mobile Toggle -->
+    <div class="flex items-center gap-3 w-64 flex-shrink-0">
+      <button onclick="toggleMobileSidebar()" class="lg:hidden text-stone-600 hover:text-stone-900 p-1.5 rounded-lg hover:bg-stone-100 cursor-pointer">
+        <i class="fa-solid fa-bars text-lg"></i>
+      </button>
+      <a href="../index.html" class="flex items-center gap-2 group" title="View Storefront">
+        <img src="../assets/images/logo-exact.png" alt="PondyVastra Logo" class="h-9 md:h-10 w-auto object-contain">
+      </a>
+    </div>
+
+    <!-- Center: Search Bar -->
+    <div class="flex-1 max-w-xl mx-4 relative hidden sm:block">
+      <div class="relative flex items-center">
+        <i class="fa-solid fa-magnifying-glass text-[#e11467] absolute left-3.5 text-sm pointer-events-none"></i>
+        <input 
+          type="text" 
+          placeholder="Search anything... (products, orders, customers...)" 
+          class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-lg pl-10 pr-4 py-2 text-xs md:text-sm text-stone-700 placeholder:text-stone-400 focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition"
+        >
+      </div>
+    </div>
+
+    <!-- Right: Storefront, Notifications, Admin Profile -->
+    <div class="flex items-center gap-4 sm:gap-6 flex-shrink-0">
+      <a href="../index.html" target="_blank" class="hidden md:inline-flex items-center gap-1.5 text-xs font-semibold text-stone-600 hover:text-[#e11467] bg-stone-50 hover:bg-rose-50 border border-stone-200 px-3 py-1.5 rounded-lg transition">
+        <i class="fa-solid fa-store text-xs"></i>
+        <span>Storefront</span>
+      </a>
+
+      <!-- Notification Bell -->
+      <div class="relative cursor-pointer group">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-stone-100 transition text-stone-700">
+          <i class="fa-regular fa-bell text-lg"></i>
+        </div>
+        <span class="absolute top-0.5 right-0.5 bg-[#ef4444] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
+          5
+        </span>
+      </div>
+
+      <!-- Admin Profile Pill -->
+      <div class="flex items-center gap-2 cursor-pointer group select-none">
+        <img 
+          src="../assets/images/admin-avatar.png" 
+          alt="Admin Avatar" 
+          class="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover border border-stone-200 group-hover:ring-2 group-hover:ring-[#e11467]/30 transition"
+        >
+        <span class="text-xs sm:text-sm font-semibold text-stone-800 group-hover:text-[#e11467] transition">
+          Admin
+        </span>
+        <i class="fa-solid fa-chevron-down text-stone-400 text-[10px] group-hover:text-stone-600 transition"></i>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= BODY CONTENT (Sidebar + Main) ================= -->
+  <div class="flex-1 flex overflow-hidden">
+
+    <!-- ================= LEFT SIDEBAR ================= -->
+    <aside id="admin-sidebar" class="fixed lg:static inset-y-0 left-0 top-16 lg:top-0 z-30 w-64 bg-[#fff9fa] border-r border-stone-200/80 flex flex-col justify-between overflow-y-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
+      <nav class="p-4 space-y-1">
+        <!-- 1. Dashboard -->
+        <a href="index.html#dashboard" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-house text-base w-5 text-center text-stone-400"></i>
+          <span>Dashboard</span>
+        </a>
+
+        <!-- 2. Products (ACTIVE hot pink) -->
+        <a href="products.html" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#e11467] text-white font-semibold text-sm shadow-xs transition cursor-pointer">
+          <i class="fa-solid fa-bag-shopping text-base w-5 text-center text-white"></i>
+          <span>Products</span>
+        </a>
+
+        <!-- 3. Filter Categories -->
+        <a href="categories.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-regular fa-folder-open text-base w-5 text-center text-stone-400"></i>
+          <span>Filter Categories</span>
+        </a>
+
+        <!-- 4. Orders -->
+        <a href="index.html#orders" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-regular fa-calendar-check text-base w-5 text-center text-stone-400"></i>
+          <span>Orders</span>
+        </a>
+
+        <!-- 5. Customers -->
+        <a href="index.html#customers" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-user-group text-base w-5 text-center text-stone-400"></i>
+          <span>Customers</span>
+        </a>
+
+        <!-- 6. Inventory -->
+        <a href="index.html#inventory" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-cube text-base w-5 text-center text-stone-400"></i>
+          <span>Inventory</span>
+        </a>
+
+        <!-- 7. Coupons & Offers -->
+        <a href="index.html#coupons" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-palette text-base w-5 text-center text-stone-400"></i>
+          <span>Coupons &amp; Offers</span>
+        </a>
+
+        <!-- 8. Banners & Homepage -->
+        <a href="index.html#banners" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-desktop text-base w-5 text-center text-stone-400"></i>
+          <span>Banners &amp; Homepage</span>
+        </a>
+
+        <!-- 9. Reviews -->
+        <a href="index.html#reviews" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-regular fa-star text-base w-5 text-center text-stone-400"></i>
+          <span>Reviews</span>
+        </a>
+
+        <!-- 10. Returns & Refunds -->
+        <a href="index.html#returns" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-rotate-left text-base w-5 text-center text-stone-400"></i>
+          <span>Returns &amp; Refunds</span>
+        </a>
+
+        <!-- 11. Marketing -->
+        <a href="index.html#marketing" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-rocket text-base w-5 text-center text-stone-400"></i>
+          <span>Marketing</span>
+        </a>
+
+        <!-- 12. Reports & Analytics -->
+        <a href="index.html#analytics" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-chart-line text-base w-5 text-center text-stone-400"></i>
+          <span>Reports &amp; Analytics</span>
+        </a>
+
+        <!-- 13. Shipping -->
+        <a href="index.html#shipping" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-truck text-base w-5 text-center text-stone-400"></i>
+          <span>Shipping</span>
+        </a>
+
+        <!-- 14. Payments -->
+        <a href="index.html#payments" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-regular fa-credit-card text-base w-5 text-center text-stone-400"></i>
+          <span>Payments</span>
+        </a>
+
+        <!-- 15. Users & Roles -->
+        <a href="index.html#users" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-users-gear text-base w-5 text-center text-stone-400"></i>
+          <span>Users &amp; Roles</span>
+        </a>
+
+        <!-- 16. Settings -->
+        <a href="index.html#settings" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-gear text-base w-5 text-center text-stone-400"></i>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+      <div class="p-4 border-t border-stone-200/70 text-[11px] text-stone-400 text-center">
+        PondyVastra v2.4 • Pondicherry Store
+      </div>
+    </aside>
+
+    <!-- Overlay for mobile drawer -->
+    <div id="mobile-sidebar-backdrop" onclick="toggleMobileSidebar()" class="hidden fixed inset-0 bg-stone-900/40 z-20 lg:hidden"></div>
+
+    <!-- ================= MAIN ADD PRODUCT BODY ================= -->
+    <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
+      
+      <!-- Breadcrumb & Header Matching Screenshot -->
+      <div class="space-y-1">
+        <nav class="flex items-center gap-1.5 text-xs text-stone-400 font-medium">
+          <a href="products.html" class="hover:text-[#e11467] transition">Products</a>
+          <i class="fa-solid fa-chevron-right text-[9px] text-stone-300"></i>
+          <span class="text-stone-700 font-semibold">Add Product</span>
+        </nav>
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1">
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-[#0f172a] tracking-tight">Add Product</h1>
+            <p class="text-xs sm:text-sm text-stone-500 mt-1">Fill in the details below to create a new product in your store.</p>
+          </div>
+
+          <!-- Back to Products Button -->
+          <a href="products.html" class="inline-flex items-center gap-2 bg-white border border-stone-200/90 hover:border-stone-300 rounded-xl px-4 py-2.5 text-xs sm:text-sm font-semibold text-stone-700 shadow-2xs hover:bg-stone-50 transition cursor-pointer self-start sm:self-auto">
+            <i class="fa-solid fa-arrow-left text-xs text-stone-500"></i>
+            <span>Back to Products</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Form Container: 2 Columns Grid Matching Screenshot -->
+      <form id="add-product-form" onsubmit="handleSaveProduct(event)" class="space-y-6">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+          
+          <!-- ================= LEFT COLUMN ================= -->
+          <div class="space-y-6">
+            
+            <!-- Card 1: Basic Information -->
+            <div class="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200/80 shadow-2xs space-y-5">
+              <h2 class="font-bold text-base sm:text-lg text-[#0f172a]">Basic Information</h2>
+
+              <!-- Product Name & SKU -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="sm:col-span-2">
+                  <label class="block text-xs font-semibold text-stone-700 mb-1.5">
+                    Product Name <span class="text-rose-500">*</span>
+                  </label>
+                  <input 
+                    type="text" 
+                    id="product-name"
+                    required
+                    value=""
+                    placeholder="e.g. Floral Anarkali Kurta"
+                    class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition"
+                  >
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-stone-700 mb-1.5">
+                    SKU <span class="text-rose-500">*</span>
+                  </label>
+                  <input 
+                    type="text" 
+                    id="product-sku"
+                    required
+                    value=""
+                    placeholder="e.g. FAK-PNK-M"
+                    class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] uppercase transition"
+                  >
+                </div>
+              </div>
+
+              <!-- Short Description -->
+              <div>
+                <label class="block text-xs font-semibold text-stone-700 mb-1.5">
+                  Short Description <span class="text-rose-500">*</span>
+                </label>
+                <div class="relative">
+                  <textarea 
+                    id="short-description"
+                    rows="3"
+                    maxlength="200"
+                    oninput="updateShortDescCount(this)"
+                    required
+                    placeholder="Short summary for product cards and search results..."
+                    class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-xl p-3.5 pb-6 text-xs sm:text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition resize-none"
+                  ></textarea>
+                  <span id="short-desc-counter" class="absolute bottom-2 right-3 text-[11px] font-medium text-stone-400">
+                    65/200
+                  </span>
+                </div>
+              </div>
+
+              <!-- Detailed Description with Toolbar -->
+              <div>
+                <label class="block text-xs font-semibold text-stone-700 mb-1.5">
+                  Description <span class="text-rose-500">*</span>
+                </label>
+                <div class="border border-stone-200/90 rounded-xl overflow-hidden focus-within:border-[#e11467] focus-within:ring-1 focus-within:ring-[#e11467] transition bg-white">
+                  <!-- Editor Toolbar Matching Screenshot -->
+                  <div class="bg-stone-50/70 border-b border-stone-200/80 p-2 flex items-center gap-1.5 flex-wrap text-stone-600 text-xs">
+                    <!-- Paragraph Dropdown -->
+                    <div class="relative">
+                      <select class="bg-white border border-stone-200 rounded-lg px-2 py-1 text-xs font-semibold text-stone-700 hover:border-stone-300 focus:outline-none cursor-pointer">
+                        <option>Paragraph</option>
+                        <option>Heading 1</option>
+                        <option>Heading 2</option>
+                        <option>Heading 3</option>
+                      </select>
+                    </div>
+
+                    <div class="h-4 w-px bg-stone-200 mx-0.5"></div>
+
+                    <!-- Formatting buttons -->
+                    <button type="button" onclick="formatDoc('bold')" class="w-7 h-7 rounded hover:bg-stone-200/70 flex items-center justify-center font-bold text-stone-700 transition" title="Bold">
+                      <b>B</b>
+                    </button>
+                    <button type="button" onclick="formatDoc('italic')" class="w-7 h-7 rounded hover:bg-stone-200/70 flex items-center justify-center italic text-stone-700 transition" title="Italic">
+                      <i>I</i>
+                    </button>
+                    <button type="button" onclick="formatDoc('underline')" class="w-7 h-7 rounded hover:bg-stone-200/70 flex items-center justify-center underline text-stone-700 transition" title="Underline">
+                      <u>U</u>
+                    </button>
+
+                    <div class="h-4 w-px bg-stone-200 mx-0.5"></div>
+
+                    <button type="button" onclick="formatDoc('insertUnorderedList')" class="w-7 h-7 rounded hover:bg-stone-200/70 flex items-center justify-center text-stone-700 transition" title="Bullet List">
+                      <i class="fa-solid fa-list-ul text-xs"></i>
+                    </button>
+                    <button type="button" onclick="formatDoc('insertOrderedList')" class="w-7 h-7 rounded hover:bg-stone-200/70 flex items-center justify-center text-stone-700 transition" title="Numbered List">
+                      <i class="fa-solid fa-list-ol text-xs"></i>
+                    </button>
+                    <button type="button" onclick="formatDoc('justifyLeft')" class="w-7 h-7 rounded hover:bg-stone-200/70 flex items-center justify-center text-stone-700 transition" title="Align Left">
+                      <i class="fa-solid fa-align-left text-xs"></i>
+                    </button>
+
+                    <div class="h-4 w-px bg-stone-200 mx-0.5"></div>
+
+                    <button type="button" onclick="insertLink()" class="w-7 h-7 rounded hover:bg-stone-200/70 flex items-center justify-center text-stone-700 transition" title="Insert Link">
+                      <i class="fa-solid fa-link text-xs"></i>
+                    </button>
+                    <button type="button" onclick="triggerEditorImage()" class="w-7 h-7 rounded hover:bg-stone-200/70 flex items-center justify-center text-stone-700 transition" title="Insert Image">
+                      <i class="fa-regular fa-image text-xs"></i>
+                    </button>
+                    <button type="button" onclick="insertVideo()" class="w-7 h-7 rounded hover:bg-stone-200/70 flex items-center justify-center text-stone-700 transition" title="Insert Video">
+                      <i class="fa-solid fa-video text-xs"></i>
+                    </button>
+                    <button type="button" onclick="insertTable()" class="w-7 h-7 rounded hover:bg-stone-200/70 flex items-center justify-center text-stone-700 transition" title="Insert Table">
+                      <i class="fa-solid fa-table text-xs"></i>
+                    </button>
+                  </div>
+
+                  <!-- Editable Rich Content Area -->
+                  <div 
+                    id="rich-description-editor" 
+                    contenteditable="true" 
+                    class="p-3.5 min-h-[140px] text-xs sm:text-sm text-stone-800 focus:outline-none"
+                    placeholder="Enter detailed product description..."
+                  ></div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Card 2: Category & Attributes -->
+            <div class="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200/80 shadow-2xs space-y-5">
+              <h2 class="font-bold text-base sm:text-lg text-[#0f172a]">Category &amp; Attributes</h2>
+
+              <!-- 3 Dropdowns: Category, Sub Category, Brand -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-stone-700 mb-1.5">
+                    Category <span class="text-rose-500">*</span>
+                  </label>
+                  <select 
+                    id="product-category" 
+                    required 
+                    onchange="handleCategoryChange(this.value)"
+                    class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-stone-800 font-medium focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition cursor-pointer"
+                  >
+                    <option value="Kurtis" selected>Kurtis</option>
+                    <option value="Sarees">Sarees</option>
+                    <option value="Lehengas">Lehengas</option>
+                    <option value="Dresses">Dresses</option>
+                    <option value="Tops">Tops</option>
+                    <option value="Bottom Wear">Bottom Wear</option>
+                    <option value="Co-ord Sets">Co-ord Sets</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-stone-700 mb-1.5">Sub Category</label>
+                  <select 
+                    id="product-subcategory" 
+                    class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-stone-800 font-medium focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition cursor-pointer"
+                  >
+                    <option value="Anarkali Kurta" selected>Anarkali Kurta</option>
+                    <option value="Straight Kurta">Straight Kurta</option>
+                    <option value="A-Line Kurta">A-Line Kurta</option>
+                    <option value="Short Kurti">Short Kurti</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-stone-700 mb-1.5">Brand</label>
+                  <select 
+                    id="product-brand" 
+                    class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-stone-800 font-medium focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition cursor-pointer"
+                  >
+                    <option value="PondyVastra" selected>PondyVastra</option>
+                    <option value="Heritage Silk">Heritage Silk</option>
+                    <option value="Auroville Cottons">Auroville Cottons</option>
+                    <option value="Custom Artisan">Custom Artisan</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Product Type Radio Buttons -->
+              <div>
+                <label class="block text-xs font-semibold text-stone-700 mb-2">Product Type</label>
+                <div class="flex items-center gap-6 text-xs sm:text-sm">
+                  <label class="inline-flex items-center gap-2 cursor-pointer group">
+                    <input type="radio" name="product_type" value="single" class="w-4 h-4 text-[#e11467] border-stone-300 cursor-pointer">
+                    <span class="text-stone-700 group-hover:text-stone-900 font-medium">Single Product</span>
+                  </label>
+                  <label class="inline-flex items-center gap-2 cursor-pointer group">
+                    <input type="radio" name="product_type" value="variants" checked class="w-4 h-4 text-[#e11467] border-stone-300 cursor-pointer">
+                    <span class="text-[#e11467] font-bold">With Variants (Color, Size, etc.)</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Tags -->
+              <div>
+                <label class="block text-xs font-semibold text-stone-700 mb-1.5">Tags (comma separated)</label>
+                <input 
+                  type="text" 
+                  id="product-tags" 
+                  value="cotton, festive, summer, floral, pink" 
+                  placeholder="e.g. cotton, festive, summer"
+                  class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition"
+                >
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- ================= RIGHT COLUMN ================= -->
+          <div class="space-y-6">
+            
+            <!-- Card 3: Color Variants & Images -->
+            <div class="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200/80 shadow-2xs space-y-4">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <h2 class="font-bold text-base sm:text-lg text-[#0f172a]">Color Variants &amp; Images</h2>
+                  <i class="fa-solid fa-circle-info text-stone-400 text-xs cursor-pointer hover:text-stone-600" title="Add color variants with multiple angle product images"></i>
+                </div>
+              </div>
+
+              <!-- Container for Color Variants List -->
+              <div id="color-variants-container" class="space-y-4">
+                
+                <!-- Variant 1 Box (Matching Screenshot) -->
+                <div class="color-variant-box rounded-2xl border border-stone-200 p-4 space-y-4 bg-white relative" data-variant-index="1">
+                  <!-- Header: Variant 1, Color Dropdown, Trash Delete button -->
+                  <div class="flex items-center justify-between gap-3">
+                    <span class="font-bold text-xs sm:text-sm text-stone-900">Variant 1</span>
+
+                    <div class="flex items-center gap-2.5">
+                      <!-- Color Selector Pill with Circle -->
+                      <div class="relative">
+                        <select onchange="handleColorVariantChange(this)" class="appearance-none bg-stone-50 border border-stone-200 hover:border-stone-300 rounded-xl pl-8 pr-8 py-1.5 text-xs font-semibold text-stone-800 focus:outline-none focus:border-[#e11467] transition cursor-pointer">
+                          <option value="Pink" selected>Pink</option>
+                          <option value="Sky Blue">Sky Blue</option>
+                          <option value="Red">Red</option>
+                          <option value="Green">Green</option>
+                          <option value="Yellow">Yellow</option>
+                          <option value="White">White</option>
+                          <option value="Maroon">Maroon</option>
+                          <option value="Black">Black</option>
+                        </select>
+                        <span class="variant-color-dot absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#e11467] pointer-events-none"></span>
+                        <i class="fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-stone-400 pointer-events-none"></i>
+                      </div>
+
+                      <!-- Trash Button (Red outline) -->
+                      <button type="button" onclick="removeColorVariant(this)" class="w-8 h-8 rounded-lg border border-rose-200 text-rose-500 hover:bg-rose-50 flex items-center justify-center transition cursor-pointer" title="Delete variant">
+                        <i class="fa-regular fa-trash-can text-xs"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- 4 Angle Upload Boxes (Front, Side, Back, Close-up) -->
+                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    
+                    <!-- 1. Front View -->
+                    <div class="upload-slot-box border-2 border-dashed border-stone-200 hover:border-[#e11467] rounded-xl p-3 text-center cursor-pointer transition flex flex-col items-center justify-center gap-1 min-h-[105px] bg-[#fcfcfd] group" onclick="triggerSlotUpload(this)">
+                      <input type="file" accept="image/*" class="hidden slot-file-input" onchange="handleSlotImageUpload(this)">
+                      <div class="slot-empty-view flex flex-col items-center">
+                        <div class="w-8 h-8 rounded-lg bg-stone-100 group-hover:bg-rose-50 flex items-center justify-center text-stone-400 group-hover:text-[#e11467] transition mb-1">
+                          <i class="fa-regular fa-image text-sm"></i>
+                        </div>
+                        <span class="text-[11px] font-semibold text-stone-700 leading-tight">Front View</span>
+                        <span class="text-[10px] text-stone-400">Upload Image</span>
+                      </div>
+                      <div class="slot-filled-view hidden relative w-full h-full">
+                        <img src="../assets/images/prod-1-anarkali.png" alt="Front View" class="w-full h-20 object-cover rounded-lg">
+                        <button type="button" onclick="clearSlotImage(event, this)" class="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/60 hover:bg-rose-600 text-white flex items-center justify-center text-[10px]"><i class="fa-solid fa-xmark"></i></button>
+                      </div>
+                    </div>
+
+                    <!-- 2. Side View -->
+                    <div class="upload-slot-box border-2 border-dashed border-stone-200 hover:border-[#e11467] rounded-xl p-3 text-center cursor-pointer transition flex flex-col items-center justify-center gap-1 min-h-[105px] bg-[#fcfcfd] group" onclick="triggerSlotUpload(this)">
+                      <input type="file" accept="image/*" class="hidden slot-file-input" onchange="handleSlotImageUpload(this)">
+                      <div class="slot-empty-view flex flex-col items-center">
+                        <div class="w-8 h-8 rounded-lg bg-stone-100 group-hover:bg-rose-50 flex items-center justify-center text-stone-400 group-hover:text-[#e11467] transition mb-1">
+                          <i class="fa-regular fa-image text-sm"></i>
+                        </div>
+                        <span class="text-[11px] font-semibold text-stone-700 leading-tight">Side View</span>
+                        <span class="text-[10px] text-stone-400">Upload Image</span>
+                      </div>
+                      <div class="slot-filled-view hidden relative w-full h-full">
+                        <img src="" alt="Side View" class="w-full h-20 object-cover rounded-lg">
+                        <button type="button" onclick="clearSlotImage(event, this)" class="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/60 hover:bg-rose-600 text-white flex items-center justify-center text-[10px]"><i class="fa-solid fa-xmark"></i></button>
+                      </div>
+                    </div>
+
+                    <!-- 3. Back View -->
+                    <div class="upload-slot-box border-2 border-dashed border-stone-200 hover:border-[#e11467] rounded-xl p-3 text-center cursor-pointer transition flex flex-col items-center justify-center gap-1 min-h-[105px] bg-[#fcfcfd] group" onclick="triggerSlotUpload(this)">
+                      <input type="file" accept="image/*" class="hidden slot-file-input" onchange="handleSlotImageUpload(this)">
+                      <div class="slot-empty-view flex flex-col items-center">
+                        <div class="w-8 h-8 rounded-lg bg-stone-100 group-hover:bg-rose-50 flex items-center justify-center text-stone-400 group-hover:text-[#e11467] transition mb-1">
+                          <i class="fa-regular fa-image text-sm"></i>
+                        </div>
+                        <span class="text-[11px] font-semibold text-stone-700 leading-tight">Back View</span>
+                        <span class="text-[10px] text-stone-400">Upload Image</span>
+                      </div>
+                      <div class="slot-filled-view hidden relative w-full h-full">
+                        <img src="" alt="Back View" class="w-full h-20 object-cover rounded-lg">
+                        <button type="button" onclick="clearSlotImage(event, this)" class="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/60 hover:bg-rose-600 text-white flex items-center justify-center text-[10px]"><i class="fa-solid fa-xmark"></i></button>
+                      </div>
+                    </div>
+
+                    <!-- 4. Close-up -->
+                    <div class="upload-slot-box border-2 border-dashed border-stone-200 hover:border-[#e11467] rounded-xl p-3 text-center cursor-pointer transition flex flex-col items-center justify-center gap-1 min-h-[105px] bg-[#fcfcfd] group" onclick="triggerSlotUpload(this)">
+                      <input type="file" accept="image/*" class="hidden slot-file-input" onchange="handleSlotImageUpload(this)">
+                      <div class="slot-empty-view flex flex-col items-center">
+                        <div class="w-8 h-8 rounded-lg bg-stone-100 group-hover:bg-rose-50 flex items-center justify-center text-stone-400 group-hover:text-[#e11467] transition mb-1">
+                          <i class="fa-regular fa-image text-sm"></i>
+                        </div>
+                        <span class="text-[11px] font-semibold text-stone-700 leading-tight">Close-up</span>
+                        <span class="text-[10px] text-stone-400">Upload Image</span>
+                      </div>
+                      <div class="slot-filled-view hidden relative w-full h-full">
+                        <img src="" alt="Close-up" class="w-full h-20 object-cover rounded-lg">
+                        <button type="button" onclick="clearSlotImage(event, this)" class="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/60 hover:bg-rose-600 text-white flex items-center justify-center text-[10px]"><i class="fa-solid fa-xmark"></i></button>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <!-- Alert Box (Matching Screenshot) -->
+                  <div class="bg-rose-50/60 border border-rose-100 rounded-xl p-3 flex items-start gap-2.5 text-xs text-rose-600">
+                    <i class="fa-solid fa-circle-exclamation text-rose-500 mt-0.5 text-xs"></i>
+                    <div>
+                      <p class="font-bold text-rose-700 leading-tight">Upload 4 images for this color (Front, Side, Back, Close-up)</p>
+                      <p class="text-[11px] text-rose-500 mt-0.5">Recommended: JPG, PNG, WebP (Max 5 MB each)</p>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- + Add Another Color Variant Button (Dashed pink outline matching screenshot) -->
+              <button 
+                type="button" 
+                onclick="addNewColorVariant()"
+                class="w-full border-2 border-dashed border-[#e11467] text-[#e11467] hover:bg-rose-50/50 rounded-2xl py-3 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition cursor-pointer"
+              >
+                <i class="fa-solid fa-plus text-xs"></i>
+                <span>Add Another Color Variant</span>
+              </button>
+            </div>
+
+            <!-- Card 4: Size Variants (Common for all colors) -->
+            <div class="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200/80 shadow-2xs space-y-4">
+              <div class="flex items-center gap-2">
+                <h2 class="font-bold text-base sm:text-lg text-[#0f172a]">Size Variants <span class="text-xs font-normal text-stone-400">(Common for all colors)</span></h2>
+                <i class="fa-solid fa-circle-info text-stone-400 text-xs cursor-pointer hover:text-stone-600" title="Select standard size variants or add custom sizes"></i>
+              </div>
+
+              <div class="flex items-center justify-between gap-3 flex-wrap">
+                <!-- Checkboxes Row Matching Screenshot -->
+                <div id="size-variants-list" class="flex items-center gap-3 sm:gap-4 flex-wrap text-xs sm:text-sm font-semibold text-stone-700">
+                  <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                    <input type="checkbox" name="sizes" value="S" checked class="w-4 h-4 rounded text-[#e11467] focus:ring-[#e11467] border-stone-300 cursor-pointer">
+                    <span>S</span>
+                  </label>
+                  <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                    <input type="checkbox" name="sizes" value="M" checked class="w-4 h-4 rounded text-[#e11467] focus:ring-[#e11467] border-stone-300 cursor-pointer">
+                    <span>M</span>
+                  </label>
+                  <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                    <input type="checkbox" name="sizes" value="L" checked class="w-4 h-4 rounded text-[#e11467] focus:ring-[#e11467] border-stone-300 cursor-pointer">
+                    <span>L</span>
+                  </label>
+                  <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                    <input type="checkbox" name="sizes" value="XL" class="w-4 h-4 rounded text-[#e11467] focus:ring-[#e11467] border-stone-300 cursor-pointer">
+                    <span>XL</span>
+                  </label>
+                  <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                    <input type="checkbox" name="sizes" value="XXL" class="w-4 h-4 rounded text-[#e11467] focus:ring-[#e11467] border-stone-300 cursor-pointer">
+                    <span>XXL</span>
+                  </label>
+                </div>
+
+                <!-- Add Custom Size Button -->
+                <button type="button" onclick="promptCustomSize()" class="inline-flex items-center gap-1.5 bg-white border border-stone-200 hover:border-stone-300 px-3 py-1.5 rounded-xl text-xs font-semibold text-stone-700 hover:bg-stone-50 transition cursor-pointer">
+                  <i class="fa-solid fa-plus text-[10px]"></i>
+                  <span>Add Custom Size</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Card 5: Pricing & Inventory -->
+            <div class="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200/80 shadow-2xs space-y-4">
+              <h2 class="font-bold text-base sm:text-lg text-[#0f172a]">Pricing &amp; Inventory</h2>
+
+              <!-- Row 1: Price, Compare Price, Discount -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-stone-700 mb-1.5">
+                    Price (₹) <span class="text-rose-500">*</span>
+                  </label>
+                  <input 
+                    type="number" 
+                    id="price-input" 
+                    required 
+                    min="0"
+                    value="1299"
+                    oninput="recalculateDiscount()"
+                    class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-stone-800 font-bold focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition"
+                  >
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-stone-700 mb-1.5">Compare Price (₹)</label>
+                  <input 
+                    type="number" 
+                    id="compare-price-input" 
+                    min="0"
+                    value="1999"
+                    oninput="recalculateDiscount()"
+                    class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-stone-800 focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition"
+                  >
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-stone-700 mb-1.5">Discount</label>
+                  <div class="flex items-center gap-1.5">
+                    <select id="discount-type" class="bg-[#f8fafc] border border-stone-200/90 rounded-xl px-2 py-2.5 text-xs font-semibold text-stone-700 focus:outline-none focus:border-[#e11467] transition cursor-pointer">
+                      <option value="percent">Percentage</option>
+                      <option value="flat">Flat ₹</option>
+                    </select>
+                    <input 
+                      type="number" 
+                      id="discount-val" 
+                      value="35" 
+                      readonly 
+                      class="w-16 bg-[#f8fafc] border border-stone-200/90 rounded-xl px-2.5 py-2.5 text-xs sm:text-sm text-stone-800 font-bold text-center"
+                    >
+                    <span id="discount-unit" class="text-xs font-bold text-stone-500">%</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Row 2: Tax (GST %), Stock Quantity, Low Stock Alert -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-stone-700 mb-1.5">Tax (GST %)</label>
+                  <select id="tax-rate" class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-stone-800 font-medium focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition cursor-pointer">
+                    <option value="0%">0% (Exempt)</option>
+                    <option value="5%" selected>5%</option>
+                    <option value="12%">12%</option>
+                    <option value="18%">18%</option>
+                    <option value="28%">28%</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-stone-700 mb-1.5">
+                    Stock Quantity <span class="text-rose-500">*</span>
+                  </label>
+                  <input 
+                    type="number" 
+                    id="stock-quantity" 
+                    required 
+                    min="0"
+                    value="25" 
+                    class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-stone-800 font-bold focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition"
+                  >
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-stone-700 mb-1.5">Low Stock Alert</label>
+                  <input 
+                    type="number" 
+                    id="low-stock-alert" 
+                    min="1"
+                    value="5" 
+                    class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-stone-800 focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition"
+                  >
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- ================= BOTTOM ACTION BUTTONS (Matching Screenshot) ================= -->
+        <div class="flex items-center justify-end gap-3 pt-4 border-t border-stone-200/80">
+          <button 
+            type="button" 
+            onclick="handleSaveDraft()"
+            class="bg-white border border-stone-200 hover:border-stone-300 text-stone-700 font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow-2xs hover:bg-stone-50 transition cursor-pointer"
+          >
+            Save as Draft
+          </button>
+
+          <button 
+            type="submit" 
+            class="bg-[#e11467] hover:bg-[#be123c] text-white font-bold text-xs sm:text-sm px-6 py-2.5 rounded-xl shadow-md hover:shadow-lg transition cursor-pointer flex items-center gap-2"
+          >
+            <span>Save Product</span>
+          </button>
+        </div>
+
+      </form>
+
+    </main>
+
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
+
+  <!-- Interactive JavaScript Logic -->
+  <script>
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('admin-sidebar');
+      const backdrop = document.getElementById('mobile-sidebar-backdrop');
+      sidebar.classList.toggle('-translate-x-full');
+      backdrop.classList.toggle('hidden');
+    }
+
+    function updateShortDescCount(textarea) {
+      const len = textarea.value.length;
+      document.getElementById('short-desc-counter').innerText = `${len}/200`;
+    }
+
+    // Rich Text Editor formatting
+    function formatDoc(cmd, value = null) {
+      document.execCommand(cmd, false, value);
+    }
+    function insertLink() {
+      const url = prompt('Enter hyperlink URL:', 'https://');
+      if (url) formatDoc('createLink', url);
+    }
+    function insertVideo() {
+      const url = prompt('Enter video URL (YouTube, Vimeo, etc.):');
+      if (url) {
+        formatDoc('insertHTML', `<p><a href="${url}" target="_blank" class="text-rose-600 underline">Watch Video: ${url}</a></p>`);
+      }
+    }
+    function insertTable() {
+      const tableHTML = `
+        <table class="border-collapse border border-stone-300 my-2 text-xs">
+          <tr><th class="border border-stone-300 p-1.5 bg-stone-100 font-bold">Feature</th><th class="border border-stone-300 p-1.5 bg-stone-100 font-bold">Detail</th></tr>
+          <tr><td class="border border-stone-300 p-1.5">Fabric</td><td class="border border-stone-300 p-1.5">100% Pure Rayon</td></tr>
+          <tr><td class="border border-stone-300 p-1.5">Care</td><td class="border border-stone-300 p-1.5">Dry Clean / Gentle Wash</td></tr>
+        </table>
+      `;
+      formatDoc('insertHTML', tableHTML);
+    }
+    function triggerEditorImage() {
+      const url = prompt('Enter image URL or press OK to select a sample image:');
+      if (url) {
+        formatDoc('insertImage', url);
+      } else {
+        formatDoc('insertImage', '../assets/images/prod-1-anarkali.png');
+      }
+    }
+
+    // Category Subcategory mapping
+    const subCategories = {
+      'Kurtis': ['Anarkali Kurta', 'Straight Kurta', 'A-Line Kurta', 'Short Kurti', 'Angrakha Kurti'],
+      'Sarees': ['Silk Saree', 'Kanjivaram Saree', 'Cotton Saree', 'Georgette Saree', 'Chiffon Saree'],
+      'Lehengas': ['Bridal Lehenga', 'Floral Lehenga', 'Party Wear Lehenga', 'Semi-Stitched Lehenga'],
+      'Dresses': ['Midi Dress', 'Maxi Dress', 'Indo-Western Dress', 'A-Line Dress'],
+      'Tops': ['Crop Top', 'Peplum Top', 'Tunic', 'Shirt'],
+      'Bottom Wear': ['Palazzo', 'Churidar', 'Pants', 'Salwar', 'Leggings'],
+      'Co-ord Sets': ['Ethnic Set', 'Printed Set', 'Silk Blend Set']
+    };
+
+    function handleCategoryChange(cat) {
+      const subSelect = document.getElementById('product-subcategory');
+      subSelect.innerHTML = '';
+      const list = subCategories[cat] || ['General'];
+      list.forEach(item => {
+        const opt = document.createElement('option');
+        opt.value = item;
+        opt.innerText = item;
+        subSelect.appendChild(opt);
+      });
+    }
+
+    // Color Swatches
+    const colorHexes = {
+      'Pink': '#e11467',
+      'Sky Blue': '#0ea5e9',
+      'Red': '#ef4444',
+      'Green': '#10b981',
+      'Yellow': '#eab308',
+      'White': '#ffffff',
+      'Maroon': '#881337',
+      'Black': '#0f172a'
+    };
+
+    function handleColorVariantChange(selectEl) {
+      const color = selectEl.value;
+      const dot = selectEl.closest('.relative').querySelector('.variant-color-dot');
+      if (dot && colorHexes[color]) {
+        dot.style.backgroundColor = colorHexes[color];
+        if (color === 'White') dot.style.border = '1px solid #cbd5e1';
+        else dot.style.border = 'none';
+      }
+    }
+
+    function removeColorVariant(btn) {
+      const boxes = document.querySelectorAll('.color-variant-box');
+      if (boxes.length <= 1) {
+        showToast('At least one color variant is required!', 'error');
+        return;
+      }
+      const box = btn.closest('.color-variant-box');
+      box.remove();
+      // Renumber variants
+      document.querySelectorAll('.color-variant-box').forEach((b, idx) => {
+        b.querySelector('.font-bold.text-xs').innerText = `Variant ${idx + 1}`;
+      });
+      showToast('Variant removed', 'info');
+    }
+
+    let variantCounter = 1;
+    function addNewColorVariant() {
+      variantCounter++;
+      const container = document.getElementById('color-variants-container');
+      const newBox = document.createElement('div');
+      newBox.className = 'color-variant-box rounded-2xl border border-stone-200 p-4 space-y-4 bg-white relative';
+      newBox.setAttribute('data-variant-index', variantCounter);
+
+      newBox.innerHTML = `
+        <div class="flex items-center justify-between gap-3">
+          <span class="font-bold text-xs sm:text-sm text-stone-900">Variant ${variantCounter}</span>
+          <div class="flex items-center gap-2.5">
+            <div class="relative">
+              <select onchange="handleColorVariantChange(this)" class="appearance-none bg-stone-50 border border-stone-200 hover:border-stone-300 rounded-xl pl-8 pr-8 py-1.5 text-xs font-semibold text-stone-800 focus:outline-none focus:border-[#e11467] transition cursor-pointer">
+                <option value="Sky Blue" selected>Sky Blue</option>
+                <option value="Pink">Pink</option>
+                <option value="Red">Red</option>
+                <option value="Green">Green</option>
+                <option value="Yellow">Yellow</option>
+                <option value="White">White</option>
+                <option value="Maroon">Maroon</option>
+                <option value="Black">Black</option>
+              </select>
+              <span class="variant-color-dot absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0ea5e9] pointer-events-none"></span>
+              <i class="fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-stone-400 pointer-events-none"></i>
+            </div>
+            <button type="button" onclick="removeColorVariant(this)" class="w-8 h-8 rounded-lg border border-rose-200 text-rose-500 hover:bg-rose-50 flex items-center justify-center transition cursor-pointer">
+              <i class="fa-regular fa-trash-can text-xs"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          ${createSlotHTML('Front View')}
+          ${createSlotHTML('Side View')}
+          ${createSlotHTML('Back View')}
+          ${createSlotHTML('Close-up')}
+        </div>
+
+        <div class="bg-rose-50/60 border border-rose-100 rounded-xl p-3 flex items-start gap-2.5 text-xs text-rose-600">
+          <i class="fa-solid fa-circle-exclamation text-rose-500 mt-0.5 text-xs"></i>
+          <div>
+            <p class="font-bold text-rose-700 leading-tight">Upload 4 images for this color (Front, Side, Back, Close-up)</p>
+            <p class="text-[11px] text-rose-500 mt-0.5">Recommended: JPG, PNG, WebP (Max 5 MB each)</p>
+          </div>
+        </div>
+      `;
+      container.appendChild(newBox);
+      showToast(`Added Variant ${variantCounter}!`);
+    }
+
+    function createSlotHTML(label) {
+      return `
+        <div class="upload-slot-box border-2 border-dashed border-stone-200 hover:border-[#e11467] rounded-xl p-3 text-center cursor-pointer transition flex flex-col items-center justify-center gap-1 min-h-[105px] bg-[#fcfcfd] group" onclick="triggerSlotUpload(this)">
+          <input type="file" accept="image/*" class="hidden slot-file-input" onchange="handleSlotImageUpload(this)">
+          <div class="slot-empty-view flex flex-col items-center">
+            <div class="w-8 h-8 rounded-lg bg-stone-100 group-hover:bg-rose-50 flex items-center justify-center text-stone-400 group-hover:text-[#e11467] transition mb-1">
+              <i class="fa-regular fa-image text-sm"></i>
+            </div>
+            <span class="text-[11px] font-semibold text-stone-700 leading-tight">${label}</span>
+            <span class="text-[10px] text-stone-400">Upload Image</span>
+          </div>
+          <div class="slot-filled-view hidden relative w-full h-full">
+            <img src="" alt="${label}" class="w-full h-20 object-cover rounded-lg">
+            <button type="button" onclick="clearSlotImage(event, this)" class="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/60 hover:bg-rose-600 text-white flex items-center justify-center text-[10px]"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+        </div>
+      `;
+    }
+
+    function triggerSlotUpload(slot) {
+      const input = slot.querySelector('.slot-file-input');
+      if (input) input.click();
+    }
+
+    function handleSlotImageUpload(input) {
+      if (input.files && input.files[0]) {
+        const slot = input.closest('.upload-slot-box');
+        const emptyView = slot.querySelector('.slot-empty-view');
+        const filledView = slot.querySelector('.slot-filled-view');
+        const img = filledView.querySelector('img');
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          img.src = e.target.result;
+          emptyView.classList.add('hidden');
+          filledView.classList.remove('hidden');
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function clearSlotImage(event, btn) {
+      event.stopPropagation();
+      const slot = btn.closest('.upload-slot-box');
+      const emptyView = slot.querySelector('.slot-empty-view');
+      const filledView = slot.querySelector('.slot-filled-view');
+      const input = slot.querySelector('.slot-file-input');
+      const img = filledView.querySelector('img');
+
+      img.src = '';
+      input.value = '';
+      filledView.classList.add('hidden');
+      emptyView.classList.remove('hidden');
+    }
+
+    function promptCustomSize() {
+      const custom = prompt('Enter custom size label (e.g. 3XL, Free Size, Petite):');
+      if (custom && custom.trim()) {
+        const sizeName = custom.trim();
+        const list = document.getElementById('size-variants-list');
+        const label = document.createElement('label');
+        label.className = 'inline-flex items-center gap-2 cursor-pointer select-none';
+        label.innerHTML = `
+          <input type="checkbox" name="sizes" value="${sizeName}" checked class="w-4 h-4 rounded text-[#e11467] focus:ring-[#e11467] border-stone-300 cursor-pointer">
+          <span>${sizeName}</span>
+        `;
+        list.appendChild(label);
+        showToast(`Size variant "${sizeName}" added!`);
+      }
+    }
+
+    function recalculateDiscount() {
+      const price = parseFloat(document.getElementById('price-input').value) || 0;
+      const comparePrice = parseFloat(document.getElementById('compare-price-input').value) || 0;
+      if (comparePrice > price && comparePrice > 0) {
+        const pct = Math.round(((comparePrice - price) / comparePrice) * 100);
+        document.getElementById('discount-val').value = pct;
+      } else {
+        document.getElementById('discount-val').value = 0;
+      }
+    }
+
+    function handleSaveDraft() {
+      const name = document.getElementById('product-name').value.trim() || 'Untitled Product';
+      showToast(`Draft "${name}" saved successfully!`, 'info');
+      setTimeout(() => {
+        window.location.href = 'products.html';
+      }, 1200);
+    }
+
+    function handleSaveProduct(e) {
+      e.preventDefault();
+      const name = document.getElementById('product-name').value.trim();
+      const sku = document.getElementById('product-sku').value.trim();
+      const price = document.getElementById('price-input').value;
+
+      showToast(`Product "${name}" (${sku}) published successfully!`);
+      setTimeout(() => {
+        window.location.href = 'products.html';
+      }, 1500);
+    }
+
+    function showToast(msg, type = 'success') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = `p-3 rounded-xl shadow-xl text-xs font-semibold flex items-center gap-2 transition transform duration-300 ${type === 'success' ? 'bg-[#0f172a] text-white' : type === 'info' ? 'bg-[#0284c7] text-white' : 'bg-[#e11467] text-white'}`;
+      toast.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> <span>${msg}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+  </script>
+
+</body>
+</html>

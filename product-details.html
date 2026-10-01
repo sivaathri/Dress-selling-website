@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="page-title">Product Details — PondyVastra Women's Fashion</title>
+  <meta name="description" content="View details, authentic handloom craftsmanship, sizes, and customer reviews for PondyVastra ethnic fashion.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Tailwind CSS v4 Browser CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-white text-stone-800 antialiased selection:bg-rose-100 selection:text-rose-900">
+
+  <!-- ================= TOP ANNOUNCEMENT BAR (Exact match) ================= -->
+  <aside aria-label="Announcement" class="bg-[#b83250] text-white text-[12px] font-normal py-1.5 px-4 tracking-wide border-b border-rose-900/10">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2">
+      <div class="flex items-center gap-2 text-rose-50">
+        <span class="text-sm">📍</span>
+        <span>Pondicherry, India — Ethnic Roots, Modern Styles, Delivered Across India.</span>
+      </div>
+      <div class="flex items-center gap-5 text-rose-100">
+        <button onclick="openTrackOrder()" class="hover:text-white flex items-center gap-1.5 transition text-[12px]">
+          <i class="fa-solid fa-truck-fast text-[11px]"></i>
+          <span>Track Order</span>
+        </button>
+        <button onclick="openSupportModal()" class="hover:text-white flex items-center gap-1.5 transition text-[12px]">
+          <i class="fa-solid fa-headset text-[11px]"></i>
+          <span>Help &amp; Support</span>
+        </button>
+        <a href="shop.html?view=wishlist" class="hover:text-white flex items-center gap-1.5 transition text-[12px]">
+          <i class="fa-solid fa-heart text-[11px]"></i>
+          <span>Wishlist</span>
+          <span class="wishlist-count-badge bg-white/20 text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full ml-0.5">0</span>
+        </a>
+        <button onclick="openSupportModal()" class="hover:text-white flex items-center gap-1.5 transition text-[12px]">
+          <i class="fa-regular fa-user text-[11px]"></i>
+          <span>My Account</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN HEADER (Exact match) ================= -->
+  <header class="bg-white border-b border-stone-100 sticky top-0 z-40 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4 md:gap-8">
+      
+      <!-- Brand Logo (Exact replica) -->
+      <a href="index.html" class="flex items-center flex-shrink-0 group">
+        <img src="assets/images/logo-exact.png" alt="PondyVastra - Women's Fashion from Pondicherry" class="h-10 md:h-12 w-auto object-contain">
+      </a>
+
+      <!-- Search Bar (Exact replica with clean inset button) -->
+      <div class="flex-1 max-w-2xl relative hidden md:block">
+        <div class="flex items-center rounded-lg border border-stone-300 bg-white hover:border-stone-400 focus-within:border-[#b81b4b] focus-within:ring-1 focus-within:ring-[#b81b4b] transition-all p-1">
+          <input 
+            type="text" 
+            placeholder="Search for kurtis, kurta sets, dresses, sarees, dupattas, ..." 
+            class="site-search-input w-full pl-3 pr-2 py-1.5 text-[13px] text-stone-800 placeholder:text-stone-400 bg-transparent focus:outline-none"
+          >
+          <button class="bg-[#b81b4b] hover:bg-[#9f1239] text-white w-10 h-8 rounded-md transition flex items-center justify-center flex-shrink-0 cursor-pointer" aria-label="Search">
+            <i class="fa-solid fa-magnifying-glass text-xs"></i>
+          </button>
+        </div>
+        <div id="search-autocomplete-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white rounded-xl shadow-2xl border border-stone-200 z-50 overflow-hidden"></div>
+      </div>
+
+      <!-- Right Side Actions: Dual Badge Cart Counter -->
+      <div class="flex items-center gap-4">
+        <button onclick="openCartDrawer()" class="flex items-center gap-2 group p-1.5 hover:bg-rose-50/50 rounded-xl transition">
+          <div class="relative">
+            <svg class="w-7 h-7 text-stone-800 group-hover:text-[#be123c] transition-colors" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.7 2.8-7.1H5.106m2.394 7.1L5.106 5.272M7.5 17.25a1.5 1.5 0 103 0 1.5 1.5 0 00-3 0zm9 0a1.5 1.5 0 103 0 1.5 1.5 0 00-3 0z" />
+            </svg>
+            <span class="cart-count-badge absolute -top-1.5 -right-1.5 bg-[#be123c] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
+              0
+            </span>
+          </div>
+          <span class="text-sm font-bold text-stone-800 group-hover:text-[#be123c] transition-colors">Cart</span>
+          <span class="cart-count-badge bg-[#be123c] text-white text-[11px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
+            0
+          </span>
+        </button>
+
+        <button onclick="toggleMobileMenu()" class="md:hidden text-stone-700 p-2 text-xl hover:text-[#be123c]" aria-label="Toggle Navigation">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= SUB-NAVIGATION / CATEGORY BAR (Exact match) ================= -->
+  <nav class="bg-[#fdf6f2] border-b border-[#f3e8e2] relative z-30 overflow-x-auto shadow-2xs">
+    <div class="max-w-7xl mx-auto px-4 flex items-center justify-between gap-1 py-1 whitespace-nowrap min-w-max">
+      <div class="flex items-center space-x-1 lg:space-x-2">
+        <div class="nav-dropdown">
+          <a href="shop.html?category=kurtis" class="cat-link"><span>Kurtis &amp; Kurta Sets</span><svg class="w-3 h-3 text-stone-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg></a>
+        </div>
+        <div class="nav-dropdown">
+          <a href="shop.html?category=dresses" class="cat-link"><span>Dresses</span><svg class="w-3 h-3 text-stone-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg></a>
+        </div>
+        <div class="nav-dropdown">
+          <a href="shop.html?category=sarees" class="cat-link"><span>Sarees</span><svg class="w-3 h-3 text-stone-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg></a>
+        </div>
+        <div class="nav-dropdown">
+          <a href="shop.html?category=bottoms" class="cat-link"><span>Bottom Wear</span><svg class="w-3 h-3 text-stone-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg></a>
+        </div>
+        <div class="nav-dropdown">
+          <a href="shop.html?category=dupattas" class="cat-link"><span>Dupattas &amp; Shawls</span><svg class="w-3 h-3 text-stone-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg></a>
+        </div>
+        <div class="nav-dropdown">
+          <a href="shop.html?category=lehengas" class="cat-link"><span>Lehengas</span><svg class="w-3 h-3 text-stone-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg></a>
+        </div>
+        <div class="nav-dropdown">
+          <a href="shop.html?category=coord-sets" class="cat-link"><span>Co-ord Sets</span><svg class="w-3 h-3 text-stone-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg></a>
+        </div>
+        <div class="nav-dropdown">
+          <a href="shop.html?size=plus" class="cat-link"><span>Plus Size</span><svg class="w-3 h-3 text-stone-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg></a>
+        </div>
+        <a href="shop.html?filter=maternity" class="cat-link">Maternity Wear</a>
+        <a href="shop.html?filter=new" class="cat-link font-semibold text-rose-800">New Arrivals</a>
+        <a href="shop.html?filter=sale" class="cat-link font-semibold text-rose-600">Sale</a>
+        <a href="shop.html" class="cat-link">Brands</a>
+      </div>
+      <div class="pl-2">
+        <button onclick="openSpecialOffers()" class="special-offers-btn cursor-pointer">
+          <i class="fa-solid fa-gift text-sm"></i>
+          <span>Special Offers</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ================= BREADCRUMB ================= -->
+  <div class="max-w-7xl mx-auto px-4 py-4 text-xs text-stone-500 flex items-center gap-2">
+    <a href="index.html" class="hover:text-rose-700">Home</a>
+    <span>/</span>
+    <a href="shop.html" class="hover:text-rose-700">Women's Fashion</a>
+    <span>/</span>
+    <span id="pd-breadcrumb-cat" class="text-stone-600 font-medium">Kurtis</span>
+    <span>/</span>
+    <span id="pd-breadcrumb-title" class="text-stone-900 font-semibold truncate max-w-xs">Product Details</span>
+  </div>
+
+  <!-- ================= PRODUCT MAIN DETAILS SECTION ================= -->
+  <main class="max-w-7xl mx-auto px-4 py-6">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+      
+      <!-- Gallery Left (7 cols) -->
+      <div class="lg:col-span-7 flex flex-col-reverse md:flex-row gap-4">
+        <!-- Thumbnails column -->
+        <div class="flex md:flex-col gap-3 overflow-x-auto md:w-24 flex-shrink-0" id="pd-thumbs">
+          <!-- Populated via JS -->
+        </div>
+
+        <!-- Main Image with zoom -->
+        <div class="flex-1 bg-stone-100 rounded-3xl overflow-hidden border border-stone-200/80 aspect-[3/4] relative group">
+          <img id="pd-main-img" src="" alt="Main Product Photo" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+          <span id="pd-badge" class="absolute top-4 left-4 bg-white/95 backdrop-blur text-rose-800 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
+            Handcrafted
+          </span>
+        </div>
+      </div>
+
+      <!-- Details Right (5 cols) -->
+      <div class="lg:col-span-5 space-y-6">
+        
+        <div>
+          <!-- Rating badge -->
+          <div class="flex items-center gap-2 mb-2">
+            <div class="flex items-center text-amber-500 text-xs font-bold gap-1 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+              <i class="fa-solid fa-star"></i>
+              <span id="pd-rating">4.9</span>
+            </div>
+            <span class="text-xs text-stone-500" id="pd-reviews-count">148 verified ratings</span>
+          </div>
+
+          <h1 id="pd-name" class="font-serif text-3xl font-bold text-stone-900 leading-tight">
+            Gulabi Zari Chanderi Silk Kurta Set
+          </h1>
+          <p id="pd-fabric-tag" class="text-xs text-stone-500 mt-1">Fabric: Pure Chanderi Silk &amp; Golden Tissue</p>
+        </div>
+
+        <!-- Price Section -->
+        <div class="p-4 bg-stone-50 rounded-2xl border border-stone-200/70 space-y-1">
+          <div class="flex items-baseline gap-3">
+            <span id="pd-price" class="font-serif text-3xl font-bold text-rose-700">₹2,499</span>
+            <span id="pd-original-price" class="text-sm line-through text-stone-400 font-medium">₹4,999</span>
+            <span id="pd-discount" class="text-xs font-bold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full">50% OFF</span>
+          </div>
+          <p class="text-[11px] text-stone-500">Inclusive of all taxes. Free Express Pan-India Delivery on this item.</p>
+        </div>
+
+        <!-- Color Selection -->
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-xs font-bold text-stone-800">Color: <span id="pd-selected-color-name" class="font-semibold text-rose-700">Ruby Crimson</span></span>
+          </div>
+          <div class="flex gap-2.5" id="pd-color-swatches">
+            <!-- Swatches injected via JS -->
+          </div>
+        </div>
+
+        <!-- Size Selection -->
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-xs font-bold text-stone-800">Select Size:</span>
+            <button onclick="openSizeGuideModal()" class="text-xs text-rose-700 hover:underline font-semibold flex items-center gap-1">
+              <i class="fa-solid fa-ruler-horizontal text-[10px]"></i> Size Guide
+            </button>
+          </div>
+          <div class="flex flex-wrap gap-2" id="pd-size-chips">
+            <!-- Size chips injected via JS -->
+          </div>
+        </div>
+
+        <!-- Quantity & Action Buttons -->
+        <div class="space-y-3 pt-2">
+          <div class="flex items-center gap-3">
+            <div class="flex items-center border border-stone-300 rounded-xl bg-white overflow-hidden">
+              <button onclick="changeDetailQty(-1)" class="px-3.5 py-2.5 hover:bg-stone-100 text-stone-700 font-bold">-</button>
+              <span id="pd-qty-display" class="px-3.5 font-bold text-stone-900 text-sm">1</span>
+              <button onclick="changeDetailQty(1)" class="px-3.5 py-2.5 hover:bg-stone-100 text-stone-700 font-bold">+</button>
+            </div>
+            
+            <button onclick="handleDetailAddToCart()" class="flex-1 bg-[#be123c] hover:bg-[#9f1239] text-white font-bold py-3.5 px-6 rounded-xl text-sm transition shadow-lg shadow-rose-700/25 flex items-center justify-center gap-2">
+              <i class="fa-solid fa-bag-shopping"></i> Add To Bag
+            </button>
+
+            <button onclick="toggleWishlist(currentProduct.id)" class="p-3.5 border border-stone-300 rounded-xl hover:border-rose-600 hover:text-rose-600 transition" title="Wishlist">
+              <i class="fa-regular fa-heart text-base"></i>
+            </button>
+          </div>
+
+          <button onclick="handleDetailBuyNow()" class="w-full bg-stone-900 hover:bg-black text-white font-bold py-3.5 px-6 rounded-xl text-sm transition shadow-md">
+            Buy Now with Express Checkout →
+          </button>
+        </div>
+
+        <!-- Pincode Checker -->
+        <div class="p-4 bg-rose-50/40 rounded-2xl border border-rose-100/80 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-stone-800 flex items-center gap-1.5">
+              <i class="fa-solid fa-truck-fast text-rose-700"></i> Check Delivery to Your Pincode
+            </span>
+          </div>
+          <div class="flex gap-2">
+            <input type="text" id="pincode-input" maxlength="6" placeholder="Enter 6-digit Pincode (e.g. 605001)" class="flex-1 px-3 py-2 border border-stone-300 rounded-xl text-xs focus:outline-none focus:border-rose-600">
+            <button onclick="checkPincode()" class="bg-stone-900 text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-black transition">
+              Check
+            </button>
+          </div>
+          <div id="pincode-result" class="text-xs text-stone-600 hidden"></div>
+        </div>
+
+        <!-- Key Highlights -->
+        <div class="border-t border-stone-200 pt-4 space-y-2 text-xs text-stone-600">
+          <p><i class="fa-solid fa-shield-halved text-rose-700 mr-2"></i> 100% Genuine Pondicherry Atelier Craft</p>
+          <p><i class="fa-solid fa-arrows-rotate text-rose-700 mr-2"></i> 7-Day Hassle-Free Exchange &amp; Returns</p>
+          <p><i class="fa-solid fa-hand-holding-dollar text-rose-700 mr-2"></i> Cash on Delivery Available Across India</p>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Product Description Tabs -->
+    <div class="mt-16 border-t border-stone-200 pt-10">
+      <div class="max-w-4xl space-y-6">
+        <h3 class="font-serif text-2xl font-bold text-stone-900">Craft Story &amp; Details</h3>
+        <p id="pd-description" class="text-sm text-stone-600 leading-relaxed"></p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+          <div class="p-4 bg-stone-50 rounded-xl border border-stone-200/70">
+            <h5 class="font-bold text-xs uppercase tracking-wider text-rose-900 mb-2">Garment Specifications</h5>
+            <ul class="text-xs text-stone-600 space-y-1.5" id="pd-specs-list">
+              <li>• <strong>Origin:</strong> Handwoven in Pondicherry, India</li>
+              <li>• <strong>Work:</strong> Hand Zari Zardozi &amp; Gotta Patti embroidery</li>
+              <li>• <strong>Includes:</strong> 1 Kurti/Top, 1 Bottom, 1 Stole/Dupatta</li>
+              <li>• <strong>Care:</strong> Dry clean only recommended for first wash</li>
+            </ul>
+          </div>
+
+          <div class="p-4 bg-stone-50 rounded-xl border border-stone-200/70">
+            <h5 class="font-bold text-xs uppercase tracking-wider text-rose-900 mb-2">Model &amp; Fit</h5>
+            <ul class="text-xs text-stone-600 space-y-1.5">
+              <li>• Model height is 5'8" wearing size S</li>
+              <li>• Straight silhouette with comfortable armholes</li>
+              <li>• Generous 2-inch side seams for easy custom tailoring</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-stone-950 text-stone-300 pt-16 pb-8 border-t border-stone-800 mt-20">
+    <div class="max-w-7xl mx-auto px-4 text-center text-xs text-stone-500">
+      © 2026 PondyVastra. Women's Fashion from Pondicherry. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- Drawer and Modals -->
+  <div id="cart-drawer-backdrop" class="fixed inset-0 drawer-backdrop z-50 hidden opacity-0 transition-opacity duration-300" onclick="closeCartDrawer()"></div>
+  <aside id="cart-drawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-white z-50 shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
+    <div class="p-4 border-b border-stone-200 flex items-center justify-between bg-stone-50/70">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-bag-shopping text-rose-700"></i>
+        <h3 class="font-serif font-bold text-lg text-stone-900">Your Shopping Bag</h3>
+        <span class="cart-count-badge bg-[#be123c] text-white text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+      </div>
+      <button onclick="closeCartDrawer()" class="p-2 text-stone-400 hover:text-stone-700 text-lg">✕</button>
+    </div>
+    <div class="p-3 bg-rose-50/50 border-b border-rose-100 text-xs text-stone-700">
+      <p id="cart-free-shipping-text" class="mb-1.5">Add ₹1,499 more to unlock FREE Express Delivery!</p>
+      <div class="w-full bg-stone-200 h-1.5 rounded-full overflow-hidden">
+        <div id="cart-free-shipping-progress" class="bg-[#be123c] h-full w-0 transition-all duration-500"></div>
+      </div>
+    </div>
+    <div id="cart-drawer-items" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
+    <div id="cart-drawer-empty" class="hidden flex-1 flex flex-col items-center justify-center p-6 text-center">
+      <div class="w-16 h-16 rounded-full bg-rose-50 text-rose-400 flex items-center justify-center text-2xl mb-3">
+        <i class="fa-solid fa-basket-shopping"></i>
+      </div>
+      <h4 class="font-serif text-lg font-bold text-stone-800">Your bag is empty</h4>
+    </div>
+    <div id="cart-drawer-footer" class="p-4 border-t border-stone-200 bg-stone-50/80 space-y-3">
+      <div class="flex justify-between items-center text-sm font-medium">
+        <span class="text-stone-600">Subtotal</span>
+        <span id="cart-drawer-subtotal" class="font-serif font-bold text-stone-900 text-base">₹0</span>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <a href="cart.html" class="text-center border border-stone-300 text-stone-800 text-xs font-bold py-3 rounded-xl">View Cart</a>
+        <a href="checkout.html" class="text-center bg-[#be123c] hover:bg-[#9f1239] text-white text-xs font-bold py-3 rounded-xl shadow-md">Checkout →</a>
+      </div>
+    </div>
+  </aside>
+
+  <div id="size-guide-modal" class="fixed inset-0 drawer-backdrop z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 relative shadow-2xl border border-stone-200">
+      <button onclick="closeSizeGuideModal()" class="absolute top-4 right-4 text-stone-400">✕</button>
+      <h3 class="font-serif text-xl font-bold text-stone-900 mb-2">PondyVastra Size Guide</h3>
+      <table class="w-full text-xs text-left">
+        <tr class="font-bold border-b"><th class="p-2">Size</th><th class="p-2">Bust</th><th class="p-2">Waist</th><th class="p-2">Hip</th></tr>
+        <tr><td class="p-2">XS</td><td class="p-2">34"</td><td class="p-2">28"</td><td class="p-2">36"</td></tr>
+        <tr><td class="p-2">S</td><td class="p-2">36"</td><td class="p-2">30"</td><td class="p-2">38"</td></tr>
+        <tr><td class="p-2">M</td><td class="p-2">38"</td><td class="p-2">32"</td><td class="p-2">40"</td></tr>
+        <tr><td class="p-2">L</td><td class="p-2">40"</td><td class="p-2">34"</td><td class="p-2">42"</td></tr>
+        <tr><td class="p-2">XL</td><td class="p-2">42"</td><td class="p-2">36"</td><td class="p-2">44"</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div id="offers-modal" class="fixed inset-0 drawer-backdrop z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 relative shadow-2xl border border-stone-200">
+      <button onclick="closeSpecialOffers()" class="absolute top-4 right-4 text-stone-400">✕</button>
+      <h3 class="font-serif text-xl font-bold text-stone-900 mb-2">PondyVastra Offers</h3>
+      <div class="p-3.5 rounded-xl border border-dashed border-rose-300 bg-rose-50/60 flex items-center justify-between">
+        <div>
+          <span class="font-mono text-sm font-bold text-rose-800 bg-white px-2 py-0.5 rounded border border-rose-200">PONDY10</span>
+          <p class="text-xs font-semibold text-stone-800 mt-1">10% OFF on Orders above ₹1,999</p>
+        </div>
+        <button onclick="copyCoupon('PONDY10')" class="bg-[#be123c] text-white text-xs font-bold px-3 py-1.5 rounded-lg">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="track-order-modal" class="fixed inset-0 drawer-backdrop z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 relative shadow-2xl border border-stone-200">
+      <button onclick="closeTrackOrder()" class="absolute top-4 right-4 text-stone-400">✕</button>
+      <h3 class="font-serif text-xl font-bold text-stone-900 mb-2">Track Shipment</h3>
+      <input type="text" placeholder="Order ID or Phone" class="w-full px-4 py-2.5 border rounded-xl text-sm mb-3">
+      <button onclick="showToast('Tracking shipment from Pondicherry...', 'info'); closeTrackOrder();" class="w-full bg-[#be123c] text-white py-2.5 rounded-xl text-xs font-bold">Track Now</button>
+    </div>
+  </div>
+
+  <div id="support-modal" class="fixed inset-0 drawer-backdrop z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 relative shadow-2xl border border-stone-200">
+      <button onclick="closeSupportModal()" class="absolute top-4 right-4 text-stone-400">✕</button>
+      <h3 class="font-serif text-xl font-bold text-stone-900 mb-2">Customer Care</h3>
+      <p class="text-xs text-stone-500 mb-4">Phone: +91 94880 12345 | Email: support@pondyvastra.com</p>
+      <a href="https://wa.me/919488012345" target="_blank" class="block text-center bg-emerald-600 text-white py-2.5 rounded-xl text-xs font-bold">WhatsApp Support</a>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="assets/js/products.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script>
+    let currentProduct = null;
+    let selectedSize = null;
+    let selectedColor = null;
+    let currentQty = 1;
+
+    function initProductDetails() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get("id") || "pv-01";
+      currentProduct = getProductById(id) || PONDY_PRODUCTS[0];
+
+      selectedSize = currentProduct.sizes[0];
+      selectedColor = currentProduct.colors && currentProduct.colors.length ? currentProduct.colors[0].name : "Standard";
+
+      // Title & Breadcrumbs
+      document.title = `${currentProduct.name} — PondyVastra`;
+      document.getElementById("pd-breadcrumb-cat").textContent = currentProduct.category;
+      document.getElementById("pd-breadcrumb-title").textContent = currentProduct.name;
+      document.getElementById("pd-name").textContent = currentProduct.name;
+      document.getElementById("pd-fabric-tag").textContent = `Fabric: ${currentProduct.fabric} | Fit: ${currentProduct.fit}`;
+      document.getElementById("pd-price").textContent = formatPrice(currentProduct.price);
+      document.getElementById("pd-original-price").textContent = formatPrice(currentProduct.originalPrice);
+      document.getElementById("pd-discount").textContent = currentProduct.discount;
+      document.getElementById("pd-rating").textContent = currentProduct.rating;
+      document.getElementById("pd-reviews-count").textContent = `${currentProduct.reviewsCount} verified customer ratings`;
+      document.getElementById("pd-description").textContent = currentProduct.description;
+      document.getElementById("pd-badge").textContent = currentProduct.badge || "Handcrafted";
+
+      // Main image & thumbs
+      const mainImg = document.getElementById("pd-main-img");
+      mainImg.src = currentProduct.image;
+
+      const thumbsContainer = document.getElementById("pd-thumbs");
+      thumbsContainer.innerHTML = currentProduct.gallery.map((img, i) => `
+        <button onclick="changeMainImage('${img}')" class="thumb-btn w-16 h-20 rounded-xl overflow-hidden border-2 ${i === 0 ? 'border-rose-600' : 'border-stone-200'} transition flex-shrink-0">
+          <img src="${img}" class="w-full h-full object-cover">
+        </button>
+      `).join("");
+
+      // Colors
+      const colorContainer = document.getElementById("pd-color-swatches");
+      if (currentProduct.colors && currentProduct.colors.length) {
+        colorContainer.innerHTML = currentProduct.colors.map((c, i) => `
+          <button onclick="selectColor('${c.name}', this)" class="w-7 h-7 rounded-full border-2 ${i === 0 ? 'ring-2 ring-rose-600 ring-offset-2 border-white' : 'border-stone-200'} transition shadow-xs" style="background-color: ${c.code}" title="${c.name}"></button>
+        `).join("");
+        document.getElementById("pd-selected-color-name").textContent = currentProduct.colors[0].name;
+      }
+
+      // Sizes
+      const sizeContainer = document.getElementById("pd-size-chips");
+      sizeContainer.innerHTML = currentProduct.sizes.map((s, i) => `
+        <button onclick="selectDetailSize('${s}', this)" class="size-chip px-4 py-2 rounded-xl text-xs font-bold border transition ${i === 0 ? 'border-rose-600 bg-rose-50 text-rose-700' : 'border-stone-200 text-stone-700 hover:border-stone-400'}">
+          ${s}
+        </button>
+      `).join("");
+    }
+
+    function changeMainImage(src) {
+      document.getElementById("pd-main-img").src = src;
+      document.querySelectorAll(".thumb-btn").forEach(b => {
+        b.classList.remove("border-rose-600");
+        b.classList.add("border-stone-200");
+      });
+      event.currentTarget.classList.add("border-rose-600");
+      event.currentTarget.classList.remove("border-stone-200");
+    }
+
+    function selectColor(name, btn) {
+      selectedColor = name;
+      document.getElementById("pd-selected-color-name").textContent = name;
+      document.querySelectorAll("#pd-color-swatches button").forEach(b => {
+        b.classList.remove("ring-2", "ring-rose-600", "ring-offset-2");
+      });
+      btn.classList.add("ring-2", "ring-rose-600", "ring-offset-2");
+    }
+
+    function selectDetailSize(size, btn) {
+      selectedSize = size;
+      document.querySelectorAll(".size-chip").forEach(b => {
+        b.classList.remove("border-rose-600", "bg-rose-50", "text-rose-700");
+        b.classList.add("border-stone-200", "text-stone-700");
+      });
+      btn.classList.add("border-rose-600", "bg-rose-50", "text-rose-700");
+      btn.classList.remove("border-stone-200", "text-stone-700");
+    }
+
+    function changeDetailQty(amount) {
+      currentQty = Math.max(1, currentQty + amount);
+      document.getElementById("pd-qty-display").textContent = currentQty;
+    }
+
+    function handleDetailAddToCart() {
+      if (!currentProduct) return;
+      addToCart(currentProduct.id, selectedSize, currentQty, selectedColor);
+    }
+
+    function handleDetailBuyNow() {
+      if (!currentProduct) return;
+      addToCart(currentProduct.id, selectedSize, currentQty, selectedColor);
+      window.location.href = "checkout.html";
+    }
+
+    function checkPincode() {
+      const pin = document.getElementById("pincode-input").value.trim();
+      const res = document.getElementById("pincode-result");
+      if (pin.length !== 6 || isNaN(pin)) {
+        res.innerHTML = `<span class="text-rose-600 font-medium">Please enter a valid 6-digit Indian pincode.</span>`;
+        res.classList.remove("hidden");
+        return;
+      }
+      res.innerHTML = `
+        <div class="mt-2 p-2 bg-emerald-50 text-emerald-900 rounded-lg border border-emerald-200 text-xs">
+          ✓ Delivery available to <strong>${pin}</strong> within <strong>2-4 business days</strong>.<br>
+          ✓ Express Shipping from Pondicherry &amp; Cash on Delivery Available!
+        </div>
+      `;
+      res.classList.remove("hidden");
+    }
+
+    document.addEventListener("DOMContentLoaded", initProductDetails);
+  </script>
+</body>
+</html>

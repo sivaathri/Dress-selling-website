@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Categories — PondyVastra Admin</title>
+  <meta name="description" content="Manage and reorder product categories for PondyVastra store.">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Font: Plus Jakarta Sans / Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              pink: '#e11467',
+              darkpink: '#be123c',
+              lightpink: '#fff1f5',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f8fafc;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    .category-card.dragging {
+      opacity: 0.4;
+      transform: scale(0.98);
+      border-color: #e11467 !important;
+      box-shadow: 0 10px 25px -5px rgba(225, 20, 103, 0.2);
+    }
+    .category-card.drag-over {
+      border-color: #e11467 !important;
+      box-shadow: 0 0 0 2px rgba(225, 20, 103, 0.4);
+    }
+  </style>
+</head>
+<body class="bg-[#f8fafc] text-stone-800 antialiased min-h-screen flex flex-col">
+
+  <!-- ================= TOP HEADER BAR ================= -->
+  <header class="bg-white border-b border-stone-200/80 sticky top-0 z-40 px-4 lg:px-6 py-2.5 flex items-center justify-between gap-4">
+    
+    <!-- Left: Mobile Toggle & Brand Logo -->
+    <div class="flex items-center gap-3">
+      <!-- Mobile Sidebar Toggle -->
+      <button 
+        id="mobile-sidebar-toggle" 
+        onclick="toggleMobileSidebar()" 
+        class="lg:hidden p-2 text-stone-600 hover:text-stone-900 rounded-lg hover:bg-stone-100 transition"
+        title="Toggle Menu"
+      >
+        <i class="fa-solid fa-bars text-lg"></i>
+      </button>
+
+      <a href="../index.html" class="flex items-center gap-2 group" title="View Storefront">
+        <img src="../assets/images/logo-exact.png" alt="PondyVastra Logo" class="h-9 md:h-10 w-auto object-contain">
+      </a>
+    </div>
+
+    <!-- Center: Search Bar -->
+    <div class="flex-1 max-w-xl mx-4 relative hidden sm:block">
+      <div class="relative flex items-center">
+        <i class="fa-solid fa-magnifying-glass text-[#e11467] absolute left-3.5 text-sm pointer-events-none"></i>
+        <input 
+          id="global-search-input"
+          type="text" 
+          placeholder="Search products, orders, customers..." 
+          class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-lg pl-10 pr-4 py-2 text-xs md:text-sm text-stone-700 placeholder:text-stone-400 focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition-all"
+        >
+      </div>
+    </div>
+
+    <!-- Right: Notifications & Admin Profile -->
+    <div class="flex items-center gap-4 sm:gap-6 flex-shrink-0">
+      
+      <!-- Storefront link -->
+      <a href="../index.html" target="_blank" class="hidden md:inline-flex items-center gap-1.5 text-xs font-semibold text-stone-600 hover:text-[#e11467] bg-stone-50 hover:bg-rose-50 border border-stone-200 px-3 py-1.5 rounded-lg transition">
+        <i class="fa-solid fa-store text-xs"></i>
+        <span>Storefront</span>
+      </a>
+
+      <!-- Notification Bell with Red Badge '5' -->
+      <div class="relative cursor-pointer group" onclick="toggleNotificationDropdown()">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-stone-100 transition text-stone-700">
+          <i class="fa-regular fa-bell text-lg"></i>
+        </div>
+        <span class="absolute top-0.5 right-0.5 bg-[#ef4444] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
+          5
+        </span>
+
+        <!-- Dropdown Notifications Menu -->
+        <div id="notifications-menu" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-stone-200 p-4 z-50">
+          <div class="flex items-center justify-between pb-3 border-b border-stone-100">
+            <span class="font-bold text-sm text-stone-900">Notifications</span>
+            <span class="text-[11px] bg-rose-50 text-[#e11467] font-semibold px-2 py-0.5 rounded-full">5 New</span>
+          </div>
+          <div class="divide-y divide-stone-100 text-xs">
+            <div class="py-2.5 flex items-start gap-2.5">
+              <span class="w-2 h-2 rounded-full bg-[#e11467] mt-1.5 flex-shrink-0"></span>
+              <div>
+                <p class="font-semibold text-stone-800">New Order #PV100324 received</p>
+                <span class="text-stone-400 text-[10px]">Just now • Priya S (₹1,299)</span>
+              </div>
+            </div>
+            <div class="py-2.5 flex items-start gap-2.5">
+              <span class="w-2 h-2 rounded-full bg-amber-500 mt-1.5 flex-shrink-0"></span>
+              <div>
+                <p class="font-semibold text-stone-800">Low Stock Alert: Cotton Kurta Set</p>
+                <span class="text-stone-400 text-[10px]">10 mins ago • Only 3 units left</span>
+              </div>
+            </div>
+            <div class="py-2.5 flex items-start gap-2.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 mt-1.5 flex-shrink-0"></span>
+              <div>
+                <p class="font-semibold text-stone-800">Payment captured via UPI</p>
+                <span class="text-stone-400 text-[10px]">25 mins ago • ₹3,199 from Ananya M</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Profile Pill -->
+      <div class="flex items-center gap-2 cursor-pointer group select-none relative" onclick="toggleAdminUserMenu()">
+        <img 
+          src="../assets/images/admin-avatar.png" 
+          alt="Admin Avatar" 
+          class="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover border border-stone-200 group-hover:ring-2 group-hover:ring-[#e11467]/30 transition"
+        >
+        <span class="text-xs sm:text-sm font-semibold text-stone-800 group-hover:text-[#e11467] transition">
+          Admin
+        </span>
+        <i class="fa-solid fa-chevron-down text-stone-400 text-[10px] group-hover:text-stone-600 transition"></i>
+
+        <!-- Dropdown User Menu -->
+        <div id="admin-user-menu" class="hidden absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-xl border border-stone-200 py-1.5 z-50 text-xs">
+          <div class="px-3 py-2 border-b border-stone-100">
+            <p class="font-bold text-stone-900">Store Administrator</p>
+            <p class="text-stone-400 text-[11px]">admin@pondyvastra.com</p>
+          </div>
+          <a href="index.html#settings" class="flex items-center gap-2 px-3 py-2 hover:bg-rose-50 text-stone-700 hover:text-[#e11467]">
+            <i class="fa-solid fa-gear text-stone-400"></i> Settings
+          </a>
+          <a href="../index.html" class="flex items-center gap-2 px-3 py-2 hover:bg-rose-50 text-stone-700 hover:text-[#e11467]">
+            <i class="fa-solid fa-arrow-right-from-bracket text-stone-400"></i> Sign Out
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ================= BODY CONTENT (Sidebar + Main) ================= -->
+  <div class="flex-1 flex overflow-hidden">
+
+    <!-- ================= LEFT SIDEBAR ================= -->
+    <aside id="admin-sidebar" class="fixed lg:static inset-y-0 left-0 top-16 lg:top-0 z-30 w-64 bg-[#fff9fa] border-r border-stone-200/80 flex flex-col justify-between overflow-y-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
+      
+      <!-- Navigation Menu List -->
+      <nav class="p-4 space-y-1">
+        
+        <!-- 1. Dashboard -->
+        <a href="index.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-house text-base w-5 text-center text-stone-400"></i>
+          <span>Dashboard</span>
+        </a>
+
+        <!-- 2. Products -->
+        <a href="products.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-bag-shopping text-base w-5 text-center text-stone-400"></i>
+          <span>Products</span>
+        </a>
+
+        <!-- 3. Filter Categories (ACTIVE hot pink pill) -->
+        <a href="categories.html" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#e11467] text-white font-semibold text-sm shadow-xs transition cursor-pointer">
+          <i class="fa-regular fa-folder-open text-base w-5 text-center text-white"></i>
+          <span>Filter Categories</span>
+        </a>
+
+        <!-- 4. Orders -->
+        <a href="index.html#orders" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-regular fa-calendar-check text-base w-5 text-center text-stone-400"></i>
+          <span>Orders</span>
+        </a>
+
+        <!-- 5. Customers -->
+        <a href="index.html#customers" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-user-group text-base w-5 text-center text-stone-400"></i>
+          <span>Customers</span>
+        </a>
+
+        <!-- 6. Inventory -->
+        <a href="index.html#inventory" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-cube text-base w-5 text-center text-stone-400"></i>
+          <span>Inventory</span>
+        </a>
+
+        <!-- 7. Coupons & Offers -->
+        <a href="index.html#coupons" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-palette text-base w-5 text-center text-stone-400"></i>
+          <span>Coupons &amp; Offers</span>
+        </a>
+
+        <!-- 8. Banners & Homepage -->
+        <a href="index.html#banners" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-desktop text-base w-5 text-center text-stone-400"></i>
+          <span>Banners &amp; Homepage</span>
+        </a>
+
+        <!-- 9. Reviews -->
+        <a href="index.html#reviews" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-regular fa-star text-base w-5 text-center text-stone-400"></i>
+          <span>Reviews</span>
+        </a>
+
+        <!-- 10. Returns & Refunds -->
+        <a href="index.html#returns" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-rotate-left text-base w-5 text-center text-stone-400"></i>
+          <span>Returns &amp; Refunds</span>
+        </a>
+
+        <!-- 11. Marketing -->
+        <a href="index.html#marketing" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-rocket text-base w-5 text-center text-stone-400"></i>
+          <span>Marketing</span>
+        </a>
+
+        <!-- 12. Reports & Analytics -->
+        <a href="index.html#analytics" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-chart-line text-base w-5 text-center text-stone-400"></i>
+          <span>Reports &amp; Analytics</span>
+        </a>
+
+        <!-- 13. Shipping -->
+        <a href="index.html#shipping" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-truck text-base w-5 text-center text-stone-400"></i>
+          <span>Shipping</span>
+        </a>
+
+        <!-- 14. Payments -->
+        <a href="index.html#payments" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-regular fa-credit-card text-base w-5 text-center text-stone-400"></i>
+          <span>Payments</span>
+        </a>
+
+        <!-- 15. Users & Roles -->
+        <a href="index.html#users" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-users-gear text-base w-5 text-center text-stone-400"></i>
+          <span>Users &amp; Roles</span>
+        </a>
+
+        <!-- 16. Settings -->
+        <a href="index.html#settings" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-700 hover:text-[#e11467] hover:bg-rose-50/70 font-medium text-sm transition cursor-pointer">
+          <i class="fa-solid fa-gear text-base w-5 text-center text-stone-400"></i>
+          <span>Settings</span>
+        </a>
+
+      </nav>
+
+      <!-- Sidebar Bottom Info -->
+      <div class="p-4 border-t border-stone-200/70 text-[11px] text-stone-400 text-center">
+        PondyVastra v2.4 • Pondicherry Store
+      </div>
+
+    </aside>
+
+    <!-- Overlay for mobile drawer -->
+    <div id="mobile-sidebar-backdrop" onclick="toggleMobileSidebar()" class="hidden fixed inset-0 bg-stone-900/40 z-20 lg:hidden"></div>
+
+    <!-- ================= MAIN CATEGORIES BODY ================= -->
+    <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
+      
+      <!-- Top Title & Action Buttons Header -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-3 flex-wrap">
+            <h1 class="text-2xl sm:text-3xl font-bold text-stone-900 tracking-tight">Categories</h1>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-rose-50 text-[#e11467] border border-rose-200/60 shadow-2xs">
+              <i class="fa-solid fa-arrows-up-down-left-right text-[10px]"></i>
+              <span>Order-wise Reordering Enabled</span>
+            </span>
+          </div>
+          <p class="text-xs sm:text-sm text-stone-500 mt-1">Manage product categories for your store • Drag cards or click 1st, 2nd badge to arrange sequence</p>
+        </div>
+
+        <div class="flex items-center gap-2.5 self-start sm:self-auto">
+          <!-- Reset Order button -->
+          <button 
+            onclick="resetDefaultOrder()"
+            title="Reset display order to initial defaults"
+            class="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 text-stone-600 hover:text-stone-900 text-xs font-semibold shadow-2xs transition cursor-pointer"
+          >
+            <i class="fa-solid fa-arrow-rotate-left text-xs text-stone-400"></i>
+            <span>Reset Order</span>
+          </button>
+
+          <!-- Add Category button -->
+          <button 
+            id="btn-add-category"
+            onclick="openAddCategoryModal()" 
+            class="inline-flex items-center justify-center gap-2 bg-[#e11467] hover:bg-[#be123c] text-white rounded-xl px-5 py-2.5 text-xs md:text-sm font-semibold shadow-xs hover:shadow-md transition cursor-pointer"
+          >
+            <i class="fa-solid fa-plus text-xs"></i>
+            <span>Add Category</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter, Search & Controls Bar -->
+      <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+        
+        <!-- Search Input -->
+        <div class="relative flex-1 max-w-md">
+          <i class="fa-solid fa-magnifying-glass text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 text-sm pointer-events-none"></i>
+          <input 
+            id="category-search-input"
+            type="text" 
+            oninput="filterCategories()"
+            placeholder="Search categories..." 
+            class="w-full bg-white border border-stone-200/90 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] shadow-2xs transition"
+          >
+        </div>
+
+        <!-- Right Dropdowns -->
+        <div class="flex items-center gap-2.5 flex-wrap">
+          
+          <!-- All Status Filter -->
+          <div class="relative">
+            <select 
+              id="status-filter" 
+              onchange="filterCategories()"
+              class="appearance-none bg-white border border-stone-200/90 rounded-xl pl-3.5 pr-8 py-2 text-xs font-semibold text-stone-700 shadow-2xs hover:border-stone-300 focus:outline-none focus:border-[#e11467] transition cursor-pointer"
+            >
+              <option value="all">All Status</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+            <i class="fa-solid fa-chevron-down text-stone-400 text-[10px] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+          </div>
+
+          <!-- Sort by -->
+          <div class="relative">
+            <select 
+              id="sort-filter" 
+              onchange="filterCategories()"
+              class="appearance-none bg-white border border-stone-200/90 rounded-xl pl-3.5 pr-8 py-2 text-xs font-semibold text-stone-700 shadow-2xs hover:border-stone-300 focus:outline-none focus:border-[#e11467] transition cursor-pointer"
+            >
+              <option value="order-asc" selected>Display Order (1st, 2nd...)</option>
+              <option value="order-desc">Display Order (Last to 1st)</option>
+              <option value="name-asc">Name (A-Z)</option>
+              <option value="name-desc">Name (Z-A)</option>
+              <option value="count-desc">Most Products</option>
+              <option value="count-asc">Least Products</option>
+            </select>
+            <i class="fa-solid fa-chevron-down text-stone-400 text-[10px] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+          </div>
+
+          <!-- Show 12 -->
+          <div class="relative">
+            <select 
+              id="limit-filter"
+              class="appearance-none bg-white border border-stone-200/90 rounded-xl pl-3.5 pr-8 py-2 text-xs font-semibold text-stone-700 shadow-2xs hover:border-stone-300 focus:outline-none focus:border-[#e11467] transition cursor-pointer"
+            >
+              <option value="12">Show 12</option>
+              <option value="24">Show 24</option>
+              <option value="all">Show All</option>
+            </select>
+            <i class="fa-solid fa-chevron-down text-stone-400 text-[10px] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Helper Notice -->
+      <div class="bg-white/80 border border-stone-200/70 rounded-xl px-4 py-2 text-xs text-stone-500 flex items-center justify-between gap-2 flex-wrap">
+        <span class="flex items-center gap-2">
+          <i class="fa-solid fa-lightbulb text-amber-500"></i>
+          <span><strong>Quick Reorder:</strong> Drag &amp; drop any card, click <strong>▲ / ▼</strong> to move steps, or click the <strong>1st, 2nd badge</strong> to jump to any position number.</span>
+        </span>
+        <span id="saved-order-indicator" class="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
+          <i class="fa-solid fa-check text-[10px]"></i> Order saved
+        </span>
+      </div>
+
+      <!-- ================= 13 CATEGORY CARDS GRID ================= -->
+      <div id="categories-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
+
+        <!-- 1. Kurtis -->
+        <div class="category-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Kurtis" data-count="245" data-status="active" data-order="1">
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
+              <i class="fa-solid fa-grip-vertical text-xs"></i>
+            </div>
+            <div class="relative">
+              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-[#fff1f5] p-1 flex items-center justify-center border border-rose-100/60 shadow-2xs">
+                <img src="../assets/images/cat-1-kurtis.png" alt="Kurtis" class="w-full h-full object-cover rounded-full pointer-events-none">
+              </div>
+              <button onclick="promptChangeOrder('Kurtis', 1)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
+                1st
+              </button>
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Kurtis</h3>
+              <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
+                <button onclick="moveCategoryOrder('Kurtis', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-up"></i>
+                </button>
+                <button onclick="moveCategoryOrder('Kurtis', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+              </div>
+            </div>
+            <p class="text-xs text-stone-400 mt-0.5">245 Products</p>
+            <div class="flex items-center gap-1.5 mt-1.5 status-badge">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span class="text-xs font-semibold text-emerald-600">Active</span>
+            </div>
+            <div class="flex items-center gap-2 mt-3">
+              <button onclick="openEditCategoryModal('Kurtis', 245, 'active', 1, '../assets/images/cat-1-kurtis.png')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-solid fa-pen text-[10px]"></i>
+              </button>
+              <button onclick="confirmDeleteCategory('Kurtis')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-regular fa-trash-can text-[11px]"></i>
+              </button>
+              <label class="relative inline-flex items-center cursor-pointer ml-auto">
+                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Kurtis')" class="sr-only peer">
+                <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Kurta Sets -->
+        <div class="category-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Kurta Sets" data-count="189" data-status="active" data-order="2">
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
+              <i class="fa-solid fa-grip-vertical text-xs"></i>
+            </div>
+            <div class="relative">
+              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-[#fff1f5] p-1 flex items-center justify-center border border-rose-100/60 shadow-2xs">
+                <img src="../assets/images/cat-2-kurta-sets.png" alt="Kurta Sets" class="w-full h-full object-cover rounded-full pointer-events-none">
+              </div>
+              <button onclick="promptChangeOrder('Kurta Sets', 2)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
+                2nd
+              </button>
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Kurta Sets</h3>
+              <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
+                <button onclick="moveCategoryOrder('Kurta Sets', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-up"></i>
+                </button>
+                <button onclick="moveCategoryOrder('Kurta Sets', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+              </div>
+            </div>
+            <p class="text-xs text-stone-400 mt-0.5">189 Products</p>
+            <div class="flex items-center gap-1.5 mt-1.5 status-badge">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span class="text-xs font-semibold text-emerald-600">Active</span>
+            </div>
+            <div class="flex items-center gap-2 mt-3">
+              <button onclick="openEditCategoryModal('Kurta Sets', 189, 'active', 2, '../assets/images/cat-2-kurta-sets.png')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-solid fa-pen text-[10px]"></i>
+              </button>
+              <button onclick="confirmDeleteCategory('Kurta Sets')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-regular fa-trash-can text-[11px]"></i>
+              </button>
+              <label class="relative inline-flex items-center cursor-pointer ml-auto">
+                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Kurta Sets')" class="sr-only peer">
+                <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Dresses -->
+        <div class="category-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Dresses" data-count="312" data-status="active" data-order="3">
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
+              <i class="fa-solid fa-grip-vertical text-xs"></i>
+            </div>
+            <div class="relative">
+              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-[#fff1f5] p-1 flex items-center justify-center border border-rose-100/60 shadow-2xs">
+                <img src="../assets/images/cat-3-dresses.png" alt="Dresses" class="w-full h-full object-cover rounded-full pointer-events-none">
+              </div>
+              <button onclick="promptChangeOrder('Dresses', 3)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
+                3rd
+              </button>
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Dresses</h3>
+              <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
+                <button onclick="moveCategoryOrder('Dresses', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-up"></i>
+                </button>
+                <button onclick="moveCategoryOrder('Dresses', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+              </div>
+            </div>
+            <p class="text-xs text-stone-400 mt-0.5">312 Products</p>
+            <div class="flex items-center gap-1.5 mt-1.5 status-badge">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span class="text-xs font-semibold text-emerald-600">Active</span>
+            </div>
+            <div class="flex items-center gap-2 mt-3">
+              <button onclick="openEditCategoryModal('Dresses', 312, 'active', 3, '../assets/images/cat-3-dresses.png')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-solid fa-pen text-[10px]"></i>
+              </button>
+              <button onclick="confirmDeleteCategory('Dresses')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-regular fa-trash-can text-[11px]"></i>
+              </button>
+              <label class="relative inline-flex items-center cursor-pointer ml-auto">
+                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Dresses')" class="sr-only peer">
+                <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Sarees -->
+        <div class="category-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Sarees" data-count="276" data-status="active" data-order="4">
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
+              <i class="fa-solid fa-grip-vertical text-xs"></i>
+            </div>
+            <div class="relative">
+              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-[#fff1f5] p-1 flex items-center justify-center border border-rose-100/60 shadow-2xs">
+                <img src="../assets/images/cat-4-sarees.png" alt="Sarees" class="w-full h-full object-cover rounded-full pointer-events-none">
+              </div>
+              <button onclick="promptChangeOrder('Sarees', 4)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
+                4th
+              </button>
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Sarees</h3>
+              <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
+                <button onclick="moveCategoryOrder('Sarees', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-up"></i>
+                </button>
+                <button onclick="moveCategoryOrder('Sarees', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+              </div>
+            </div>
+            <p class="text-xs text-stone-400 mt-0.5">276 Products</p>
+            <div class="flex items-center gap-1.5 mt-1.5 status-badge">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span class="text-xs font-semibold text-emerald-600">Active</span>
+            </div>
+            <div class="flex items-center gap-2 mt-3">
+              <button onclick="openEditCategoryModal('Sarees', 276, 'active', 4, '../assets/images/cat-4-sarees.png')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-solid fa-pen text-[10px]"></i>
+              </button>
+              <button onclick="confirmDeleteCategory('Sarees')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-regular fa-trash-can text-[11px]"></i>
+              </button>
+              <label class="relative inline-flex items-center cursor-pointer ml-auto">
+                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Sarees')" class="sr-only peer">
+                <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Bottom Wear -->
+        <div class="category-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Bottom Wear" data-count="156" data-status="active" data-order="5">
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
+              <i class="fa-solid fa-grip-vertical text-xs"></i>
+            </div>
+            <div class="relative">
+              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-[#fff1f5] p-1 flex items-center justify-center border border-rose-100/60 shadow-2xs">
+                <img src="../assets/images/cat-5-bottoms.png" alt="Bottom Wear" class="w-full h-full object-cover rounded-full pointer-events-none">
+              </div>
+              <button onclick="promptChangeOrder('Bottom Wear', 5)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
+                5th
+              </button>
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Bottom Wear</h3>
+              <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
+                <button onclick="moveCategoryOrder('Bottom Wear', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-up"></i>
+                </button>
+                <button onclick="moveCategoryOrder('Bottom Wear', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+              </div>
+            </div>
+            <p class="text-xs text-stone-400 mt-0.5">156 Products</p>
+            <div class="flex items-center gap-1.5 mt-1.5 status-badge">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span class="text-xs font-semibold text-emerald-600">Active</span>
+            </div>
+            <div class="flex items-center gap-2 mt-3">
+              <button onclick="openEditCategoryModal('Bottom Wear', 156, 'active', 5, '../assets/images/cat-5-bottoms.png')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-solid fa-pen text-[10px]"></i>
+              </button>
+              <button onclick="confirmDeleteCategory('Bottom Wear')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-regular fa-trash-can text-[11px]"></i>
+              </button>
+              <label class="relative inline-flex items-center cursor-pointer ml-auto">
+                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Bottom Wear')" class="sr-only peer">
+                <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Dupattas & Shawls -->
+        <div class="category-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Dupattas & Shawls" data-count="98" data-status="active" data-order="6">
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
+              <i class="fa-solid fa-grip-vertical text-xs"></i>
+            </div>
+            <div class="relative">
+              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-[#fff1f5] p-1 flex items-center justify-center border border-rose-100/60 shadow-2xs">
+                <img src="../assets/images/cat-6-dupattas.png" alt="Dupattas & Shawls" class="w-full h-full object-cover rounded-full pointer-events-none">
+              </div>
+              <button onclick="promptChangeOrder('Dupattas & Shawls', 6)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
+                6th
+              </button>
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Dupattas &amp; Shawls</h3>
+              <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
+                <button onclick="moveCategoryOrder('Dupattas & Shawls', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-up"></i>
+                </button>
+                <button onclick="moveCategoryOrder('Dupattas & Shawls', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+              </div>
+            </div>
+            <p class="text-xs text-stone-400 mt-0.5">98 Products</p>
+            <div class="flex items-center gap-1.5 mt-1.5 status-badge">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span class="text-xs font-semibold text-emerald-600">Active</span>
+            </div>
+            <div class="flex items-center gap-2 mt-3">
+              <button onclick="openEditCategoryModal('Dupattas & Shawls', 98, 'active', 6, '../assets/images/cat-6-dupattas.png')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-solid fa-pen text-[10px]"></i>
+              </button>
+              <button onclick="confirmDeleteCategory('Dupattas & Shawls')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-regular fa-trash-can text-[11px]"></i>
+              </button>
+              <label class="relative inline-flex items-center cursor-pointer ml-auto">
+                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Dupattas & Shawls')" class="sr-only peer">
+                <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7. Lehengas -->
+        <div class="category-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Lehengas" data-count="134" data-status="active" data-order="7">
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
+              <i class="fa-solid fa-grip-vertical text-xs"></i>
+            </div>
+            <div class="relative">
+              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-[#fff1f5] p-1 flex items-center justify-center border border-rose-100/60 shadow-2xs">
+                <img src="../assets/images/cat-7-lehengas.png" alt="Lehengas" class="w-full h-full object-cover rounded-full pointer-events-none">
+              </div>
+              <button onclick="promptChangeOrder('Lehengas', 7)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
+                7th
+              </button>
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Lehengas</h3>
+              <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
+                <button onclick="moveCategoryOrder('Lehengas', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-up"></i>
+                </button>
+                <button onclick="moveCategoryOrder('Lehengas', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+              </div>
+            </div>
+            <p class="text-xs text-stone-400 mt-0.5">134 Products</p>
+            <div class="flex items-center gap-1.5 mt-1.5 status-badge">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span class="text-xs font-semibold text-emerald-600">Active</span>
+            </div>
+            <div class="flex items-center gap-2 mt-3">
+              <button onclick="openEditCategoryModal('Lehengas', 134, 'active', 7, '../assets/images/cat-7-lehengas.png')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-solid fa-pen text-[10px]"></i>
+              </button>
+              <button onclick="confirmDeleteCategory('Lehengas')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-regular fa-trash-can text-[11px]"></i>
+              </button>
+              <label class="relative inline-flex items-center cursor-pointer ml-auto">
+                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Lehengas')" class="sr-only peer">
+                <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8. Co-ord Sets -->
+        <div class="category-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Co-ord Sets" data-count="102" data-status="active" data-order="8">
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
+              <i class="fa-solid fa-grip-vertical text-xs"></i>
+            </div>
+            <div class="relative">
+              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-[#fff1f5] p-1 flex items-center justify-center border border-rose-100/60 shadow-2xs">
+                <img src="../assets/images/cat-8-coord-sets.png" alt="Co-ord Sets" class="w-full h-full object-cover rounded-full pointer-events-none">
+              </div>
+              <button onclick="promptChangeOrder('Co-ord Sets', 8)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
+                8th
+              </button>
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Co-ord Sets</h3>
+              <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
+                <button onclick="moveCategoryOrder('Co-ord Sets', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-up"></i>
+                </button>
+                <button onclick="moveCategoryOrder('Co-ord Sets', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+              </div>
+            </div>
+            <p class="text-xs text-stone-400 mt-0.5">102 Products</p>
+            <div class="flex items-center gap-1.5 mt-1.5 status-badge">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span class="text-xs font-semibold text-emerald-600">Active</span>
+            </div>
+            <div class="flex items-center gap-2 mt-3">
+              <button onclick="openEditCategoryModal('Co-ord Sets', 102, 'active', 8, '../assets/images/cat-8-coord-sets.png')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-solid fa-pen text-[10px]"></i>
+              </button>
+              <button onclick="confirmDeleteCategory('Co-ord Sets')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-regular fa-trash-can text-[11px]"></i>
+              </button>
+              <label class="relative inline-flex items-center cursor-pointer ml-auto">
+                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Co-ord Sets')" class="sr-only peer">
+                <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9. Plus Size -->
+        <div class="category-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Plus Size" data-count="87" data-status="active" data-order="9">
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
+              <i class="fa-solid fa-grip-vertical text-xs"></i>
+            </div>
+            <div class="relative">
+              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-[#fff1f5] p-1 flex items-center justify-center border border-rose-100/60 shadow-2xs">
+                <img src="../assets/images/cat-9-plus-size.png" alt="Plus Size" class="w-full h-full object-cover rounded-full pointer-events-none">
+              </div>
+              <button onclick="promptChangeOrder('Plus Size', 9)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
+                9th
+              </button>
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Plus Size</h3>
+              <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
+                <button onclick="moveCategoryOrder('Plus Size', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-up"></i>
+                </button>
+                <button onclick="moveCategoryOrder('Plus Size', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+              </div>
+            </div>
+            <p class="text-xs text-stone-400 mt-0.5">87 Products</p>
+            <div class="flex items-center gap-1.5 mt-1.5 status-badge">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span class="text-xs font-semibold text-emerald-600">Active</span>
+            </div>
+            <div class="flex items-center gap-2 mt-3">
+              <button onclick="openEditCategoryModal('Plus Size', 87, 'active', 9, '../assets/images/cat-9-plus-size.png')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-solid fa-pen text-[10px]"></i>
+              </button>
+              <button onclick="confirmDeleteCategory('Plus Size')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-regular fa-trash-can text-[11px]"></i>
+              </button>
+              <label class="relative inline-flex items-center cursor-pointer ml-auto">
+                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Plus Size')" class="sr-only peer">
+                <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 10. Maternity Wear -->
+        <div class="category-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Maternity Wear" data-count="62" data-status="active" data-order="10">
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
+              <i class="fa-solid fa-grip-vertical text-xs"></i>
+            </div>
+            <div class="relative">
+              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-[#fff1f5] p-1 flex items-center justify-center border border-rose-100/60 shadow-2xs">
+                <img src="../assets/images/cat-10-maternity.png" alt="Maternity Wear" class="w-full h-full object-cover rounded-full pointer-events-none">
+              </div>
+              <button onclick="promptChangeOrder('Maternity Wear', 10)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
+                10th
+              </button>
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Maternity Wear</h3>
+              <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
+                <button onclick="moveCategoryOrder('Maternity Wear', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-up"></i>
+                </button>
+                <button onclick="moveCategoryOrder('Maternity Wear', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+              </div>
+            </div>
+            <p class="text-xs text-stone-400 mt-0.5">62 Products</p>
+            <div class="flex items-center gap-1.5 mt-1.5 status-badge">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span class="text-xs font-semibold text-emerald-600">Active</span>
+            </div>
+            <div class="flex items-center gap-2 mt-3">
+              <button onclick="openEditCategoryModal('Maternity Wear', 62, 'active', 10, '../assets/images/cat-10-maternity.png')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-solid fa-pen text-[10px]"></i>
+              </button>
+              <button onclick="confirmDeleteCategory('Maternity Wear')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-regular fa-trash-can text-[11px]"></i>
+              </button>
+              <label class="relative inline-flex items-center cursor-pointer ml-auto">
+                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Maternity Wear')" class="sr-only peer">
+                <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 11. Night Wear -->
+        <div class="category-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Night Wear" data-count="75" data-status="active" data-order="11">
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
+              <i class="fa-solid fa-grip-vertical text-xs"></i>
+            </div>
+            <div class="relative">
+              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-[#fff1f5] p-1 flex items-center justify-center border border-rose-100/60 shadow-2xs">
+                <img src="../assets/images/cat-11-nightwear.png" alt="Night Wear" class="w-full h-full object-cover rounded-full pointer-events-none">
+              </div>
+              <button onclick="promptChangeOrder('Night Wear', 11)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
+                11th
+              </button>
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Night Wear</h3>
+              <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
+                <button onclick="moveCategoryOrder('Night Wear', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-up"></i>
+                </button>
+                <button onclick="moveCategoryOrder('Night Wear', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+              </div>
+            </div>
+            <p class="text-xs text-stone-400 mt-0.5">75 Products</p>
+            <div class="flex items-center gap-1.5 mt-1.5 status-badge">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span class="text-xs font-semibold text-emerald-600">Active</span>
+            </div>
+            <div class="flex items-center gap-2 mt-3">
+              <button onclick="openEditCategoryModal('Night Wear', 75, 'active', 11, '../assets/images/cat-11-nightwear.png')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-solid fa-pen text-[10px]"></i>
+              </button>
+              <button onclick="confirmDeleteCategory('Night Wear')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-regular fa-trash-can text-[11px]"></i>
+              </button>
+              <label class="relative inline-flex items-center cursor-pointer ml-auto">
+                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Night Wear')" class="sr-only peer">
+                <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 12. Accessories -->
+        <div class="category-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Accessories" data-count="198" data-status="active" data-order="12">
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
+              <i class="fa-solid fa-grip-vertical text-xs"></i>
+            </div>
+            <div class="relative">
+              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-[#fff1f5] p-1 flex items-center justify-center border border-rose-100/60 shadow-2xs">
+                <img src="../assets/images/cat-12-accessories.png" alt="Accessories" class="w-full h-full object-cover rounded-full pointer-events-none">
+              </div>
+              <button onclick="promptChangeOrder('Accessories', 12)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
+                12th
+              </button>
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Accessories</h3>
+              <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
+                <button onclick="moveCategoryOrder('Accessories', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-up"></i>
+                </button>
+                <button onclick="moveCategoryOrder('Accessories', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+              </div>
+            </div>
+            <p class="text-xs text-stone-400 mt-0.5">198 Products</p>
+            <div class="flex items-center gap-1.5 mt-1.5 status-badge">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span class="text-xs font-semibold text-emerald-600">Active</span>
+            </div>
+            <div class="flex items-center gap-2 mt-3">
+              <button onclick="openEditCategoryModal('Accessories', 198, 'active', 12, '../assets/images/cat-12-accessories.png')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-solid fa-pen text-[10px]"></i>
+              </button>
+              <button onclick="confirmDeleteCategory('Accessories')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-regular fa-trash-can text-[11px]"></i>
+              </button>
+              <label class="relative inline-flex items-center cursor-pointer ml-auto">
+                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Accessories')" class="sr-only peer">
+                <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 13. Sale -->
+        <div class="category-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Sale" data-count="43" data-status="active" data-order="13">
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
+              <i class="fa-solid fa-grip-vertical text-xs"></i>
+            </div>
+            <div class="relative">
+              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-[#fff1f5] p-1 flex items-center justify-center border border-rose-100/60 shadow-2xs">
+                <img src="../assets/images/cat-13-sale.png" alt="Sale" class="w-full h-full object-cover rounded-full pointer-events-none">
+              </div>
+              <button onclick="promptChangeOrder('Sale', 13)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
+                13th
+              </button>
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Sale</h3>
+              <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
+                <button onclick="moveCategoryOrder('Sale', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-up"></i>
+                </button>
+                <button onclick="moveCategoryOrder('Sale', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+              </div>
+            </div>
+            <p class="text-xs text-stone-400 mt-0.5">43 Products</p>
+            <div class="flex items-center gap-1.5 mt-1.5 status-badge">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span class="text-xs font-semibold text-emerald-600">Active</span>
+            </div>
+            <div class="flex items-center gap-2 mt-3">
+              <button onclick="openEditCategoryModal('Sale', 43, 'active', 13, '../assets/images/cat-13-sale.png')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-solid fa-pen text-[10px]"></i>
+              </button>
+              <button onclick="confirmDeleteCategory('Sale')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-regular fa-trash-can text-[11px]"></i>
+              </button>
+              <label class="relative inline-flex items-center cursor-pointer ml-auto">
+                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Sale')" class="sr-only peer">
+                <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Empty state when search has no matches -->
+      <div id="no-categories-found" class="hidden text-center py-16 bg-white rounded-2xl border border-stone-200/80 p-8">
+        <div class="w-16 h-16 rounded-full bg-rose-50 text-[#e11467] flex items-center justify-center mx-auto mb-4 text-2xl">
+          <i class="fa-regular fa-folder-open"></i>
+        </div>
+        <h3 class="text-base font-bold text-stone-900">No categories found</h3>
+        <p class="text-xs text-stone-500 mt-1 max-w-sm mx-auto">We couldn't find any categories matching your search criteria. Try a different keyword or create a new category.</p>
+        <button onclick="openAddCategoryModal()" class="mt-4 px-4 py-2 bg-[#e11467] hover:bg-[#be123c] text-white text-xs font-semibold rounded-xl transition">
+          + Add Category
+        </button>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- ================= ADD CATEGORY MODAL ================= -->
+  <div id="add-category-modal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-stone-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-stone-100 overflow-hidden transform transition-all duration-300 scale-95 opacity-0 modal-container">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-4 border-b border-stone-100 flex items-center justify-between bg-gradient-to-r from-rose-50/50 to-white">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-rose-50 text-[#e11467] flex items-center justify-center text-sm font-bold">
+            <i class="fa-solid fa-folder-plus"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-stone-900 text-base">Add New Category</h3>
+            <p class="text-stone-400 text-xs">Create a new category and set its display position</p>
+          </div>
+        </div>
+        <button onclick="closeAddCategoryModal()" class="w-8 h-8 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <!-- Modal Form -->
+      <form id="add-category-form" onsubmit="handleSaveNewCategory(event)" class="p-6 space-y-4 text-xs">
+        
+        <!-- Category Name -->
+        <div>
+          <label class="block font-semibold text-stone-700 mb-1.5">Category Name <span class="text-[#e11467]">*</span></label>
+          <input 
+            type="text" 
+            id="new-cat-name" 
+            required 
+            placeholder="e.g. Anarkali Suits"
+            oninput="autoGenerateSlug(this.value)"
+            class="w-full bg-[#f8fafc] border border-stone-200 rounded-xl px-3.5 py-2.5 text-stone-800 focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition"
+          >
+        </div>
+
+        <!-- Slug & Display Order -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-stone-700 mb-1.5">Slug (URL)</label>
+            <input 
+              type="text" 
+              id="new-cat-slug" 
+              placeholder="e.g. anarkali-suits"
+              class="w-full bg-[#f8fafc] border border-stone-200 rounded-xl px-3.5 py-2.5 text-stone-800 focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition"
+            >
+          </div>
+          <div>
+            <label class="block font-semibold text-stone-700 mb-1.5">Display Order (Position)</label>
+            <input 
+              type="number" 
+              id="new-cat-order" 
+              min="1"
+              value="14"
+              class="w-full bg-[#f8fafc] border border-stone-200 rounded-xl px-3.5 py-2.5 text-stone-800 focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition font-bold"
+              title="1 for 1st, 2 for 2nd, etc."
+            >
+          </div>
+        </div>
+
+        <!-- Parent Category -->
+        <div>
+          <label class="block font-semibold text-stone-700 mb-1.5">Parent Category</label>
+          <select id="new-cat-parent" class="w-full bg-[#f8fafc] border border-stone-200 rounded-xl px-3.5 py-2.5 text-stone-800 focus:outline-none focus:border-[#e11467] transition">
+            <option value="none">None (Root Category)</option>
+            <option value="kurtis">Kurtis</option>
+            <option value="kurta-sets">Kurta Sets</option>
+            <option value="dresses">Dresses</option>
+            <option value="sarees">Sarees</option>
+            <option value="bottom-wear">Bottom Wear</option>
+          </select>
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label class="block font-semibold text-stone-700 mb-1.5">Description (Optional)</label>
+          <textarea 
+            id="new-cat-desc" 
+            rows="2" 
+            placeholder="Brief details about what products belong here..."
+            class="w-full bg-[#f8fafc] border border-stone-200 rounded-xl p-3 text-stone-800 focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition resize-none"
+          ></textarea>
+        </div>
+
+        <!-- Category Image Dropzone -->
+        <div>
+          <label class="block font-semibold text-stone-700 mb-1.5">Category Circle Image</label>
+          <div class="border-2 border-dashed border-stone-200 hover:border-[#e11467] rounded-2xl p-4 text-center bg-rose-50/20 transition cursor-pointer relative" onclick="document.getElementById('new-cat-image-file').click()">
+            <input type="file" id="new-cat-image-file" accept="image/*" class="hidden" onchange="previewCategoryUpload(this)">
+            <div id="upload-placeholder" class="flex flex-col items-center gap-1.5">
+              <div class="w-10 h-10 rounded-full bg-rose-50 text-[#e11467] flex items-center justify-center text-sm">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+              </div>
+              <p class="font-semibold text-stone-700">Click to upload or drag image</p>
+              <p class="text-[11px] text-stone-400">PNG, JPG or WebP (square recommended)</p>
+            </div>
+            <!-- Preview image when selected -->
+            <div id="upload-preview-container" class="hidden flex items-center justify-center gap-3">
+              <img id="upload-preview-img" src="" alt="Preview" class="w-14 h-14 rounded-full object-cover border-2 border-[#e11467] shadow-xs">
+              <div class="text-left">
+                <p id="upload-filename" class="font-semibold text-stone-800 text-xs truncate max-w-[180px]">image.png</p>
+                <span class="text-[10px] text-emerald-600 font-semibold">Image selected ready to save</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status Toggle -->
+        <div class="flex items-center justify-between p-3 bg-stone-50 rounded-xl border border-stone-200/70">
+          <div>
+            <p class="font-semibold text-stone-800 text-xs">Set Status to Active</p>
+            <p class="text-[11px] text-stone-400">Category will be visible to buyers immediately</p>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="new-cat-status" checked class="sr-only peer">
+            <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
+          </label>
+        </div>
+
+        <!-- Footer Buttons -->
+        <div class="flex items-center justify-end gap-2.5 pt-3 border-t border-stone-100">
+          <button 
+            type="button" 
+            onclick="closeAddCategoryModal()" 
+            class="px-4 py-2.5 rounded-xl border border-stone-200 text-stone-600 font-semibold hover:bg-stone-50 transition cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button 
+            type="submit" 
+            class="px-5 py-2.5 rounded-xl bg-[#e11467] hover:bg-[#be123c] text-white font-semibold shadow-xs hover:shadow-md transition cursor-pointer flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-check text-xs"></i>
+            <span>Save Category</span>
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= EDIT CATEGORY MODAL ================= -->
+  <div id="edit-category-modal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-stone-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-stone-100 overflow-hidden transform transition-all duration-300 scale-95 opacity-0 modal-container">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-4 border-b border-stone-100 flex items-center justify-between bg-gradient-to-r from-rose-50/50 to-white">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-rose-50 text-[#e11467] flex items-center justify-center text-sm font-bold">
+            <i class="fa-solid fa-pen-to-square"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-stone-900 text-base">Edit Category</h3>
+            <p class="text-stone-400 text-xs">Update category name, product count &amp; display position</p>
+          </div>
+        </div>
+        <button onclick="closeEditCategoryModal()" class="w-8 h-8 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <!-- Modal Form -->
+      <form id="edit-category-form" onsubmit="handleSaveEditedCategory(event)" class="p-6 space-y-4 text-xs">
+        <input type="hidden" id="edit-original-name">
+
+        <!-- Category Name -->
+        <div>
+          <label class="block font-semibold text-stone-700 mb-1.5">Category Name <span class="text-[#e11467]">*</span></label>
+          <input 
+            type="text" 
+            id="edit-cat-name" 
+            required 
+            class="w-full bg-[#f8fafc] border border-stone-200 rounded-xl px-3.5 py-2.5 text-stone-800 focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition"
+          >
+        </div>
+
+        <!-- Product Count & Display Order -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-stone-700 mb-1.5">Product Count</label>
+            <input 
+              type="number" 
+              id="edit-cat-count" 
+              min="0"
+              class="w-full bg-[#f8fafc] border border-stone-200 rounded-xl px-3.5 py-2.5 text-stone-800 focus:outline-none focus:border-[#e11467] transition"
+            >
+          </div>
+          <div>
+            <label class="block font-semibold text-stone-700 mb-1.5">Display Order Position (1st, 2nd...)</label>
+            <input 
+              type="number" 
+              id="edit-cat-order" 
+              min="1"
+              class="w-full bg-[#f8fafc] border border-stone-200 rounded-xl px-3.5 py-2.5 text-stone-800 focus:outline-none focus:border-[#e11467] transition font-bold text-[#e11467]"
+            >
+          </div>
+        </div>
+
+        <!-- Status Toggle -->
+        <div class="flex items-center justify-between p-3 bg-stone-50 rounded-xl border border-stone-200/70">
+          <div>
+            <p class="font-semibold text-stone-800 text-xs">Category Active</p>
+            <p class="text-[11px] text-stone-400">Controls visibility in the storefront</p>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="edit-cat-status" class="sr-only peer">
+            <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
+          </label>
+        </div>
+
+        <!-- Footer Buttons -->
+        <div class="flex items-center justify-end gap-2.5 pt-3 border-t border-stone-100">
+          <button 
+            type="button" 
+            onclick="closeEditCategoryModal()" 
+            class="px-4 py-2.5 rounded-xl border border-stone-200 text-stone-600 font-semibold hover:bg-stone-50 transition cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button 
+            type="submit" 
+            class="px-5 py-2.5 rounded-xl bg-[#e11467] hover:bg-[#be123c] text-white font-semibold shadow-xs hover:shadow-md transition cursor-pointer flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-check text-xs"></i>
+            <span>Update Category</span>
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
+
+  <!-- Interactive Logic -->
+  <script>
+    // Helper: 1 -> 1st, 2 -> 2nd, 3 -> 3rd, etc.
+    function getOrdinal(n) {
+      const s = ["th", "st", "nd", "rd"];
+      const v = n % 100;
+      return n + (s[(v - 20) % 10] || s[v] || s[0]);
+    }
+
+    // Mobile Drawer Toggle
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('admin-sidebar');
+      const backdrop = document.getElementById('mobile-sidebar-backdrop');
+      if (sidebar.classList.contains('-translate-x-full')) {
+        sidebar.classList.remove('-translate-x-full');
+        backdrop.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        backdrop.classList.add('hidden');
+      }
+    }
+
+    function toggleNotificationDropdown() {
+      const menu = document.getElementById('notifications-menu');
+      menu.classList.toggle('hidden');
+    }
+
+    function toggleAdminUserMenu() {
+      const menu = document.getElementById('admin-user-menu');
+      menu.classList.toggle('hidden');
+    }
+
+    // Close menus on outside click
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('#notifications-menu') && !e.target.closest('.fa-bell')) {
+        const notif = document.getElementById('notifications-menu');
+        if (notif) notif.classList.add('hidden');
+      }
+      if (!e.target.closest('#admin-user-menu') && !e.target.closest('.group')) {
+        const userMenu = document.getElementById('admin-user-menu');
+        if (userMenu) userMenu.classList.add('hidden');
+      }
+    });
+
+    // Auto-generate slug from Category name
+    function autoGenerateSlug(val) {
+      const slugInput = document.getElementById('new-cat-slug');
+      if (slugInput) {
+        slugInput.value = val.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      }
+    }
+
+    // ================= ORDERING & DRAG-AND-DROP SYSTEM =================
+    const STORAGE_KEY = 'pondyvastra_category_order';
+
+    // Update all cards' order badges, data attributes, and save to localStorage
+    function updateAllOrderAttributesAndBadges() {
+      const grid = document.getElementById('categories-grid');
+      const cards = Array.from(grid.querySelectorAll('.category-card'));
+      const orderList = [];
+
+      cards.forEach((card, idx) => {
+        const orderNum = idx + 1;
+        const ordinal = getOrdinal(orderNum);
+        const name = card.getAttribute('data-name');
+
+        card.setAttribute('data-order', orderNum);
+        
+        // Update badge
+        const badge = card.querySelector('.order-badge');
+        if (badge) {
+          badge.innerText = ordinal;
+          badge.setAttribute('onclick', `promptChangeOrder('${name}', ${orderNum})`);
+        }
+
+        // Update up/down buttons
+        const upBtn = card.querySelector('button[title="Move up"]');
+        const downBtn = card.querySelector('button[title="Move down"]');
+        if (upBtn) upBtn.setAttribute('onclick', `moveCategoryOrder('${name}', -1)`);
+        if (downBtn) downBtn.setAttribute('onclick', `moveCategoryOrder('${name}', 1)`);
+
+        orderList.push(name);
+      });
+
+      // Persist order in localStorage
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(orderList));
+      } catch (err) {
+        console.error('Failed to save category order', err);
+      }
+
+      // Update indicator
+      const ind = document.getElementById('saved-order-indicator');
+      if (ind) {
+        ind.innerHTML = `<i class="fa-solid fa-check text-[10px]"></i> Saved (${cards.length} ordered)`;
+      }
+
+      // Re-setup drag & drop listeners for any newly added cards
+      setupDragAndDrop();
+    }
+
+    // Load persisted order from localStorage on page startup
+    function loadSavedOrder() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) return;
+        const names = JSON.parse(saved);
+        if (!Array.isArray(names)) return;
+
+        const grid = document.getElementById('categories-grid');
+        const cards = Array.from(grid.querySelectorAll('.category-card'));
+        const cardMap = new Map();
+        cards.forEach(c => cardMap.set(c.getAttribute('data-name'), c));
+
+        names.forEach(name => {
+          if (cardMap.has(name)) {
+            grid.appendChild(cardMap.get(name));
+            cardMap.delete(name);
+          }
+        });
+        // Append any categories that weren't in saved list
+        cardMap.forEach(card => grid.appendChild(card));
+
+        updateAllOrderAttributesAndBadges();
+      } catch (err) {
+        console.error('Error loading saved order', err);
+      }
+    }
+
+    // Reset order to defaults
+    function resetDefaultOrder() {
+      if (confirm('Reset category order to original store defaults?')) {
+        localStorage.removeItem(STORAGE_KEY);
+        window.location.reload();
+      }
+    }
+
+    // Move category step up or down
+    function moveCategoryOrder(catName, direction) {
+      const grid = document.getElementById('categories-grid');
+      const cards = Array.from(grid.querySelectorAll('.category-card'));
+      const index = cards.findIndex(c => c.getAttribute('data-name') === catName);
+      if (index === -1) return;
+
+      const targetIndex = index + direction;
+      if (targetIndex < 0 || targetIndex >= cards.length) {
+        showToast(`"${catName}" is already at the ${direction < 0 ? 'very first' : 'very last'} position.`, 'info');
+        return;
+      }
+
+      const cardToMove = cards[index];
+      const targetCard = cards[targetIndex];
+
+      if (direction > 0) {
+        targetCard.after(cardToMove);
+      } else {
+        targetCard.before(cardToMove);
+      }
+
+      updateAllOrderAttributesAndBadges();
+      showToast(`"${catName}" moved to position ${getOrdinal(targetIndex + 1)}!`, 'success');
+    }
+
+    // Prompt to set custom position directly
+    function promptChangeOrder(catName, currentOrder) {
+      const grid = document.getElementById('categories-grid');
+      const total = grid.querySelectorAll('.category-card').length;
+      const input = prompt(`Change display position for "${catName}":\nEnter a new position between 1 and ${total}:`, currentOrder);
+      if (input === null) return;
+      const newPos = parseInt(input, 10);
+      if (isNaN(newPos) || newPos < 1 || newPos > total) {
+        showToast(`Please enter a valid position number between 1 and ${total}`, 'info');
+        return;
+      }
+      setCategoryPosition(catName, newPos);
+    }
+
+    // Set category to a specific position number
+    function setCategoryPosition(catName, targetPos) {
+      const grid = document.getElementById('categories-grid');
+      const cards = Array.from(grid.querySelectorAll('.category-card'));
+      const cardIndex = cards.findIndex(c => c.getAttribute('data-name') === catName);
+      if (cardIndex === -1) return;
+
+      const card = cards[cardIndex];
+      cards.splice(cardIndex, 1);
+      cards.splice(targetPos - 1, 0, card);
+
+      cards.forEach(c => grid.appendChild(c));
+      updateAllOrderAttributesAndBadges();
+      showToast(`"${catName}" is now in ${getOrdinal(targetPos)} position!`, 'success');
+    }
+
+    // HTML5 Drag and Drop Setup
+    let draggedCard = null;
+    function setupDragAndDrop() {
+      const cards = document.querySelectorAll('#categories-grid .category-card');
+      cards.forEach(card => {
+        card.setAttribute('draggable', 'true');
+
+        card.ondragstart = function(e) {
+          draggedCard = card;
+          card.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
+          e.dataTransfer.setData('text/plain', card.getAttribute('data-name'));
+        };
+
+        card.ondragend = function() {
+          draggedCard = null;
+          cards.forEach(c => c.classList.remove('dragging', 'drag-over'));
+        };
+
+        card.ondragover = function(e) {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          if (draggedCard && card !== draggedCard) {
+            card.classList.add('drag-over');
+          }
+        };
+
+        card.ondragleave = function() {
+          card.classList.remove('drag-over');
+        };
+
+        card.ondrop = function(e) {
+          e.preventDefault();
+          card.classList.remove('drag-over');
+          if (draggedCard && card !== draggedCard) {
+            const grid = document.getElementById('categories-grid');
+            const allCards = Array.from(grid.querySelectorAll('.category-card'));
+            const draggedIdx = allCards.indexOf(draggedCard);
+            const targetIdx = allCards.indexOf(card);
+
+            if (draggedIdx < targetIdx) {
+              card.after(draggedCard);
+            } else {
+              card.before(draggedCard);
+            }
+
+            updateAllOrderAttributesAndBadges();
+            const newPos = Array.from(grid.querySelectorAll('.category-card')).indexOf(draggedCard) + 1;
+            showToast(`"${draggedCard.getAttribute('data-name')}" moved to ${getOrdinal(newPos)} position!`, 'success');
+          }
+        };
+      });
+    }
+
+    // Filter Categories by Search, Status, and Sort Order
+    function filterCategories() {
+      const query = (document.getElementById('category-search-input').value || '').trim().toLowerCase();
+      const statusFilter = document.getElementById('status-filter').value;
+      const sortFilter = document.getElementById('sort-filter').value;
+      const grid = document.getElementById('categories-grid');
+      const cards = Array.from(grid.querySelectorAll('.category-card'));
+
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const name = (card.getAttribute('data-name') || '').toLowerCase();
+        const status = card.getAttribute('data-status') || 'active';
+
+        const matchQuery = !query || name.includes(query);
+        const matchStatus = statusFilter === 'all' || status === statusFilter;
+
+        if (matchQuery && matchStatus) {
+          card.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      // Sorting
+      if (sortFilter === 'order-asc') {
+        cards.sort((a, b) => parseInt(a.getAttribute('data-order') || '0', 10) - parseInt(b.getAttribute('data-order') || '0', 10));
+        cards.forEach(card => grid.appendChild(card));
+      } else if (sortFilter === 'order-desc') {
+        cards.sort((a, b) => parseInt(b.getAttribute('data-order') || '0', 10) - parseInt(a.getAttribute('data-order') || '0', 10));
+        cards.forEach(card => grid.appendChild(card));
+      } else if (sortFilter === 'name-asc') {
+        cards.sort((a, b) => (a.getAttribute('data-name') || '').localeCompare(b.getAttribute('data-name') || ''));
+        cards.forEach(card => grid.appendChild(card));
+      } else if (sortFilter === 'name-desc') {
+        cards.sort((a, b) => (b.getAttribute('data-name') || '').localeCompare(a.getAttribute('data-name') || ''));
+        cards.forEach(card => grid.appendChild(card));
+      } else if (sortFilter === 'count-desc') {
+        cards.sort((a, b) => parseInt(b.getAttribute('data-count') || '0', 10) - parseInt(a.getAttribute('data-count') || '0', 10));
+        cards.forEach(card => grid.appendChild(card));
+      } else if (sortFilter === 'count-asc') {
+        cards.sort((a, b) => parseInt(a.getAttribute('data-count') || '0', 10) - parseInt(b.getAttribute('data-count') || '0', 10));
+        cards.forEach(card => grid.appendChild(card));
+      }
+
+      // Empty State
+      const emptyState = document.getElementById('no-categories-found');
+      if (visibleCount === 0) {
+        emptyState.classList.remove('hidden');
+      } else {
+        emptyState.classList.add('hidden');
+      }
+    }
+
+    // Toggle Category Active / Inactive Switch
+    function toggleCategoryStatus(checkbox, catName) {
+      const card = checkbox.closest('.category-card');
+      const badge = card.querySelector('.status-badge');
+      if (checkbox.checked) {
+        card.setAttribute('data-status', 'active');
+        badge.innerHTML = `
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span class="text-xs font-semibold text-emerald-600">Active</span>
+        `;
+        showToast(`Category "${catName}" set to Active`, 'success');
+      } else {
+        card.setAttribute('data-status', 'inactive');
+        badge.innerHTML = `
+          <span class="w-2 h-2 rounded-full bg-stone-400"></span>
+          <span class="text-xs font-semibold text-stone-500">Inactive</span>
+        `;
+        showToast(`Category "${catName}" set to Inactive`, 'info');
+      }
+    }
+
+    // Delete Category
+    function confirmDeleteCategory(catName) {
+      if (confirm(`Are you sure you want to delete "${catName}" category? All linked products will need re-categorization.`)) {
+        const cards = document.querySelectorAll('#categories-grid .category-card');
+        cards.forEach(card => {
+          if (card.getAttribute('data-name') === catName) {
+            card.style.transition = 'all 0.3s ease';
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+              card.remove();
+              updateAllOrderAttributesAndBadges();
+              filterCategories();
+              showToast(`Category "${catName}" deleted successfully`, 'info');
+            }, 300);
+          }
+        });
+      }
+    }
+
+    // Add Category Modal open/close
+    function openAddCategoryModal() {
+      const modal = document.getElementById('add-category-modal');
+      const box = modal.querySelector('.modal-container');
+      const total = document.querySelectorAll('#categories-grid .category-card').length;
+      document.getElementById('new-cat-order').value = total + 1;
+
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        box.classList.remove('scale-95', 'opacity-0');
+        box.classList.add('scale-100', 'opacity-100');
+      }, 10);
+      document.getElementById('new-cat-name').focus();
+    }
+
+    function closeAddCategoryModal() {
+      const modal = document.getElementById('add-category-modal');
+      const box = modal.querySelector('.modal-container');
+      box.classList.remove('scale-100', 'opacity-100');
+      box.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        document.getElementById('add-category-form').reset();
+        document.getElementById('upload-preview-container').classList.add('hidden');
+        document.getElementById('upload-placeholder').classList.remove('hidden');
+      }, 200);
+    }
+
+    // Preview category uploaded image
+    let currentUploadedDataUrl = '';
+    function previewCategoryUpload(input) {
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          currentUploadedDataUrl = e.target.result;
+          document.getElementById('upload-preview-img').src = currentUploadedDataUrl;
+          document.getElementById('upload-filename').innerText = file.name;
+          document.getElementById('upload-placeholder').classList.add('hidden');
+          document.getElementById('upload-preview-container').classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Save New Category Form Submission
+    function handleSaveNewCategory(e) {
+      e.preventDefault();
+      const name = document.getElementById('new-cat-name').value.trim();
+      const isActive = document.getElementById('new-cat-status').checked;
+      const targetOrder = parseInt(document.getElementById('new-cat-order').value, 10) || 1;
+      const imgSrc = currentUploadedDataUrl || '../assets/images/cat-1-kurtis.png';
+
+      // Create new Card element matching the exact layout
+      const grid = document.getElementById('categories-grid');
+      const card = document.createElement('div');
+      card.className = "category-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none";
+      card.setAttribute('draggable', 'true');
+      card.setAttribute('data-name', name);
+      card.setAttribute('data-count', '0');
+      card.setAttribute('data-status', isActive ? 'active' : 'inactive');
+      card.setAttribute('data-order', targetOrder);
+
+      card.innerHTML = `
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
+            <i class="fa-solid fa-grip-vertical text-xs"></i>
+          </div>
+          <div class="relative">
+            <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-[#fff1f5] p-1 flex items-center justify-center border border-rose-100/60 shadow-2xs">
+              <img src="${imgSrc}" alt="${name}" class="w-full h-full object-cover rounded-full pointer-events-none">
+            </div>
+            <button onclick="promptChangeOrder('${name}', ${targetOrder})" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
+              ${getOrdinal(targetOrder)}
+            </button>
+          </div>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center justify-between gap-1">
+            <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">${name}</h3>
+            <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
+              <button onclick="moveCategoryOrder('${name}', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                <i class="fa-solid fa-chevron-up"></i>
+              </button>
+              <button onclick="moveCategoryOrder('${name}', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                <i class="fa-solid fa-chevron-down"></i>
+              </button>
+            </div>
+          </div>
+          <p class="text-xs text-stone-400 mt-0.5">0 Products</p>
+          <div class="flex items-center gap-1.5 mt-1.5 status-badge">
+            <span class="w-2 h-2 rounded-full ${isActive ? 'bg-emerald-500' : 'bg-stone-400'}"></span>
+            <span class="text-xs font-semibold ${isActive ? 'text-emerald-600' : 'text-stone-500'}">${isActive ? 'Active' : 'Inactive'}</span>
+          </div>
+          <div class="flex items-center gap-2 mt-3">
+            <button onclick="openEditCategoryModal('${name}', 0, '${isActive ? 'active' : 'inactive'}', ${targetOrder}, '${imgSrc}')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
+              <i class="fa-solid fa-pen text-[10px]"></i>
+            </button>
+            <button onclick="confirmDeleteCategory('${name}')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
+              <i class="fa-regular fa-trash-can text-[11px]"></i>
+            </button>
+            <label class="relative inline-flex items-center cursor-pointer ml-auto">
+              <input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleCategoryStatus(this, '${name}')" class="sr-only peer">
+              <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
+            </label>
+          </div>
+        </div>
+      `;
+
+      const existingCards = Array.from(grid.querySelectorAll('.category-card'));
+      if (targetOrder <= 1 || existingCards.length === 0) {
+        grid.prepend(card);
+      } else if (targetOrder > existingCards.length) {
+        grid.appendChild(card);
+      } else {
+        existingCards[targetOrder - 1].before(card);
+      }
+
+      updateAllOrderAttributesAndBadges();
+      closeAddCategoryModal();
+      showToast(`Category "${name}" created at ${getOrdinal(targetOrder)} position!`, 'success');
+      currentUploadedDataUrl = '';
+    }
+
+    // Edit Category Modal
+    function openEditCategoryModal(name, count, status, order, img) {
+      const modal = document.getElementById('edit-category-modal');
+      const box = modal.querySelector('.modal-container');
+      const card = document.querySelector(`.category-card[data-name="${name}"]`);
+      const currentOrder = card ? card.getAttribute('data-order') : order;
+
+      document.getElementById('edit-original-name').value = name;
+      document.getElementById('edit-cat-name').value = name;
+      document.getElementById('edit-cat-count').value = count;
+      document.getElementById('edit-cat-order').value = currentOrder;
+      document.getElementById('edit-cat-status').checked = (status === 'active');
+
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        box.classList.remove('scale-95', 'opacity-0');
+        box.classList.add('scale-100', 'opacity-100');
+      }, 10);
+    }
+
+    function closeEditCategoryModal() {
+      const modal = document.getElementById('edit-category-modal');
+      const box = modal.querySelector('.modal-container');
+      box.classList.remove('scale-100', 'opacity-100');
+      box.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 200);
+    }
+
+    function handleSaveEditedCategory(e) {
+      e.preventDefault();
+      const origName = document.getElementById('edit-original-name').value;
+      const newName = document.getElementById('edit-cat-name').value.trim();
+      const newCount = document.getElementById('edit-cat-count').value;
+      const targetPos = parseInt(document.getElementById('edit-cat-order').value, 10);
+      const isActive = document.getElementById('edit-cat-status').checked;
+
+      const card = document.querySelector(`.category-card[data-name="${origName}"]`);
+      if (card) {
+        card.setAttribute('data-name', newName);
+        card.setAttribute('data-count', newCount);
+        card.setAttribute('data-status', isActive ? 'active' : 'inactive');
+
+        card.querySelector('h3').innerText = newName;
+        card.querySelector('p').innerText = `${newCount} Products`;
+        const badge = card.querySelector('.status-badge');
+        badge.innerHTML = `
+          <span class="w-2 h-2 rounded-full ${isActive ? 'bg-emerald-500' : 'bg-stone-400'}"></span>
+          <span class="text-xs font-semibold ${isActive ? 'text-emerald-600' : 'text-stone-500'}">${isActive ? 'Active' : 'Inactive'}</span>
+        `;
+        const toggle = card.querySelector('input[type="checkbox"]');
+        if (toggle) toggle.checked = isActive;
+
+        // If target position changed, move it
+        if (!isNaN(targetPos) && targetPos >= 1) {
+          setCategoryPosition(newName, targetPos);
+        } else {
+          updateAllOrderAttributesAndBadges();
+        }
+      }
+
+      closeEditCategoryModal();
+      showToast(`Category "${newName}" updated successfully!`, 'success');
+    }
+
+    // Toast Notification helper
+    function showToast(msg, type = 'success') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = `p-3 rounded-xl shadow-xl text-xs font-semibold flex items-center gap-2 transition transform duration-300 ${type === 'success' ? 'bg-[#0f172a] text-white' : type === 'info' ? 'bg-[#0284c7] text-white' : 'bg-[#e11467] text-white'}`;
+      toast.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> <span>${msg}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // On Load: setup order persistence and drag/drop
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSavedOrder();
+      setupDragAndDrop();
+    });
+  </script>
+
+</body>
+</html>

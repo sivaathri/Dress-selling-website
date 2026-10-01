@@ -1,0 +1,214 @@
+/* PondyVastra Custom Styles & Design System */
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Cinzel:wght@500;600;700&display=swap');
+
+:root {
+  --pondy-primary: #be123c;       /* Rose-crimson brand color */
+  --pondy-primary-dark: #9f1239;  /* Deep crimson */
+  --pondy-topbar: #b83250;        /* Exact rose tone of top announcement bar */
+  --pondy-subnav: #fdf5f2;        /* Subtle warm blush tone of category bar */
+  --pondy-subnav-border: #f3e6e1;
+  --pondy-gold: #d97706;          /* Zari gold */
+  --pondy-bg-light: #fffaf7;      /* Warm boutique ivory */
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-brand: 'Playfair Display', serif;
+  --font-handwriting: 'Caveat', cursive, sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: #1f2937;
+  background-color: #ffffff;
+  overflow-x: hidden;
+}
+
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.font-brand {
+  font-family: var(--font-brand);
+}
+
+.font-handwriting {
+  font-family: var(--font-handwriting);
+}
+
+/* Category Circular Navigation Card */
+.cat-avatar-wrap {
+  position: relative;
+  border-radius: 9999px;
+  overflow: hidden;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+}
+
+.cat-avatar-wrap:hover {
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 10px 15px -3px rgba(190, 18, 60, 0.12), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+}
+
+.cat-avatar-wrap img {
+  image-rendering: -webkit-optimize-contrast;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Custom exact colors */
+.bg-pondy-topbar {
+  background-color: var(--pondy-topbar);
+}
+
+.bg-pondy-primary {
+  background-color: var(--pondy-primary);
+}
+
+.text-pondy-primary {
+  color: var(--pondy-primary);
+}
+
+.border-pondy-primary {
+  border-color: var(--pondy-primary);
+}
+
+.bg-pondy-subnav {
+  background-color: var(--pondy-subnav);
+}
+
+.border-pondy-subnav {
+  border-color: var(--pondy-subnav-border);
+}
+
+/* Submenu / Mega dropdown */
+.nav-dropdown {
+  position: relative;
+}
+
+.nav-dropdown-content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 240px;
+  background: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f3e8e2;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 50;
+}
+
+.nav-dropdown:hover .nav-dropdown-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Category Bar Link Style */
+.cat-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: #374151;
+  padding: 0.55rem 0.65rem;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+  border-radius: 0.375rem;
+}
+
+.cat-link:hover {
+  color: var(--pondy-primary);
+  background-color: rgba(190, 18, 60, 0.04);
+}
+
+.cat-link svg {
+  transition: transform 0.2s ease;
+}
+
+.nav-dropdown:hover .cat-link svg {
+  transform: rotate(180deg);
+}
+
+/* Special Offers Button */
+.special-offers-btn {
+  background-color: #fce7f3;
+  color: #9f1239;
+  border: 1px solid #f472b6;
+  font-weight: 600;
+  font-size: 0.83rem;
+  border-radius: 9999px;
+  padding: 0.35rem 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.2s ease;
+}
+
+.special-offers-btn:hover {
+  background-color: #fbcfe8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(190, 18, 60, 0.15);
+}
+
+/* Product Card Animations */
+.product-card {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 30px -10px rgba(190, 18, 60, 0.12);
+}
+
+.product-card .img-zoom {
+  transition: transform 0.5s ease;
+}
+
+.product-card:hover .img-zoom {
+  transform: scale(1.06);
+}
+
+/* Slide-over Drawer Backdrop */
+.drawer-backdrop {
+  background-color: rgba(17, 24, 39, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Subtle pulse for badges */
+@keyframes softPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+.animate-soft-pulse {
+  animation: softPulse 2s infinite ease-in-out;
+}
+
+/* Hide scrollbar for category strip */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+

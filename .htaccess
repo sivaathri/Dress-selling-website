@@ -1,0 +1,15 @@
+# PondyVastra Apache URL Rewriting
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Redirect old root admin URLs to admin folder
+  RewriteRule ^admin\.html/?$ admin/index.html [R=301,L]
+  RewriteRule ^admin-products\.html/?$ admin/products.html [R=301,L]
+  RewriteRule ^admin-add-product\.html/?$ admin/add-product.html [R=301,L]
+
+  # Route clean admin URLs
+  RewriteRule ^admin/add-product/?$ admin/add-product.html [L,QSA]
+  RewriteRule ^admin/products/?$ admin/products.html [L,QSA]
+  RewriteRule ^admin/categories/?$ admin/categories.html [L,QSA]
+  RewriteRule ^admin/?$ admin/index.html [L,QSA]
+</IfModule>
