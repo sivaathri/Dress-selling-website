@@ -335,7 +335,7 @@
           <!-- Add Category button -->
           <button 
             id="btn-add-category"
-            onclick="openAddCategoryModal()" 
+            onclick="handleAddCategoryButtonClick()" 
             class="inline-flex items-center justify-center gap-2 bg-[#e11467] hover:bg-[#be123c] text-white rounded-xl px-5 py-2.5 text-xs md:text-sm font-semibold shadow-xs hover:shadow-md transition cursor-pointer"
           >
             <i class="fa-solid fa-plus text-xs"></i>
@@ -353,7 +353,7 @@
         >
           <i class="fa-solid fa-layer-group text-xs"></i>
           <span>Products Categories</span>
-          <span class="bg-white/25 text-white text-[10px] px-2 py-0.5 rounded-full font-semibold">13</span>
+          <span id="badge-products-count" class="bg-white/25 text-white text-[10px] px-2 py-0.5 rounded-full font-semibold">13</span>
         </button>
 
         <button 
@@ -363,7 +363,7 @@
         >
           <i class="fa-solid fa-sliders text-xs"></i>
           <span>Filter Categories</span>
-          <span class="bg-stone-200/80 text-stone-700 text-[10px] px-2 py-0.5 rounded-full font-semibold">8</span>
+          <span id="badge-filter-count" class="bg-stone-200/80 text-stone-700 text-[10px] px-2 py-0.5 rounded-full font-semibold">8</span>
         </button>
       </div>
       <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
@@ -1060,376 +1060,416 @@
       <!-- ================= 8 FILTER CATEGORY CARDS GRID ================= -->
       <div id="filter-categories-grid" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
 
-        <!-- 1. Size -->
-        <div class="filter-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Size" data-count="8" data-status="active" data-order="1">
-          <div class="flex items-center gap-2 flex-shrink-0">
-            <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
-              <i class="fa-solid fa-grip-vertical text-xs"></i>
-            </div>
-            <div class="relative">
-              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-indigo-50 p-1 flex items-center justify-center border border-indigo-100/60 shadow-2xs text-indigo-500">
-                <i class="fa-solid fa-ruler-combined text-2xl"></i>
-              </div>
-              <button onclick="promptChangeFilterOrder('Size', 1)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
-                1st
-              </button>
-            </div>
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="flex items-center justify-between gap-1">
-              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Size</h3>
-              <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
-                <button onclick="moveFilterOrder('Size', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
-                  <i class="fa-solid fa-chevron-up"></i>
-                </button>
-                <button onclick="moveFilterOrder('Size', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
-                  <i class="fa-solid fa-chevron-down"></i>
-                </button>
-              </div>
-            </div>
-            <p class="text-xs text-stone-400 mt-0.5">8 Size Values</p>
-            <div class="flex items-center gap-1.5 mt-1.5 status-badge">
-              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-              <span class="text-xs font-semibold text-emerald-600">Active</span>
-            </div>
-            <div class="flex items-center gap-1.5 mt-3 pt-2.5 border-t border-stone-100">
-              <button onclick="editFilterCategory('Size', 8, 1, 'active')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200/60 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
-                <i class="fa-regular fa-pen-to-square text-[11px]"></i>
-              </button>
-              <button onclick="confirmDeleteCategory('Size')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
-                <i class="fa-regular fa-trash-can text-[11px]"></i>
-              </button>
-              <label class="relative inline-flex items-center cursor-pointer ml-auto">
-                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Size')" class="sr-only peer">
-                <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <!-- 2. Color -->
-        <div class="filter-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Color" data-count="10" data-status="active" data-order="2">
-          <div class="flex items-center gap-2 flex-shrink-0">
-            <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
-              <i class="fa-solid fa-grip-vertical text-xs"></i>
-            </div>
-            <div class="relative">
-              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-rose-50 p-1 flex items-center justify-center border border-rose-100/60 shadow-2xs text-rose-500">
-                <i class="fa-solid fa-palette text-2xl"></i>
-              </div>
-              <button onclick="promptChangeFilterOrder('Color', 2)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
-                2nd
-              </button>
-            </div>
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="flex items-center justify-between gap-1">
-              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Color</h3>
-              <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
-                <button onclick="moveFilterOrder('Color', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
-                  <i class="fa-solid fa-chevron-up"></i>
-                </button>
-                <button onclick="moveFilterOrder('Color', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
-                  <i class="fa-solid fa-chevron-down"></i>
-                </button>
-              </div>
-            </div>
-            <p class="text-xs text-stone-400 mt-0.5">10 Color Shades</p>
-            <div class="flex items-center gap-1.5 mt-1.5 status-badge">
-              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-              <span class="text-xs font-semibold text-emerald-600">Active</span>
-            </div>
-            <div class="flex items-center gap-1.5 mt-3 pt-2.5 border-t border-stone-100">
-              <button onclick="editFilterCategory('Color', 10, 2, 'active')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200/60 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
-                <i class="fa-regular fa-pen-to-square text-[11px]"></i>
-              </button>
-              <button onclick="confirmDeleteCategory('Color')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
-                <i class="fa-regular fa-trash-can text-[11px]"></i>
-              </button>
-              <label class="relative inline-flex items-center cursor-pointer ml-auto">
-                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Color')" class="sr-only peer">
-                <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <!-- 3. Fabric & Material -->
-        <div class="filter-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Fabric" data-count="8" data-status="active" data-order="3">
-          <div class="flex items-center gap-2 flex-shrink-0">
-            <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
-              <i class="fa-solid fa-grip-vertical text-xs"></i>
-            </div>
-            <div class="relative">
-              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-amber-50 p-1 flex items-center justify-center border border-amber-100/60 shadow-2xs text-amber-600">
-                <i class="fa-solid fa-scroll text-2xl"></i>
-              </div>
-              <button onclick="promptChangeFilterOrder('Fabric', 3)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
-                3rd
-              </button>
-            </div>
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="flex items-center justify-between gap-1">
-              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Fabric &amp; Material</h3>
-              <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
-                <button onclick="moveFilterOrder('Fabric', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
-                  <i class="fa-solid fa-chevron-up"></i>
-                </button>
-                <button onclick="moveFilterOrder('Fabric', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
-                  <i class="fa-solid fa-chevron-down"></i>
-                </button>
-              </div>
-            </div>
-            <p class="text-xs text-stone-400 mt-0.5">8 Fabrics</p>
-            <div class="flex items-center gap-1.5 mt-1.5 status-badge">
-              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-              <span class="text-xs font-semibold text-emerald-600">Active</span>
-            </div>
-            <div class="flex items-center gap-1.5 mt-3 pt-2.5 border-t border-stone-100">
-              <button onclick="editFilterCategory('Fabric', 8, 3, 'active')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200/60 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
-                <i class="fa-regular fa-pen-to-square text-[11px]"></i>
-              </button>
-              <button onclick="confirmDeleteCategory('Fabric')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
-                <i class="fa-regular fa-trash-can text-[11px]"></i>
-              </button>
-              <label class="relative inline-flex items-center cursor-pointer ml-auto">
-                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Fabric')" class="sr-only peer">
-                <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <!-- 4. Occasion -->
-        <div class="filter-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Occasion" data-count="5" data-status="active" data-order="4">
-          <div class="flex items-center gap-2 flex-shrink-0">
-            <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
-              <i class="fa-solid fa-grip-vertical text-xs"></i>
-            </div>
-            <div class="relative">
-              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-purple-50 p-1 flex items-center justify-center border border-purple-100/60 shadow-2xs text-purple-600">
-                <i class="fa-solid fa-champagne-glasses text-2xl"></i>
-              </div>
-              <button onclick="promptChangeFilterOrder('Occasion', 4)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
-                4th
-              </button>
-            </div>
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="flex items-center justify-between gap-1">
-              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Occasion</h3>
-              <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
-                <button onclick="moveFilterOrder('Occasion', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
-                  <i class="fa-solid fa-chevron-up"></i>
-                </button>
-                <button onclick="moveFilterOrder('Occasion', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
-                  <i class="fa-solid fa-chevron-down"></i>
-                </button>
-              </div>
-            </div>
-            <p class="text-xs text-stone-400 mt-0.5">5 Occasions</p>
-            <div class="flex items-center gap-1.5 mt-1.5 status-badge">
-              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-              <span class="text-xs font-semibold text-emerald-600">Active</span>
-            </div>
-            <div class="flex items-center gap-1.5 mt-3 pt-2.5 border-t border-stone-100">
-              <button onclick="editFilterCategory('Occasion', 5, 4, 'active')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200/60 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
-                <i class="fa-regular fa-pen-to-square text-[11px]"></i>
-              </button>
-              <button onclick="confirmDeleteCategory('Occasion')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
-                <i class="fa-regular fa-trash-can text-[11px]"></i>
-              </button>
-              <label class="relative inline-flex items-center cursor-pointer ml-auto">
-                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Occasion')" class="sr-only peer">
-                <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <!-- 5. Price Range -->
-        <div class="filter-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Price Range" data-count="4" data-status="active" data-order="5">
-          <div class="flex items-center gap-2 flex-shrink-0">
-            <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
-              <i class="fa-solid fa-grip-vertical text-xs"></i>
-            </div>
-            <div class="relative">
-              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-emerald-50 p-1 flex items-center justify-center border border-emerald-100/60 shadow-2xs text-emerald-600">
-                <i class="fa-solid fa-indian-rupee-sign text-2xl"></i>
-              </div>
-              <button onclick="promptChangeFilterOrder('Price Range', 5)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
-                5th
-              </button>
-            </div>
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="flex items-center justify-between gap-1">
-              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Price Range</h3>
-              <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
-                <button onclick="moveFilterOrder('Price Range', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
-                  <i class="fa-solid fa-chevron-up"></i>
-                </button>
-                <button onclick="moveFilterOrder('Price Range', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
-                  <i class="fa-solid fa-chevron-down"></i>
-                </button>
-              </div>
-            </div>
-            <p class="text-xs text-stone-400 mt-0.5">4 Price Tiers</p>
-            <div class="flex items-center gap-1.5 mt-1.5 status-badge">
-              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-              <span class="text-xs font-semibold text-emerald-600">Active</span>
-            </div>
-            <div class="flex items-center gap-1.5 mt-3 pt-2.5 border-t border-stone-100">
-              <button onclick="editFilterCategory('Price Range', 4, 5, 'active')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200/60 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
-                <i class="fa-regular fa-pen-to-square text-[11px]"></i>
-              </button>
-              <button onclick="confirmDeleteCategory('Price Range')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
-                <i class="fa-regular fa-trash-can text-[11px]"></i>
-              </button>
-              <label class="relative inline-flex items-center cursor-pointer ml-auto">
-                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Price Range')" class="sr-only peer">
-                <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <!-- 6. Discount & Offers -->
-        <div class="filter-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Discount" data-count="4" data-status="active" data-order="6">
+        <!-- 1. Kurtis -->
+        <div class="filter-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Kurtis" data-parent="Kurtis" data-subcategories="Anarkali Kurta, Straight Kurta, A-Line Kurta, Short Kurti, Angrakha Kurti" data-count="5" data-status="active" data-order="1">
           <div class="flex items-center gap-2 flex-shrink-0">
             <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
               <i class="fa-solid fa-grip-vertical text-xs"></i>
             </div>
             <div class="relative">
               <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-rose-50 p-1 flex items-center justify-center border border-rose-100/60 shadow-2xs text-[#e11467]">
-                <i class="fa-solid fa-percent text-2xl"></i>
+                <i class="fa-solid fa-vest-patches text-2xl"></i>
               </div>
-              <button onclick="promptChangeFilterOrder('Discount', 6)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
+              <button onclick="promptChangeFilterOrder('Kurtis', 1)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
+                1st
+              </button>
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Kurtis</h3>
+              <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
+                <button onclick="moveFilterOrder('Kurtis', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-up"></i>
+                </button>
+                <button onclick="moveFilterOrder('Kurtis', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+              </div>
+            </div>
+            <p class="text-xs text-stone-400 mt-0.5">5 Sub Categories</p>
+            <div class="flex flex-wrap gap-1 mt-1.5 sub-chips-preview">
+              <span class="px-1.5 py-0.5 rounded-md bg-stone-100 text-[10px] text-stone-700 font-medium">Anarkali</span>
+              <span class="px-1.5 py-0.5 rounded-md bg-stone-100 text-[10px] text-stone-700 font-medium">Straight</span>
+              <span class="px-1.5 py-0.5 rounded-md bg-rose-50 text-[10px] text-[#e11467] font-semibold">+3 more</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-2 status-badge">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span class="text-xs font-semibold text-emerald-600">Active</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-2.5 pt-2 border-t border-stone-100">
+              <button onclick="openEditFilterCategoryModal('Kurtis')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200/60 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-regular fa-pen-to-square text-[11px]"></i>
+              </button>
+              <button onclick="confirmDeleteFilterCategory('Kurtis')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-regular fa-trash-can text-[11px]"></i>
+              </button>
+              <label class="relative inline-flex items-center cursor-pointer ml-auto">
+                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Kurtis')" class="sr-only peer">
+                <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Sarees -->
+        <div class="filter-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Sarees" data-parent="Sarees" data-subcategories="Silk Saree, Kanjivaram Saree, Cotton Saree, Georgette Saree, Chiffon Saree" data-count="5" data-status="active" data-order="2">
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
+              <i class="fa-solid fa-grip-vertical text-xs"></i>
+            </div>
+            <div class="relative">
+              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-rose-50 p-1 flex items-center justify-center border border-rose-100/60 shadow-2xs text-[#e11467]">
+                <i class="fa-solid fa-vest text-2xl"></i>
+              </div>
+              <button onclick="promptChangeFilterOrder('Sarees', 2)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
+                2nd
+              </button>
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Sarees</h3>
+              <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
+                <button onclick="moveFilterOrder('Sarees', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-up"></i>
+                </button>
+                <button onclick="moveFilterOrder('Sarees', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+              </div>
+            </div>
+            <p class="text-xs text-stone-400 mt-0.5">5 Sub Categories</p>
+            <div class="flex flex-wrap gap-1 mt-1.5 sub-chips-preview">
+              <span class="px-1.5 py-0.5 rounded-md bg-stone-100 text-[10px] text-stone-700 font-medium">Silk</span>
+              <span class="px-1.5 py-0.5 rounded-md bg-stone-100 text-[10px] text-stone-700 font-medium">Kanjivaram</span>
+              <span class="px-1.5 py-0.5 rounded-md bg-rose-50 text-[10px] text-[#e11467] font-semibold">+3 more</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-2 status-badge">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span class="text-xs font-semibold text-emerald-600">Active</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-2.5 pt-2 border-t border-stone-100">
+              <button onclick="openEditFilterCategoryModal('Sarees')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200/60 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-regular fa-pen-to-square text-[11px]"></i>
+              </button>
+              <button onclick="confirmDeleteFilterCategory('Sarees')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-regular fa-trash-can text-[11px]"></i>
+              </button>
+              <label class="relative inline-flex items-center cursor-pointer ml-auto">
+                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Sarees')" class="sr-only peer">
+                <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Lehengas -->
+        <div class="filter-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Lehengas" data-parent="Lehengas" data-subcategories="Bridal Lehenga, Floral Lehenga, Party Wear Lehenga, Semi-Stitched Lehenga" data-count="4" data-status="active" data-order="3">
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
+              <i class="fa-solid fa-grip-vertical text-xs"></i>
+            </div>
+            <div class="relative">
+              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-rose-50 p-1 flex items-center justify-center border border-rose-100/60 shadow-2xs text-[#e11467]">
+                <i class="fa-solid fa-gem text-2xl"></i>
+              </div>
+              <button onclick="promptChangeFilterOrder('Lehengas', 3)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
+                3rd
+              </button>
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Lehengas</h3>
+              <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
+                <button onclick="moveFilterOrder('Lehengas', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-up"></i>
+                </button>
+                <button onclick="moveFilterOrder('Lehengas', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+              </div>
+            </div>
+            <p class="text-xs text-stone-400 mt-0.5">4 Sub Categories</p>
+            <div class="flex flex-wrap gap-1 mt-1.5 sub-chips-preview">
+              <span class="px-1.5 py-0.5 rounded-md bg-stone-100 text-[10px] text-stone-700 font-medium">Bridal</span>
+              <span class="px-1.5 py-0.5 rounded-md bg-stone-100 text-[10px] text-stone-700 font-medium">Floral</span>
+              <span class="px-1.5 py-0.5 rounded-md bg-rose-50 text-[10px] text-[#e11467] font-semibold">+2 more</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-2 status-badge">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span class="text-xs font-semibold text-emerald-600">Active</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-2.5 pt-2 border-t border-stone-100">
+              <button onclick="openEditFilterCategoryModal('Lehengas')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200/60 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-regular fa-pen-to-square text-[11px]"></i>
+              </button>
+              <button onclick="confirmDeleteFilterCategory('Lehengas')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-regular fa-trash-can text-[11px]"></i>
+              </button>
+              <label class="relative inline-flex items-center cursor-pointer ml-auto">
+                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Lehengas')" class="sr-only peer">
+                <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Salwar Suits -->
+        <div class="filter-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Salwar Suits" data-parent="Salwar Suits" data-subcategories="Punjabi Suit, Palazzo Suit, Sharara Suit, Churidar Suit, Patiala Suit" data-count="5" data-status="active" data-order="4">
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
+              <i class="fa-solid fa-grip-vertical text-xs"></i>
+            </div>
+            <div class="relative">
+              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-rose-50 p-1 flex items-center justify-center border border-rose-100/60 shadow-2xs text-[#e11467]">
+                <i class="fa-solid fa-wand-magic-sparkles text-2xl"></i>
+              </div>
+              <button onclick="promptChangeFilterOrder('Salwar Suits', 4)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
+                4th
+              </button>
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Salwar Suits</h3>
+              <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
+                <button onclick="moveFilterOrder('Salwar Suits', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-up"></i>
+                </button>
+                <button onclick="moveFilterOrder('Salwar Suits', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+              </div>
+            </div>
+            <p class="text-xs text-stone-400 mt-0.5">5 Sub Categories</p>
+            <div class="flex flex-wrap gap-1 mt-1.5 sub-chips-preview">
+              <span class="px-1.5 py-0.5 rounded-md bg-stone-100 text-[10px] text-stone-700 font-medium">Punjabi</span>
+              <span class="px-1.5 py-0.5 rounded-md bg-stone-100 text-[10px] text-stone-700 font-medium">Palazzo</span>
+              <span class="px-1.5 py-0.5 rounded-md bg-rose-50 text-[10px] text-[#e11467] font-semibold">+3 more</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-2 status-badge">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span class="text-xs font-semibold text-emerald-600">Active</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-2.5 pt-2 border-t border-stone-100">
+              <button onclick="openEditFilterCategoryModal('Salwar Suits')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200/60 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-regular fa-pen-to-square text-[11px]"></i>
+              </button>
+              <button onclick="confirmDeleteFilterCategory('Salwar Suits')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-regular fa-trash-can text-[11px]"></i>
+              </button>
+              <label class="relative inline-flex items-center cursor-pointer ml-auto">
+                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Salwar Suits')" class="sr-only peer">
+                <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Dresses & Gowns -->
+        <div class="filter-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Dresses & Gowns" data-parent="Dresses & Gowns" data-subcategories="Midi Dress, Maxi Dress, Indo-Western Dress, Evening Gown" data-count="4" data-status="active" data-order="5">
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
+              <i class="fa-solid fa-grip-vertical text-xs"></i>
+            </div>
+            <div class="relative">
+              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-rose-50 p-1 flex items-center justify-center border border-rose-100/60 shadow-2xs text-[#e11467]">
+                <i class="fa-solid fa-person-dress text-2xl"></i>
+              </div>
+              <button onclick="promptChangeFilterOrder('Dresses & Gowns', 5)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
+                5th
+              </button>
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Dresses &amp; Gowns</h3>
+              <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
+                <button onclick="moveFilterOrder('Dresses & Gowns', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-up"></i>
+                </button>
+                <button onclick="moveFilterOrder('Dresses & Gowns', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+              </div>
+            </div>
+            <p class="text-xs text-stone-400 mt-0.5">4 Sub Categories</p>
+            <div class="flex flex-wrap gap-1 mt-1.5 sub-chips-preview">
+              <span class="px-1.5 py-0.5 rounded-md bg-stone-100 text-[10px] text-stone-700 font-medium">Midi</span>
+              <span class="px-1.5 py-0.5 rounded-md bg-stone-100 text-[10px] text-stone-700 font-medium">Maxi</span>
+              <span class="px-1.5 py-0.5 rounded-md bg-rose-50 text-[10px] text-[#e11467] font-semibold">+2 more</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-2 status-badge">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span class="text-xs font-semibold text-emerald-600">Active</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-2.5 pt-2 border-t border-stone-100">
+              <button onclick="openEditFilterCategoryModal('Dresses & Gowns')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200/60 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-regular fa-pen-to-square text-[11px]"></i>
+              </button>
+              <button onclick="confirmDeleteFilterCategory('Dresses & Gowns')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-regular fa-trash-can text-[11px]"></i>
+              </button>
+              <label class="relative inline-flex items-center cursor-pointer ml-auto">
+                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Dresses & Gowns')" class="sr-only peer">
+                <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Co-ord Sets -->
+        <div class="filter-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Co-ord Sets" data-parent="Co-ord Sets" data-subcategories="Ethnic Set, Printed Set, Silk Blend Set" data-count="3" data-status="active" data-order="6">
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
+              <i class="fa-solid fa-grip-vertical text-xs"></i>
+            </div>
+            <div class="relative">
+              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-rose-50 p-1 flex items-center justify-center border border-rose-100/60 shadow-2xs text-[#e11467]">
+                <i class="fa-solid fa-shapes text-2xl"></i>
+              </div>
+              <button onclick="promptChangeFilterOrder('Co-ord Sets', 6)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
                 6th
               </button>
             </div>
           </div>
           <div class="flex-1 min-w-0">
             <div class="flex items-center justify-between gap-1">
-              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Discount &amp; Offers</h3>
+              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Co-ord Sets</h3>
               <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
-                <button onclick="moveFilterOrder('Discount', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                <button onclick="moveFilterOrder('Co-ord Sets', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
                   <i class="fa-solid fa-chevron-up"></i>
                 </button>
-                <button onclick="moveFilterOrder('Discount', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                <button onclick="moveFilterOrder('Co-ord Sets', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
                   <i class="fa-solid fa-chevron-down"></i>
                 </button>
               </div>
             </div>
-            <p class="text-xs text-stone-400 mt-0.5">4 Discount Brackets</p>
-            <div class="flex items-center gap-1.5 mt-1.5 status-badge">
+            <p class="text-xs text-stone-400 mt-0.5">3 Sub Categories</p>
+            <div class="flex flex-wrap gap-1 mt-1.5 sub-chips-preview">
+              <span class="px-1.5 py-0.5 rounded-md bg-stone-100 text-[10px] text-stone-700 font-medium">Ethnic</span>
+              <span class="px-1.5 py-0.5 rounded-md bg-stone-100 text-[10px] text-stone-700 font-medium">Printed</span>
+              <span class="px-1.5 py-0.5 rounded-md bg-rose-50 text-[10px] text-[#e11467] font-semibold">+1 more</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-2 status-badge">
               <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
               <span class="text-xs font-semibold text-emerald-600">Active</span>
             </div>
-            <div class="flex items-center gap-1.5 mt-3 pt-2.5 border-t border-stone-100">
-              <button onclick="editFilterCategory('Discount', 4, 6, 'active')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200/60 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
+            <div class="flex items-center gap-1.5 mt-2.5 pt-2 border-t border-stone-100">
+              <button onclick="openEditFilterCategoryModal('Co-ord Sets')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200/60 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
                 <i class="fa-regular fa-pen-to-square text-[11px]"></i>
               </button>
-              <button onclick="confirmDeleteCategory('Discount')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
+              <button onclick="confirmDeleteFilterCategory('Co-ord Sets')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
                 <i class="fa-regular fa-trash-can text-[11px]"></i>
               </button>
               <label class="relative inline-flex items-center cursor-pointer ml-auto">
-                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Discount')" class="sr-only peer">
+                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Co-ord Sets')" class="sr-only peer">
                 <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
               </label>
             </div>
           </div>
         </div>
 
-        <!-- 7. Pattern & Work -->
-        <div class="filter-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Pattern" data-count="6" data-status="active" data-order="7">
+        <!-- 7. Bottom Wear -->
+        <div class="filter-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Bottom Wear" data-parent="Bottom Wear" data-subcategories="Palazzo, Churidar, Pants, Salwar, Leggings" data-count="5" data-status="active" data-order="7">
           <div class="flex items-center gap-2 flex-shrink-0">
             <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
               <i class="fa-solid fa-grip-vertical text-xs"></i>
             </div>
             <div class="relative">
-              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-pink-50 p-1 flex items-center justify-center border border-pink-100/60 shadow-2xs text-pink-600">
-                <i class="fa-solid fa-wand-magic-sparkles text-2xl"></i>
+              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-rose-50 p-1 flex items-center justify-center border border-rose-100/60 shadow-2xs text-[#e11467]">
+                <i class="fa-solid fa-bars-staggered text-2xl"></i>
               </div>
-              <button onclick="promptChangeFilterOrder('Pattern', 7)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
+              <button onclick="promptChangeFilterOrder('Bottom Wear', 7)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
                 7th
               </button>
             </div>
           </div>
           <div class="flex-1 min-w-0">
             <div class="flex items-center justify-between gap-1">
-              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Pattern &amp; Work</h3>
+              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Bottom Wear</h3>
               <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
-                <button onclick="moveFilterOrder('Pattern', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                <button onclick="moveFilterOrder('Bottom Wear', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
                   <i class="fa-solid fa-chevron-up"></i>
                 </button>
-                <button onclick="moveFilterOrder('Pattern', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                <button onclick="moveFilterOrder('Bottom Wear', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
                   <i class="fa-solid fa-chevron-down"></i>
                 </button>
               </div>
             </div>
-            <p class="text-xs text-stone-400 mt-0.5">6 Work Types</p>
-            <div class="flex items-center gap-1.5 mt-1.5 status-badge">
+            <p class="text-xs text-stone-400 mt-0.5">5 Sub Categories</p>
+            <div class="flex flex-wrap gap-1 mt-1.5 sub-chips-preview">
+              <span class="px-1.5 py-0.5 rounded-md bg-stone-100 text-[10px] text-stone-700 font-medium">Palazzo</span>
+              <span class="px-1.5 py-0.5 rounded-md bg-stone-100 text-[10px] text-stone-700 font-medium">Churidar</span>
+              <span class="px-1.5 py-0.5 rounded-md bg-rose-50 text-[10px] text-[#e11467] font-semibold">+3 more</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-2 status-badge">
               <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
               <span class="text-xs font-semibold text-emerald-600">Active</span>
             </div>
-            <div class="flex items-center gap-1.5 mt-3 pt-2.5 border-t border-stone-100">
-              <button onclick="editFilterCategory('Pattern', 6, 7, 'active')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200/60 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
+            <div class="flex items-center gap-1.5 mt-2.5 pt-2 border-t border-stone-100">
+              <button onclick="openEditFilterCategoryModal('Bottom Wear')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200/60 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
                 <i class="fa-regular fa-pen-to-square text-[11px]"></i>
               </button>
-              <button onclick="confirmDeleteCategory('Pattern')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
+              <button onclick="confirmDeleteFilterCategory('Bottom Wear')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
                 <i class="fa-regular fa-trash-can text-[11px]"></i>
               </button>
               <label class="relative inline-flex items-center cursor-pointer ml-auto">
-                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Pattern')" class="sr-only peer">
+                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Bottom Wear')" class="sr-only peer">
                 <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
               </label>
             </div>
           </div>
         </div>
 
-        <!-- 8. Neck & Sleeve -->
-        <div class="filter-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Neck & Sleeve" data-count="6" data-status="active" data-order="8">
+        <!-- 8. Indo-Western -->
+        <div class="filter-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none" draggable="true" data-name="Indo-Western" data-parent="Indo-Western" data-subcategories="Dhoti Kurta, Cape Sets, Peplum Sets, Jacket Style" data-count="4" data-status="active" data-order="8">
           <div class="flex items-center gap-2 flex-shrink-0">
             <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
               <i class="fa-solid fa-grip-vertical text-xs"></i>
             </div>
             <div class="relative">
-              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-sky-50 p-1 flex items-center justify-center border border-sky-100/60 shadow-2xs text-sky-600">
-                <i class="fa-solid fa-shirt text-2xl"></i>
+              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-rose-50 p-1 flex items-center justify-center border border-rose-100/60 shadow-2xs text-[#e11467]">
+                <i class="fa-solid fa-feather text-2xl"></i>
               </div>
-              <button onclick="promptChangeFilterOrder('Neck & Sleeve', 8)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
+              <button onclick="promptChangeFilterOrder('Indo-Western', 8)" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
                 8th
               </button>
             </div>
           </div>
           <div class="flex-1 min-w-0">
             <div class="flex items-center justify-between gap-1">
-              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Neck &amp; Sleeve</h3>
+              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">Indo-Western</h3>
               <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
-                <button onclick="moveFilterOrder('Neck & Sleeve', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                <button onclick="moveFilterOrder('Indo-Western', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
                   <i class="fa-solid fa-chevron-up"></i>
                 </button>
-                <button onclick="moveFilterOrder('Neck & Sleeve', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                <button onclick="moveFilterOrder('Indo-Western', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
                   <i class="fa-solid fa-chevron-down"></i>
                 </button>
               </div>
             </div>
-            <p class="text-xs text-stone-400 mt-0.5">6 Styles</p>
-            <div class="flex items-center gap-1.5 mt-1.5 status-badge">
+            <p class="text-xs text-stone-400 mt-0.5">4 Sub Categories</p>
+            <div class="flex flex-wrap gap-1 mt-1.5 sub-chips-preview">
+              <span class="px-1.5 py-0.5 rounded-md bg-stone-100 text-[10px] text-stone-700 font-medium">Dhoti Kurta</span>
+              <span class="px-1.5 py-0.5 rounded-md bg-stone-100 text-[10px] text-stone-700 font-medium">Cape Sets</span>
+              <span class="px-1.5 py-0.5 rounded-md bg-rose-50 text-[10px] text-[#e11467] font-semibold">+2 more</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-2 status-badge">
               <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
               <span class="text-xs font-semibold text-emerald-600">Active</span>
             </div>
-            <div class="flex items-center gap-1.5 mt-3 pt-2.5 border-t border-stone-100">
-              <button onclick="editFilterCategory('Neck & Sleeve', 6, 8, 'active')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200/60 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
+            <div class="flex items-center gap-1.5 mt-2.5 pt-2 border-t border-stone-100">
+              <button onclick="openEditFilterCategoryModal('Indo-Western')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200/60 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
                 <i class="fa-regular fa-pen-to-square text-[11px]"></i>
               </button>
-              <button onclick="confirmDeleteCategory('Neck & Sleeve')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
+              <button onclick="confirmDeleteFilterCategory('Indo-Western')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
                 <i class="fa-regular fa-trash-can text-[11px]"></i>
               </button>
               <label class="relative inline-flex items-center cursor-pointer ml-auto">
-                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Neck & Sleeve')" class="sr-only peer">
+                <input type="checkbox" checked onchange="toggleCategoryStatus(this, 'Indo-Western')" class="sr-only peer">
                 <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
               </label>
             </div>
@@ -1445,7 +1485,7 @@
         </div>
         <h3 class="text-base font-bold text-stone-900">No categories found</h3>
         <p class="text-xs text-stone-500 mt-1 max-w-sm mx-auto">We couldn't find any categories matching your search criteria. Try a different keyword or create a new category.</p>
-        <button onclick="openAddCategoryModal()" class="mt-4 px-4 py-2 bg-[#e11467] hover:bg-[#be123c] text-white text-xs font-semibold rounded-xl transition">
+        <button onclick="handleAddCategoryButtonClick()" class="mt-4 px-4 py-2 bg-[#e11467] hover:bg-[#be123c] text-white text-xs font-semibold rounded-xl transition cursor-pointer">
           + Add Category
         </button>
       </div>
@@ -1679,6 +1719,249 @@
           >
             <i class="fa-solid fa-check text-xs"></i>
             <span>Update Category</span>
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= ADD / EDIT FILTER CATEGORY MODAL (2 KEY INPUTS: 1. Parent Category, 2. Sub Categories) ================= -->
+  <div id="filter-category-modal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-stone-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-stone-100 overflow-hidden transform transition-all duration-300 scale-95 opacity-0 modal-container">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-4 border-b border-stone-100 flex items-center justify-between bg-gradient-to-r from-rose-50/50 to-white">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-rose-50 text-[#e11467] flex items-center justify-center text-base font-bold shadow-2xs">
+            <i class="fa-solid fa-sliders"></i>
+          </div>
+          <div>
+            <h3 id="filter-modal-title" class="font-bold text-stone-900 text-base">Add Filter Category</h3>
+            <p id="filter-modal-subtitle" class="text-stone-400 text-xs">Configure parent category &amp; filterable sub categories</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeFilterCategoryModal()" class="w-8 h-8 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition cursor-pointer">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <!-- Modal Form with the 2 Mandatory Inputs -->
+      <form id="filter-category-form" onsubmit="handleSaveFilterCategory(event)" class="p-6 space-y-4 text-xs">
+        <input type="hidden" id="filter-modal-mode" value="add">
+        <input type="hidden" id="filter-original-parent" value="">
+
+        <!-- INPUT 1: Product Parent Categories (Dual Mode: Select from Dropdown OR Add New) -->
+        <div class="bg-rose-50/20 border border-rose-100 rounded-2xl p-3.5 space-y-2.5">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <label class="block font-bold text-stone-900 text-xs flex items-center gap-1.5">
+              <span class="w-5 h-5 rounded-full bg-[#e11467] text-white flex items-center justify-center text-[10px] font-bold">1</span>
+              <span>Product Parent Category</span>
+              <span class="text-[#e11467]">*</span>
+            </label>
+
+            <!-- Dual Mode Switcher: Dropdown vs Add New -->
+            <div class="inline-flex items-center bg-stone-100/90 p-0.5 rounded-xl border border-stone-200/80 text-[11px] shadow-2xs">
+              <button 
+                type="button" 
+                id="parent-mode-select-btn" 
+                onclick="setParentCategoryMode('select')"
+                class="px-2.5 py-1 rounded-lg font-bold transition flex items-center gap-1.5 bg-white text-[#e11467] shadow-2xs cursor-pointer"
+                title="Select an existing category from dropdown"
+              >
+                <i class="fa-solid fa-list-ul text-[10px]"></i>
+                <span>Select Dropdown</span>
+              </button>
+              <button 
+                type="button" 
+                id="parent-mode-new-btn" 
+                onclick="setParentCategoryMode('new')"
+                class="px-2.5 py-1 rounded-lg font-medium text-stone-500 hover:text-stone-900 transition flex items-center gap-1.5 cursor-pointer"
+                title="Type and add a new parent category"
+              >
+                <i class="fa-solid fa-plus text-[10px]"></i>
+                <span>+ Add New</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Hidden mode tracker -->
+          <input type="hidden" id="parent-category-active-mode" value="select">
+
+          <!-- OPTION A: SELECT FROM DROPDOWN -->
+          <div id="parent-mode-select-view" class="space-y-2">
+            <div class="flex items-center gap-2">
+              <div class="relative flex-1">
+                <select 
+                  id="filter-parent-category-select" 
+                  onchange="handleFilterParentSelectChange(this)"
+                  class="w-full bg-white border border-stone-200/90 rounded-xl pl-3.5 pr-8 py-2.5 text-stone-800 text-xs font-semibold focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition appearance-none cursor-pointer"
+                >
+                  <option value="" disabled selected>-- Select Product Parent Category --</option>
+                  <!-- Populated dynamically via JS -->
+                </select>
+                <i class="fa-solid fa-chevron-down text-stone-400 text-[10px] absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+              </div>
+              <button 
+                type="button" 
+                onclick="setParentCategoryMode('new')"
+                class="px-3 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-[#e11467] border border-rose-200/70 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer flex-shrink-0"
+                title="Add a new custom category"
+              >
+                <i class="fa-solid fa-plus text-[10px]"></i>
+                <span class="hidden sm:inline">Add New</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- OPTION B: ADD NEW PARENT CATEGORY DIRECTLY -->
+          <div id="parent-mode-new-view" class="hidden space-y-2">
+            <div class="bg-white border-2 border-dashed border-[#e11467]/40 hover:border-[#e11467] rounded-xl p-3 transition space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-bold text-stone-800 flex items-center gap-1.5">
+                  <i class="fa-solid fa-folder-plus text-[#e11467]"></i>
+                  <span>Create &amp; Add New Parent Category</span>
+                </span>
+                <span class="text-[10px] text-stone-400">Auto-saved to dropdown</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="relative flex-1">
+                  <input 
+                    type="text" 
+                    id="filter-new-parent-input"
+                    placeholder="Type category name (e.g. Silk Dupattas, Western Wear)..."
+                    onkeydown="handleNewParentInputKeydown(event)"
+                    class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-lg px-3 py-2 text-stone-800 text-xs font-semibold focus:outline-none focus:border-[#e11467] focus:bg-white focus:ring-1 focus:ring-[#e11467] transition"
+                  >
+                </div>
+                <button 
+                  type="button" 
+                  onclick="confirmAddNewParentCategory()"
+                  class="px-3.5 py-2 rounded-lg bg-[#e11467] hover:bg-[#be123c] text-white font-bold text-xs flex items-center gap-1.5 shadow-xs transition cursor-pointer flex-shrink-0"
+                >
+                  <i class="fa-solid fa-check text-[10px]"></i>
+                  <span>Add &amp; Select</span>
+                </button>
+              </div>
+              <div class="flex items-center justify-between text-[10px] text-stone-400 pt-1">
+                <span>Press Enter or click "Add &amp; Select"</span>
+                <button 
+                  type="button" 
+                  onclick="setParentCategoryMode('select')" 
+                  class="text-stone-500 hover:text-[#e11467] font-semibold transition cursor-pointer flex items-center gap-1"
+                >
+                  <i class="fa-solid fa-arrow-left text-[9px]"></i> Back to dropdown list
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Active selection summary chip -->
+          <div id="parent-selected-summary" class="hidden items-center justify-between bg-white/90 border border-stone-200/80 rounded-lg px-2.5 py-1.5 text-[11px]">
+            <span class="text-stone-500 flex items-center gap-1.5">
+              <i class="fa-solid fa-circle-check text-emerald-500"></i>
+              <span>Active Parent:</span>
+              <strong id="parent-selected-summary-name" class="text-stone-800 font-bold"></strong>
+            </span>
+            <button 
+              type="button" 
+              onclick="clearParentCategorySelection()" 
+              class="text-stone-400 hover:text-rose-500 text-[10px] transition cursor-pointer"
+              title="Clear selection"
+            >
+              <i class="fa-solid fa-xmark"></i> Change
+            </button>
+          </div>
+        </div>
+
+        <!-- INPUT 2: Sub Categories -->
+        <div class="bg-rose-50/20 border border-rose-100 rounded-2xl p-3.5 space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="block font-bold text-stone-900 text-xs flex items-center gap-1.5">
+              <span class="w-5 h-5 rounded-full bg-[#e11467] text-white flex items-center justify-center text-[10px] font-bold">2</span>
+              <span>Sub Categories</span>
+              <span class="text-[#e11467]">*</span>
+            </label>
+            <span class="text-[11px] text-stone-400 font-medium">Shows on screen card</span>
+          </div>
+
+          <!-- Interactive Chips Area -->
+          <div class="bg-white border border-stone-200/90 rounded-xl p-3 min-h-[96px] focus-within:border-[#e11467] focus-within:ring-1 focus-within:ring-[#e11467] transition">
+            <div id="filter-subcategories-chips" class="flex flex-wrap gap-1.5 mb-2">
+              <span class="text-[11px] text-stone-400 italic">No sub categories added yet. Type below and press Enter or click suggestions.</span>
+            </div>
+            <div class="flex items-center gap-2 pt-1 border-t border-stone-100">
+              <input 
+                type="text" 
+                id="filter-subcategory-input"
+                placeholder="Type sub category name (e.g. Anarkali Kurta) and press Enter..."
+                onkeydown="handleSubcategoryInputKeydown(event)"
+                class="flex-1 bg-transparent border-0 text-stone-800 text-xs placeholder:text-stone-400 focus:outline-none py-1"
+              >
+              <button 
+                type="button" 
+                onclick="handleAddSubcategoryFromInput()"
+                class="px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-[#e11467] text-[11px] font-bold transition flex items-center gap-1 cursor-pointer flex-shrink-0"
+              >
+                <i class="fa-solid fa-plus text-[10px]"></i> Add
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Preset Suggestions -->
+          <div class="flex items-center gap-1.5 flex-wrap pt-0.5">
+            <span class="text-[10px] text-stone-400 font-semibold flex items-center gap-1">
+              <i class="fa-solid fa-bolt text-amber-500 text-[10px]"></i> Quick Add:
+            </span>
+            <div id="filter-preset-chips" class="flex items-center gap-1 flex-wrap">
+              <span class="text-[10px] text-stone-400 italic">Select parent category to see suggestions</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Display Order & Icon Row -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-stone-700 mb-1">Display Order Position (1st, 2nd...)</label>
+            <input 
+              type="number" 
+              id="filter-cat-order" 
+              min="1" 
+              value="1" 
+              class="w-full bg-[#f8fafc] border border-stone-200 rounded-xl px-3.5 py-2.5 text-stone-800 text-xs font-bold text-[#e11467] focus:outline-none focus:border-[#e11467] transition"
+            >
+          </div>
+          
+        </div>
+
+        <!-- Status Toggle -->
+        <div class="flex items-center justify-between p-3 bg-stone-50 rounded-xl border border-stone-200/70">
+          <div>
+            <p class="font-semibold text-stone-800 text-xs">Filter Category Active</p>
+            <p class="text-[11px] text-stone-400">Controls visibility in the storefront filter drawer</p>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="filter-cat-status" checked class="sr-only peer">
+            <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
+          </label>
+        </div>
+
+        <!-- Footer Buttons -->
+        <div class="flex items-center justify-end gap-2.5 pt-3 border-t border-stone-100">
+          <button 
+            type="button" 
+            onclick="closeFilterCategoryModal()" 
+            class="px-4 py-2.5 rounded-xl border border-stone-200 text-stone-600 font-semibold hover:bg-stone-50 transition cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button 
+            type="submit" 
+            id="btn-save-filter-cat"
+            class="px-5 py-2.5 rounded-xl bg-[#e11467] hover:bg-[#be123c] text-white font-semibold shadow-xs hover:shadow-md transition cursor-pointer flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-check text-xs"></i>
+            <span id="btn-save-filter-cat-label">Save Filter Category</span>
           </button>
         </div>
 
@@ -2044,6 +2327,7 @@
       const box = modal.querySelector('.modal-container');
       const total = document.querySelectorAll('#categories-grid .category-card').length;
       document.getElementById('new-cat-order').value = total + 1;
+      populateNewCatParentSelect();
 
       modal.classList.remove('hidden');
       setTimeout(() => {
@@ -2242,6 +2526,16 @@
       }, 3000);
     }
 
+    // Top bar Add Category button click dispatcher
+    function handleAddCategoryButtonClick() {
+      const isFilterMode = document.getElementById('filter-categories-grid') && !document.getElementById('filter-categories-grid').classList.contains('hidden');
+      if (isFilterMode) {
+        openAddFilterCategoryModal();
+      } else {
+        openAddCategoryModal();
+      }
+    }
+
     // Switch between Products Categories and Filter Categories
     function setCategoriesView(type, event) {
       if (event && event.preventDefault) event.preventDefault();
@@ -2255,6 +2549,14 @@
       const tabProd = document.getElementById('tab-products-categories');
       const tabFilt = document.getElementById('tab-filter-categories');
       const btnAdd = document.getElementById('btn-add-category');
+
+      // Update Tab Badges with current counts
+      const prodCount = prodGrid ? prodGrid.querySelectorAll('.category-card').length : 13;
+      const filterCount = filterGrid ? filterGrid.querySelectorAll('.filter-card').length : 8;
+      const bProd = document.getElementById('badge-products-count');
+      const bFilt = document.getElementById('badge-filter-count');
+      if (bProd) bProd.innerText = prodCount;
+      if (bFilt) bFilt.innerText = filterCount;
 
       if (type === 'filters') {
         // Activate Filter Categories in Sidebar
@@ -2278,11 +2580,11 @@
         if (filterGrid) filterGrid.classList.remove('hidden');
 
         if (pageTitle) pageTitle.innerText = 'Filter Categories';
-        if (pageSubtitle) pageSubtitle.innerText = 'Manage storefront facet filters (Size, Color, Fabric, Occasion...) • Drag cards or click badge to arrange sequence';
+        if (pageSubtitle) pageSubtitle.innerText = 'Manage product parent & sub category filters • Drag cards or click badge to arrange sequence';
         if (btnAdd) btnAdd.querySelector('span').innerText = 'Add Filter Category';
 
         history.replaceState(null, null, '#filter-categories');
-        showToast('Filter Categories view active', 'info');
+        filterCategories();
       } else {
         // Activate Products Categories in Sidebar
         if (navProd) {
@@ -2309,39 +2611,695 @@
         if (btnAdd) btnAdd.querySelector('span').innerText = 'Add Category';
 
         history.replaceState(null, null, '#products-categories');
+        filterCategories();
       }
     }
 
-    // Filter Categories reorder helpers
+    // ================= FILTER CATEGORIES SYSTEM (2 INPUTS: 1. Parent, 2. Subcategories) =================
+    let filterSubcategories = [];
+    const FILTER_STORAGE_KEY = 'pondyvastra_filter_categories_data';
+
+    const PARENT_PRESETS = {
+      'Kurtis': ['Anarkali Kurta', 'Straight Kurta', 'A-Line Kurta', 'Short Kurti', 'Angrakha Kurti', 'Flared Kurti', 'Kaftan Kurti'],
+      'Sarees': ['Silk Saree', 'Kanjivaram Saree', 'Cotton Saree', 'Georgette Saree', 'Chiffon Saree', 'Banarasi Saree', 'Organza Saree'],
+      'Lehengas': ['Bridal Lehenga', 'Floral Lehenga', 'Party Wear Lehenga', 'Semi-Stitched Lehenga', 'Velvet Lehenga', 'Crop Top Lehenga'],
+      'Salwar Suits': ['Punjabi Suit', 'Palazzo Suit', 'Sharara Suit', 'Churidar Suit', 'Patiala Suit', 'Anarkali Suit'],
+      'Dresses & Gowns': ['Midi Dress', 'Maxi Dress', 'Indo-Western Dress', 'Evening Gown', 'Party Dress', 'Tiered Dress'],
+      'Co-ord Sets': ['Ethnic Set', 'Printed Set', 'Silk Blend Set', 'Blazer Set', 'Crop Top & Skirt', 'Pant Set'],
+      'Bottom Wear': ['Palazzo', 'Churidar', 'Pants', 'Salwar', 'Leggings', 'Dhoti Pants', 'Culottes'],
+      'Indo-Western': ['Dhoti Kurta', 'Cape Sets', 'Peplum Sets', 'Jacket Style', 'Jumpsuits', 'Asymmetric Top'],
+      'Kurta Sets': ['Kurta with Palazzo', 'Kurta with Pants', 'Kurta with Skirt', 'Kurta with Dupatta'],
+      'Tops & Tunics': ['Short Tunics', 'Long Tunics', 'Peplum Tops', 'Embroidered Tops', 'Printed Shirts'],
+      'Dupattas & Shawls': ['Banarasi Dupatta', 'Phulkari Dupatta', 'Chanderi Dupatta', 'Bandhani Dupatta', 'Silk Shawls'],
+      'Ethnic Jackets': ['Koti Jackets', 'Long Cape Jackets', 'Embroidered Shrugs', 'Silk Waistcoats'],
+      'Nightwear & Loungewear': ['Cotton Kaftan', 'Pyjama Sets', 'Night Robes', 'Lounge Kurtis']
+    };
+
+    function renderSubcategoryChips() {
+      const container = document.getElementById('filter-subcategories-chips');
+      if (!container) return;
+      if (filterSubcategories.length === 0) {
+        container.innerHTML = `<span class="text-[11px] text-stone-400 italic">No sub categories added yet. Type below and press Enter or click suggestions.</span>`;
+        return;
+      }
+      container.innerHTML = filterSubcategories.map((sub, idx) => `
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-50 text-[#e11467] font-semibold text-xs border border-rose-200/70 shadow-2xs group animate-in">
+          <span>${sub}</span>
+          <button type="button" onclick="removeSubcategoryTag(${idx})" class="w-4 h-4 rounded-full hover:bg-[#e11467] hover:text-white flex items-center justify-center text-[10px] text-stone-400 group-hover:text-[#e11467] transition cursor-pointer">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </span>
+      `).join('');
+    }
+
+    function addSubcategoryTag(tag) {
+      const clean = tag.trim().replace(/^,+|,+$/g, '');
+      if (!clean) return;
+      if (!filterSubcategories.includes(clean)) {
+        filterSubcategories.push(clean);
+        renderSubcategoryChips();
+      }
+    }
+
+    function removeSubcategoryTag(index) {
+      filterSubcategories.splice(index, 1);
+      renderSubcategoryChips();
+    }
+
+    function handleSubcategoryInputKeydown(e) {
+      if (e.key === 'Enter' || e.key === ',') {
+        e.preventDefault();
+        handleAddSubcategoryFromInput();
+      } else if (e.key === 'Backspace' && !e.target.value && filterSubcategories.length > 0) {
+        removeSubcategoryTag(filterSubcategories.length - 1);
+      }
+    }
+
+    function handleAddSubcategoryFromInput() {
+      const input = document.getElementById('filter-subcategory-input');
+      if (!input) return;
+      const val = input.value;
+      if (val.includes(',')) {
+        val.split(',').forEach(s => addSubcategoryTag(s));
+      } else {
+        addSubcategoryTag(val);
+      }
+      input.value = '';
+      input.focus();
+    }
+
+    // ================= PARENT CATEGORIES MANAGEMENT (Dropdown + Add New) =================
+    const CUSTOM_PARENTS_STORAGE_KEY = 'pondyvastra_custom_parent_categories';
+    const DEFAULT_PARENT_CATEGORIES = [
+      'Kurtis',
+      'Sarees',
+      'Lehengas',
+      'Salwar Suits',
+      'Dresses & Gowns',
+      'Co-ord Sets',
+      'Bottom Wear',
+      'Indo-Western',
+      'Kurta Sets',
+      'Tops & Tunics',
+      'Dupattas & Shawls',
+      'Ethnic Jackets',
+      'Nightwear & Loungewear'
+    ];
+
+    function getSavedCustomParentCategories() {
+      try {
+        const raw = localStorage.getItem(CUSTOM_PARENTS_STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveCustomParentCategory(name) {
+      const clean = (name || '').trim();
+      if (!clean) return;
+      const list = getSavedCustomParentCategories();
+      if (!list.some(c => c.toLowerCase() === clean.toLowerCase())) {
+        list.push(clean);
+        localStorage.setItem(CUSTOM_PARENTS_STORAGE_KEY, JSON.stringify(list));
+      }
+    }
+
+    function getAllParentCategories() {
+      const set = new Set();
+      DEFAULT_PARENT_CATEGORIES.forEach(c => set.add(c));
+
+      // Product cards in DOM
+      const prodCards = document.querySelectorAll('#categories-grid .category-card');
+      prodCards.forEach(c => {
+        const n = c.getAttribute('data-name');
+        if (n && n.trim()) set.add(n.trim());
+      });
+
+      // Filter cards in DOM
+      const filterCards = document.querySelectorAll('#filter-categories-grid .filter-card');
+      filterCards.forEach(c => {
+        const n = c.getAttribute('data-parent') || c.getAttribute('data-name');
+        if (n && n.trim()) set.add(n.trim());
+      });
+
+      // Persistent custom additions
+      getSavedCustomParentCategories().forEach(c => set.add(c));
+
+      return Array.from(set);
+    }
+
+    function populateParentCategorySelect(selectedCategory = '') {
+      const selectEl = document.getElementById('filter-parent-category-select');
+      if (!selectEl) return;
+
+      const categories = getAllParentCategories();
+      let optionsHtml = `<option value="" disabled ${!selectedCategory ? 'selected' : ''}>-- Select Product Parent Category --</option>`;
+
+      categories.forEach(cat => {
+        const isSelected = selectedCategory && (selectedCategory.toLowerCase() === cat.toLowerCase());
+        optionsHtml += `<option value="${cat}" ${isSelected ? 'selected' : ''}>${cat}</option>`;
+      });
+
+      optionsHtml += `<option value="__add_new__" class="font-bold text-[#e11467] bg-rose-50">+ Add New Parent Category...</option>`;
+      selectEl.innerHTML = optionsHtml;
+
+      renderParentQuickPills(categories.slice(0, 8), selectedCategory);
+      updateParentSelectedSummary(selectedCategory);
+    }
+
+    function renderParentQuickPills(categories, selected) {
+      const container = document.getElementById('parent-quick-pills');
+      if (!container) return;
+
+      container.innerHTML = categories.map(cat => {
+        const isSel = selected && (selected.toLowerCase() === cat.toLowerCase());
+        const activeClass = isSel 
+          ? 'bg-[#e11467] text-white border-[#e11467] shadow-2xs font-bold' 
+          : 'bg-white text-stone-600 hover:text-[#e11467] hover:border-rose-200 border-stone-200/80 font-medium';
+        return `
+          <button 
+            type="button" 
+            onclick="selectParentCategoryQuickly('${cat.replace(/'/g, "\\'")}')" 
+            class="px-2.5 py-1 rounded-lg text-[10px] border transition cursor-pointer flex items-center gap-1 ${activeClass}"
+          >
+            ${isSel ? '<i class="fa-solid fa-check text-[9px]"></i>' : ''}
+            <span>${cat}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectParentCategoryQuickly(catName) {
+      setParentCategoryMode('select');
+      const selectEl = document.getElementById('filter-parent-category-select');
+      if (selectEl) {
+        selectEl.value = catName;
+        handleFilterParentSelectChange(selectEl);
+      }
+    }
+
+    function updateParentSelectedSummary(catName) {
+      const summaryEl = document.getElementById('parent-selected-summary');
+      const nameEl = document.getElementById('parent-selected-summary-name');
+      if (!summaryEl || !nameEl) return;
+
+      if (catName && catName !== '__add_new__') {
+        nameEl.innerText = catName;
+        summaryEl.classList.remove('hidden');
+        summaryEl.classList.add('flex');
+      } else {
+        summaryEl.classList.add('hidden');
+        summaryEl.classList.remove('flex');
+      }
+    }
+
+    function clearParentCategorySelection() {
+      const selectEl = document.getElementById('filter-parent-category-select');
+      if (selectEl) {
+        selectEl.value = '';
+        handleFilterParentSelectChange(selectEl);
+      }
+      updateParentSelectedSummary('');
+    }
+
+    function setParentCategoryMode(mode) {
+      const activeModeInput = document.getElementById('parent-category-active-mode');
+      const selectView = document.getElementById('parent-mode-select-view');
+      const newView = document.getElementById('parent-mode-new-view');
+      const btnSelect = document.getElementById('parent-mode-select-btn');
+      const btnNew = document.getElementById('parent-mode-new-btn');
+      const inputNew = document.getElementById('filter-new-parent-input');
+
+      if (activeModeInput) activeModeInput.value = mode;
+
+      if (mode === 'new') {
+        if (selectView) selectView.classList.add('hidden');
+        if (newView) newView.classList.remove('hidden');
+        
+        if (btnNew) {
+          btnNew.className = "px-2.5 py-1 rounded-lg font-bold transition flex items-center gap-1.5 bg-white text-[#e11467] shadow-2xs cursor-pointer";
+        }
+        if (btnSelect) {
+          btnSelect.className = "px-2.5 py-1 rounded-lg font-medium text-stone-500 hover:text-stone-900 transition flex items-center gap-1.5 cursor-pointer";
+        }
+
+        if (inputNew) {
+          setTimeout(() => inputNew.focus(), 50);
+        }
+      } else {
+        // Mode is 'select'
+        if (selectView) selectView.classList.remove('hidden');
+        if (newView) newView.classList.add('hidden');
+
+        if (btnSelect) {
+          btnSelect.className = "px-2.5 py-1 rounded-lg font-bold transition flex items-center gap-1.5 bg-white text-[#e11467] shadow-2xs cursor-pointer";
+        }
+        if (btnNew) {
+          btnNew.className = "px-2.5 py-1 rounded-lg font-medium text-stone-500 hover:text-stone-900 transition flex items-center gap-1.5 cursor-pointer";
+        }
+      }
+    }
+
+    function handleNewParentInputKeydown(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        confirmAddNewParentCategory();
+      }
+    }
+
+    function confirmAddNewParentCategory() {
+      const input = document.getElementById('filter-new-parent-input');
+      if (!input) return;
+      const val = input.value.trim();
+      if (!val) {
+        showToast('Please type a parent category name', 'error');
+        input.focus();
+        return;
+      }
+
+      saveCustomParentCategory(val);
+      populateParentCategorySelect(val);
+      setParentCategoryMode('select');
+
+      const presets = PARENT_PRESETS[val] || [];
+      renderPresetChips(presets);
+
+      input.value = '';
+      showToast(`Parent category "${val}" added & selected!`, 'success');
+    }
+
+    function handleFilterParentSelectChange(selectEl) {
+      const val = selectEl.value;
+
+      if (val === '__add_new__') {
+        setParentCategoryMode('new');
+        return;
+      }
+
+      const categories = getAllParentCategories();
+      renderParentQuickPills(categories.slice(0, 8), val);
+      updateParentSelectedSummary(val);
+
+      const presets = PARENT_PRESETS[val] || [];
+      renderPresetChips(presets);
+    }
+
+    function renderPresetChips(presets) {
+      const container = document.getElementById('filter-preset-chips');
+      if (!container) return;
+      if (!presets || presets.length === 0) {
+        container.innerHTML = `<span class="text-[10px] text-stone-400 italic">Select parent category to see suggestions</span>`;
+        return;
+      }
+      container.innerHTML = presets.map(p => `
+        <button type="button" onclick="addSubcategoryTag('${p.replace(/'/g, "\\'")}')" class="px-2 py-0.5 rounded-md bg-stone-100 hover:bg-rose-50 hover:text-[#e11467] text-stone-600 text-[10px] font-medium transition cursor-pointer border border-stone-200/60">
+          + ${p}
+        </button>
+      `).join('');
+    }
+
+    function populateNewCatParentSelect() {
+      const sel = document.getElementById('new-cat-parent');
+      if (!sel) return;
+      const currentVal = sel.value;
+      const categories = getAllParentCategories();
+      let html = `<option value="none">None (Root Category)</option>`;
+      categories.forEach(c => {
+        const slug = c.toLowerCase().replace(/\s+/g, '-');
+        html += `<option value="${slug}">${c}</option>`;
+      });
+      sel.innerHTML = html;
+      if (currentVal) sel.value = currentVal;
+    }
+
+    // Open Add Filter Category Modal
+    function openAddFilterCategoryModal() {
+      const modal = document.getElementById('filter-category-modal');
+      if (!modal) return;
+      const box = modal.querySelector('.modal-container');
+      
+      document.getElementById('filter-category-form').reset();
+      document.getElementById('filter-modal-mode').value = 'add';
+      document.getElementById('filter-original-parent').value = '';
+      document.getElementById('filter-modal-title').innerText = 'Add Filter Category';
+      document.getElementById('filter-modal-subtitle').innerText = '1. Select Product Parent Category & 2. Add Sub Categories';
+      document.getElementById('btn-save-filter-cat-label').innerText = 'Save Filter Category';
+      
+      // Populate parent select dropdown and reset mode
+      populateParentCategorySelect('');
+      setParentCategoryMode('select');
+      const newParentInput = document.getElementById('filter-new-parent-input');
+      if (newParentInput) newParentInput.value = '';
+      updateParentSelectedSummary('');
+
+      filterSubcategories = [];
+      renderSubcategoryChips();
+      renderPresetChips([]);
+
+      const grid = document.getElementById('filter-categories-grid');
+      const count = grid ? grid.querySelectorAll('.filter-card').length : 0;
+      document.getElementById('filter-cat-order').value = count + 1;
+      document.getElementById('filter-cat-status').checked = true;
+
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        box.classList.remove('scale-95', 'opacity-0');
+        box.classList.add('scale-100', 'opacity-100');
+      }, 10);
+    }
+
+    // Close Filter Category Modal
+    function closeFilterCategoryModal() {
+      const modal = document.getElementById('filter-category-modal');
+      if (!modal) return;
+      const box = modal.querySelector('.modal-container');
+      box.classList.remove('scale-100', 'opacity-100');
+      box.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        filterSubcategories = [];
+      }, 200);
+    }
+
+    // Open Edit Filter Category Modal
+    function openEditFilterCategoryModal(parentName) {
+      const grid = document.getElementById('filter-categories-grid');
+      const card = grid.querySelector(`.filter-card[data-parent="${parentName}"], .filter-card[data-name="${parentName}"]`);
+      if (!card) return;
+
+      const modal = document.getElementById('filter-category-modal');
+      const box = modal.querySelector('.modal-container');
+
+      document.getElementById('filter-modal-mode').value = 'edit';
+      document.getElementById('filter-original-parent').value = parentName;
+      document.getElementById('filter-modal-title').innerText = `Edit Filter Category: ${parentName}`;
+      document.getElementById('filter-modal-subtitle').innerText = 'Update Product Parent Category and Sub Categories';
+      document.getElementById('btn-save-filter-cat-label').innerText = 'Update Filter Category';
+
+      // Ensure parentName is in the parent select and selected
+      saveCustomParentCategory(parentName);
+      populateParentCategorySelect(parentName);
+      setParentCategoryMode('select');
+      updateParentSelectedSummary(parentName);
+
+      // Populate subcategories chips from card data
+      const rawSubs = card.getAttribute('data-subcategories') || '';
+      filterSubcategories = rawSubs.split(',').map(s => s.trim()).filter(Boolean);
+      renderSubcategoryChips();
+
+      const presets = PARENT_PRESETS[parentName] || [];
+      renderPresetChips(presets);
+
+      const currentOrder = card.getAttribute('data-order') || '1';
+      document.getElementById('filter-cat-order').value = currentOrder;
+
+      const currentStatus = card.getAttribute('data-status') || 'active';
+      document.getElementById('filter-cat-status').checked = (currentStatus === 'active');
+
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        box.classList.remove('scale-95', 'opacity-0');
+        box.classList.add('scale-100', 'opacity-100');
+      }, 10);
+    }
+
+    // Confirm Delete Filter Category
+    function confirmDeleteFilterCategory(parentName) {
+      if (confirm(`Are you sure you want to delete filter category "${parentName}" and all its sub categories?`)) {
+        const grid = document.getElementById('filter-categories-grid');
+        const card = grid.querySelector(`.filter-card[data-parent="${parentName}"], .filter-card[data-name="${parentName}"]`);
+        if (card) {
+          card.style.transition = 'all 0.3s ease';
+          card.style.opacity = '0';
+          card.style.transform = 'scale(0.9)';
+          setTimeout(() => {
+            card.remove();
+            updateAllFilterOrderAttributesAndBadges();
+            saveFilterCategoriesToStorage();
+            updateTabBadgeCounts();
+            filterCategories();
+            showToast(`Filter Category "${parentName}" deleted successfully`, 'info');
+          }, 300);
+        }
+      }
+    }
+
+    // Save Filter Category Submission
+    function handleSaveFilterCategory(e) {
+      e.preventDefault();
+      
+      // 1. Get Product Parent Category (Handles Dropdown or Add-New)
+      const modeParent = document.getElementById('parent-category-active-mode')?.value || 'select';
+      let parentName = '';
+
+      if (modeParent === 'new') {
+        const inputNew = document.getElementById('filter-new-parent-input');
+        parentName = inputNew ? inputNew.value.trim() : '';
+        if (parentName) {
+          saveCustomParentCategory(parentName);
+          populateParentCategorySelect(parentName);
+        }
+      } else {
+        const selectEl = document.getElementById('filter-parent-category-select');
+        parentName = selectEl ? selectEl.value : '';
+        if (parentName === '__add_new__') {
+          const inputNew = document.getElementById('filter-new-parent-input');
+          parentName = inputNew ? inputNew.value.trim() : '';
+          if (parentName) {
+            saveCustomParentCategory(parentName);
+            populateParentCategorySelect(parentName);
+          }
+        }
+      }
+
+      if (!parentName) {
+        showToast('Please select or enter a Product Parent Category', 'error');
+        if (modeParent === 'new') {
+          document.getElementById('filter-new-parent-input')?.focus();
+        } else {
+          document.getElementById('filter-parent-category-select')?.focus();
+        }
+        return;
+      }
+
+      // 2. Get Sub Categories
+      const subInput = document.getElementById('filter-subcategory-input');
+      if (subInput && subInput.value.trim()) {
+        addSubcategoryTag(subInput.value.trim());
+        subInput.value = '';
+      }
+
+      if (filterSubcategories.length === 0) {
+        showToast('Please add at least one Sub Category', 'error');
+        return;
+      }
+
+      const mode = document.getElementById('filter-modal-mode').value;
+      const origParent = document.getElementById('filter-original-parent').value;
+      const targetOrder = parseInt(document.getElementById('filter-cat-order').value, 10) || 1;
+      const isActive = document.getElementById('filter-cat-status').checked;
+      const iconClass = document.getElementById('filter-cat-icon').value || 'fa-vest-patches';
+
+      const subcategoriesStr = filterSubcategories.join(', ');
+      const count = filterSubcategories.length;
+
+      // Sub-categories preview chips HTML
+      const chip1 = filterSubcategories[0] || '';
+      const chip2 = filterSubcategories[1] || '';
+      const remainingCount = count - 2;
+      let chipsHtml = '';
+      if (chip1) chipsHtml += `<span class="px-1.5 py-0.5 rounded-md bg-stone-100 text-[10px] text-stone-700 font-medium">${chip1}</span>`;
+      if (chip2) chipsHtml += `<span class="px-1.5 py-0.5 rounded-md bg-stone-100 text-[10px] text-stone-700 font-medium">${chip2}</span>`;
+      if (remainingCount > 0) chipsHtml += `<span class="px-1.5 py-0.5 rounded-md bg-rose-50 text-[10px] text-[#e11467] font-semibold">+${remainingCount} more</span>`;
+
+      const grid = document.getElementById('filter-categories-grid');
+
+      if (mode === 'add') {
+        const card = document.createElement('div');
+        card.className = "filter-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none";
+        card.setAttribute('draggable', 'true');
+        card.setAttribute('data-name', parentName);
+        card.setAttribute('data-parent', parentName);
+        card.setAttribute('data-subcategories', subcategoriesStr);
+        card.setAttribute('data-count', count);
+        card.setAttribute('data-status', isActive ? 'active' : 'inactive');
+        card.setAttribute('data-order', targetOrder);
+
+        card.innerHTML = `
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
+              <i class="fa-solid fa-grip-vertical text-xs"></i>
+            </div>
+            <div class="relative">
+              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-rose-50 p-1 flex items-center justify-center border border-rose-100/60 shadow-2xs text-[#e11467]">
+                <i class="fa-solid ${iconClass} text-2xl"></i>
+              </div>
+              <button onclick="promptChangeFilterOrder('${parentName}', ${targetOrder})" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
+                ${getOrdinal(targetOrder)}
+              </button>
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">${parentName}</h3>
+              <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
+                <button onclick="moveFilterOrder('${parentName}', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-up"></i>
+                </button>
+                <button onclick="moveFilterOrder('${parentName}', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+              </div>
+            </div>
+            <p class="text-xs text-stone-400 mt-0.5">${count} Sub Categories</p>
+            <div class="flex flex-wrap gap-1 mt-1.5 sub-chips-preview">
+              ${chipsHtml}
+            </div>
+            <div class="flex items-center gap-1.5 mt-2 status-badge">
+              <span class="w-2 h-2 rounded-full ${isActive ? 'bg-emerald-500' : 'bg-stone-400'}"></span>
+              <span class="text-xs font-semibold ${isActive ? 'text-emerald-600' : 'text-stone-500'}">${isActive ? 'Active' : 'Inactive'}</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-2.5 pt-2 border-t border-stone-100">
+              <button onclick="openEditFilterCategoryModal('${parentName}')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200/60 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-regular fa-pen-to-square text-[11px]"></i>
+              </button>
+              <button onclick="confirmDeleteFilterCategory('${parentName}')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-regular fa-trash-can text-[11px]"></i>
+              </button>
+              <label class="relative inline-flex items-center cursor-pointer ml-auto">
+                <input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleCategoryStatus(this, '${parentName}')" class="sr-only peer">
+                <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
+              </label>
+            </div>
+          </div>
+        `;
+
+        const existingCards = Array.from(grid.querySelectorAll('.filter-card'));
+        if (targetOrder <= 1 || existingCards.length === 0) {
+          grid.prepend(card);
+        } else if (targetOrder > existingCards.length) {
+          grid.appendChild(card);
+        } else {
+          existingCards[targetOrder - 1].before(card);
+        }
+
+        updateAllFilterOrderAttributesAndBadges();
+        setupFilterDragAndDrop();
+        saveFilterCategoriesToStorage();
+        updateTabBadgeCounts();
+        closeFilterCategoryModal();
+        showToast(`Filter Category "${parentName}" added with ${count} Sub Categories!`, 'success');
+
+      } else {
+        // Mode is Edit
+        const card = grid.querySelector(`.filter-card[data-parent="${origParent}"], .filter-card[data-name="${origParent}"]`);
+        if (card) {
+          card.setAttribute('data-name', parentName);
+          card.setAttribute('data-parent', parentName);
+          card.setAttribute('data-subcategories', subcategoriesStr);
+          card.setAttribute('data-count', count);
+          card.setAttribute('data-status', isActive ? 'active' : 'inactive');
+
+          card.querySelector('h3').innerText = parentName;
+          card.querySelector('p').innerText = `${count} Sub Categories`;
+          const chipsPreview = card.querySelector('.sub-chips-preview');
+          if (chipsPreview) chipsPreview.innerHTML = chipsHtml;
+
+          const badge = card.querySelector('.status-badge');
+          if (badge) {
+            badge.innerHTML = `
+              <span class="w-2 h-2 rounded-full ${isActive ? 'bg-emerald-500' : 'bg-stone-400'}"></span>
+              <span class="text-xs font-semibold ${isActive ? 'text-emerald-600' : 'text-stone-500'}">${isActive ? 'Active' : 'Inactive'}</span>
+            `;
+          }
+
+          const iconEl = card.querySelector('.relative .rounded-full i');
+          if (iconEl) iconEl.className = `fa-solid ${iconClass} text-2xl`;
+
+          const toggle = card.querySelector('input[type="checkbox"]');
+          if (toggle) toggle.checked = isActive;
+
+          const editBtn = card.querySelector('button[title="Edit"]');
+          if (editBtn) editBtn.setAttribute('onclick', `openEditFilterCategoryModal('${parentName}')`);
+          const delBtn = card.querySelector('button[title="Delete"]');
+          if (delBtn) delBtn.setAttribute('onclick', `confirmDeleteFilterCategory('${parentName}')`);
+
+          if (!isNaN(targetOrder) && targetOrder >= 1) {
+            setFilterCategoryPosition(parentName, targetOrder);
+          } else {
+            updateAllFilterOrderAttributesAndBadges();
+          }
+
+          setupFilterDragAndDrop();
+          saveFilterCategoriesToStorage();
+          updateTabBadgeCounts();
+          closeFilterCategoryModal();
+          showToast(`Filter Category "${parentName}" updated successfully!`, 'success');
+        }
+      }
+    }
+
+    // Set filter category to specific position number
+    function setFilterCategoryPosition(catName, targetPos) {
+      const grid = document.getElementById('filter-categories-grid');
+      if (!grid) return;
+      const cards = Array.from(grid.querySelectorAll('.filter-card'));
+      const cardIndex = cards.findIndex(c => c.getAttribute('data-name') === catName || c.getAttribute('data-parent') === catName);
+      if (cardIndex === -1) return;
+
+      const card = cards[cardIndex];
+      cards.splice(cardIndex, 1);
+      cards.splice(targetPos - 1, 0, card);
+
+      cards.forEach(c => grid.appendChild(c));
+      updateAllFilterOrderAttributesAndBadges();
+    }
+
+    // Update all filter card badges and ordering
     function updateAllFilterOrderAttributesAndBadges() {
       const grid = document.getElementById('filter-categories-grid');
       if (!grid) return;
       const cards = grid.querySelectorAll('.filter-card');
       cards.forEach((card, idx) => {
         const orderNum = idx + 1;
+        const parentName = card.getAttribute('data-parent') || card.getAttribute('data-name');
         card.setAttribute('data-order', orderNum);
         const badge = card.querySelector('.order-badge');
         if (badge) {
           badge.innerText = getOrdinal(orderNum);
-          badge.setAttribute('onclick', `promptChangeFilterOrder('${card.getAttribute('data-name')}', ${orderNum})`);
+          badge.setAttribute('onclick', `promptChangeFilterOrder('${parentName}', ${orderNum})`);
         }
+        const upBtn = card.querySelector('button[title="Move up"]');
+        const downBtn = card.querySelector('button[title="Move down"]');
+        if (upBtn) upBtn.setAttribute('onclick', `moveFilterOrder('${parentName}', -1)`);
+        if (downBtn) downBtn.setAttribute('onclick', `moveFilterOrder('${parentName}', 1)`);
       });
+
+      const ind = document.getElementById('saved-order-indicator');
+      if (ind) {
+        ind.innerHTML = `<i class="fa-solid fa-check text-[10px]"></i> Saved (${cards.length} ordered)`;
+      }
     }
 
     function moveFilterOrder(catName, direction) {
       const grid = document.getElementById('filter-categories-grid');
       if (!grid) return;
       const cards = Array.from(grid.querySelectorAll('.filter-card'));
-      const idx = cards.findIndex(c => c.getAttribute('data-name') === catName);
+      const idx = cards.findIndex(c => c.getAttribute('data-name') === catName || c.getAttribute('data-parent') === catName);
       if (idx === -1) return;
       const targetIdx = idx + direction;
-      if (targetIdx < 0 || targetIdx >= cards.length) return;
+      if (targetIdx < 0 || targetIdx >= cards.length) {
+        showToast(`"${catName}" is already at the ${direction < 0 ? 'top' : 'bottom'} position.`, 'info');
+        return;
+      }
 
       const card = cards[idx];
       cards.splice(idx, 1);
       cards.splice(targetIdx, 0, card);
       cards.forEach(c => grid.appendChild(c));
       updateAllFilterOrderAttributesAndBadges();
+      saveFilterCategoriesToStorage();
       showToast(`"${catName}" moved to ${getOrdinal(targetIdx + 1)} position!`, 'success');
     }
 
@@ -2356,19 +3314,9 @@
         showToast(`Please enter a valid position number between 1 and ${total}`, 'info');
         return;
       }
-      const cards = Array.from(grid.querySelectorAll('.filter-card'));
-      const cardIdx = cards.findIndex(c => c.getAttribute('data-name') === catName);
-      if (cardIdx === -1) return;
-      const card = cards[cardIdx];
-      cards.splice(cardIdx, 1);
-      cards.splice(newPos - 1, 0, card);
-      cards.forEach(c => grid.appendChild(c));
-      updateAllFilterOrderAttributesAndBadges();
+      setFilterCategoryPosition(catName, newPos);
+      saveFilterCategoriesToStorage();
       showToast(`"${catName}" is now in ${getOrdinal(newPos)} position!`, 'success');
-    }
-
-    function editFilterCategory(name, count, order, status) {
-      openEditCategoryModal(name, count, order, status);
     }
 
     function setupFilterDragAndDrop() {
@@ -2403,6 +3351,7 @@
             if (dIdx < tIdx) card.after(draggedFilter);
             else card.before(draggedFilter);
             updateAllFilterOrderAttributesAndBadges();
+            saveFilterCategoriesToStorage();
             const newPos = Array.from(grid.querySelectorAll('.filter-card')).indexOf(draggedFilter) + 1;
             showToast(`"${draggedFilter.getAttribute('data-name')}" moved to ${getOrdinal(newPos)} position!`, 'success');
           }
@@ -2410,11 +3359,143 @@
       });
     }
 
+    // Persist Filter Categories in LocalStorage
+    function saveFilterCategoriesToStorage() {
+      const grid = document.getElementById('filter-categories-grid');
+      if (!grid) return;
+      const cards = Array.from(grid.querySelectorAll('.filter-card'));
+      const data = cards.map(c => {
+        const iconEl = c.querySelector('.relative .rounded-full i');
+        const iconClass = iconEl ? Array.from(iconEl.classList).find(cls => cls.startsWith('fa-') && cls !== 'fa-solid') || 'fa-vest-patches' : 'fa-vest-patches';
+        return {
+          parent: c.getAttribute('data-parent') || c.getAttribute('data-name'),
+          subcategories: c.getAttribute('data-subcategories') || '',
+          status: c.getAttribute('data-status') || 'active',
+          icon: iconClass
+        };
+      });
+      try {
+        localStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify(data));
+      } catch (e) {
+        console.error('Failed saving filter categories data', e);
+      }
+    }
+
+    function loadSavedFilterCategories() {
+      try {
+        const saved = localStorage.getItem(FILTER_STORAGE_KEY);
+        if (!saved) return;
+        const data = JSON.parse(saved);
+        if (!Array.isArray(data) || data.length === 0) return;
+
+        const grid = document.getElementById('filter-categories-grid');
+        if (!grid) return;
+        grid.innerHTML = '';
+
+        data.forEach((item, idx) => {
+          const orderNum = idx + 1;
+          const parentName = item.parent;
+          const rawSubs = item.subcategories || '';
+          const subList = rawSubs.split(',').map(s => s.trim()).filter(Boolean);
+          const count = subList.length;
+          const isActive = item.status !== 'inactive';
+          const iconClass = item.icon || 'fa-vest-patches';
+
+          const chip1 = subList[0] || '';
+          const chip2 = subList[1] || '';
+          const remainingCount = count - 2;
+          let chipsHtml = '';
+          if (chip1) chipsHtml += `<span class="px-1.5 py-0.5 rounded-md bg-stone-100 text-[10px] text-stone-700 font-medium">${chip1}</span>`;
+          if (chip2) chipsHtml += `<span class="px-1.5 py-0.5 rounded-md bg-stone-100 text-[10px] text-stone-700 font-medium">${chip2}</span>`;
+          if (remainingCount > 0) chipsHtml += `<span class="px-1.5 py-0.5 rounded-md bg-rose-50 text-[10px] text-[#e11467] font-semibold">+${remainingCount} more</span>`;
+
+          const card = document.createElement('div');
+          card.className = "filter-card relative bg-white rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md transition flex items-center gap-3.5 group cursor-move select-none";
+          card.setAttribute('draggable', 'true');
+          card.setAttribute('data-name', parentName);
+          card.setAttribute('data-parent', parentName);
+          card.setAttribute('data-subcategories', rawSubs);
+          card.setAttribute('data-count', count);
+          card.setAttribute('data-status', isActive ? 'active' : 'inactive');
+          card.setAttribute('data-order', orderNum);
+
+          card.innerHTML = `
+            <div class="flex items-center gap-2 flex-shrink-0">
+              <div class="drag-handle text-stone-300 group-hover:text-stone-500 cursor-grab active:cursor-grabbing transition" title="Drag to reorder">
+                <i class="fa-solid fa-grip-vertical text-xs"></i>
+              </div>
+              <div class="relative">
+                <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-rose-50 p-1 flex items-center justify-center border border-rose-100/60 shadow-2xs text-[#e11467]">
+                  <i class="fa-solid ${iconClass} text-2xl"></i>
+                </div>
+                <button onclick="promptChangeFilterOrder('${parentName}', ${orderNum})" title="Click to change order position" class="order-badge absolute -top-1 -right-1 bg-white hover:bg-[#e11467] text-stone-700 hover:text-white font-bold text-[10px] px-2 py-0.5 rounded-full border border-stone-200 hover:border-[#e11467] shadow-xs transition cursor-pointer">
+                  ${getOrdinal(orderNum)}
+                </button>
+              </div>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between gap-1">
+                <h3 class="font-bold text-stone-900 text-sm sm:text-base leading-snug truncate">${parentName}</h3>
+                <div class="flex items-center gap-0.5 bg-stone-50 border border-stone-200/80 rounded-lg p-0.5">
+                  <button onclick="moveFilterOrder('${parentName}', -1)" title="Move up" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                    <i class="fa-solid fa-chevron-up"></i>
+                  </button>
+                  <button onclick="moveFilterOrder('${parentName}', 1)" title="Move down" class="w-5 h-5 rounded hover:bg-white hover:text-[#e11467] text-stone-400 flex items-center justify-center text-[9px] transition cursor-pointer">
+                    <i class="fa-solid fa-chevron-down"></i>
+                  </button>
+                </div>
+              </div>
+              <p class="text-xs text-stone-400 mt-0.5">${count} Sub Categories</p>
+              <div class="flex flex-wrap gap-1 mt-1.5 sub-chips-preview">
+                ${chipsHtml}
+              </div>
+              <div class="flex items-center gap-1.5 mt-2 status-badge">
+                <span class="w-2 h-2 rounded-full ${isActive ? 'bg-emerald-500' : 'bg-stone-400'}"></span>
+                <span class="text-xs font-semibold ${isActive ? 'text-emerald-600' : 'text-stone-500'}">${isActive ? 'Active' : 'Inactive'}</span>
+              </div>
+              <div class="flex items-center gap-1.5 mt-2.5 pt-2 border-t border-stone-100">
+                <button onclick="openEditFilterCategoryModal('${parentName}')" title="Edit" class="w-7 h-7 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200/60 text-stone-600 hover:text-stone-900 flex items-center justify-center text-xs transition cursor-pointer">
+                  <i class="fa-regular fa-pen-to-square text-[11px]"></i>
+                </button>
+                <button onclick="confirmDeleteFilterCategory('${parentName}')" title="Delete" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-500 hover:text-rose-700 flex items-center justify-center text-xs transition cursor-pointer">
+                  <i class="fa-regular fa-trash-can text-[11px]"></i>
+                </button>
+                <label class="relative inline-flex items-center cursor-pointer ml-auto">
+                  <input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleCategoryStatus(this, '${parentName}')" class="sr-only peer">
+                  <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
+                </label>
+              </div>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+
+        updateAllFilterOrderAttributesAndBadges();
+        setupFilterDragAndDrop();
+        updateTabBadgeCounts();
+      } catch (err) {
+        console.error('Error loading saved filter categories', err);
+      }
+    }
+
+    function updateTabBadgeCounts() {
+      const prodGrid = document.getElementById('categories-grid');
+      const filterGrid = document.getElementById('filter-categories-grid');
+      const bProd = document.getElementById('badge-products-count');
+      const bFilt = document.getElementById('badge-filter-count');
+      if (bProd && prodGrid) bProd.innerText = prodGrid.querySelectorAll('.category-card').length;
+      if (bFilt && filterGrid) bFilt.innerText = filterGrid.querySelectorAll('.filter-card').length;
+    }
+
     // On Load: setup order persistence and drag/drop
     window.addEventListener('DOMContentLoaded', () => {
       loadSavedOrder();
+      loadSavedFilterCategories();
       setupDragAndDrop();
       setupFilterDragAndDrop();
+      updateTabBadgeCounts();
+      populateParentCategorySelect('');
+      populateNewCatParentSelect();
 
       if (window.location.hash === '#filter-categories') {
         setCategoriesView('filters');
