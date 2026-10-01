@@ -10,6 +10,8 @@
   # Route clean admin URLs
   RewriteRule ^admin/add-product/?$ admin/add-product.html [L,QSA]
   RewriteRule ^admin/products/?$ admin/products.html [L,QSA]
+  RewriteRule ^admin/products-categories/?$ admin/categories.html [L,QSA]
+  RewriteRule ^admin/filter-categories/?$ admin/categories.html#filter-categories [NE,L,QSA]
   RewriteRule ^admin/categories/?$ admin/categories.html [L,QSA]
   RewriteRule ^admin/?$ admin/index.html [L,QSA]
 </IfModule>
