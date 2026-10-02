@@ -1205,7 +1205,7 @@
         </div>
 
         <!-- Form Container: 2 Columns Grid Matching Screenshot -->
-        <form id="add-product-form" onsubmit="handleSaveProduct(event)" class="space-y-6">
+        <form id="add-product-form" autocomplete="off" onsubmit="handleSaveProduct(event)" class="space-y-6">
           
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
             
@@ -1226,8 +1226,8 @@
                       type="text" 
                       id="product-name"
                       required
-                      value="Floral Anarkali Kurta"
-                      placeholder="e.g. Floral Anarkali Kurta"
+                      value=""
+                      placeholder=""
                       class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition"
                     >
                   </div>
@@ -1240,8 +1240,8 @@
                       type="text" 
                       id="product-sku"
                       required
-                      value="FAK-PNK-M"
-                      placeholder="e.g. FAK-PNK-M"
+                      value=""
+                      placeholder=""
                       class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] uppercase transition"
                     >
                   </div>
@@ -1254,12 +1254,12 @@
                   </label>
                   <div class="relative">
                     <textarea 
-                      id="short-description"
-                      rows="3"
-                      maxlength="200"
-                      oninput="updateShortDescCount(this)"
-                      required
-                      placeholder="Short summary for product cards and search results..."
+                      id="short-description" 
+                      rows="3" 
+                      maxlength="200" 
+                      oninput="updateShortDescCount(this)" 
+                      required 
+                      placeholder="" 
                       class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-xl p-3.5 pb-6 text-xs sm:text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition resize-none"
                     ></textarea>
                     <span id="short-desc-counter" class="absolute bottom-2 right-3 text-[11px] font-medium text-stone-400">
@@ -1332,8 +1332,8 @@
                       id="rich-description-editor" 
                       contenteditable="true" 
                       class="p-3.5 min-h-[140px] text-xs sm:text-sm text-stone-800 focus:outline-none"
-                      placeholder="Enter detailed product description..."
-                    >Enter detailed product description...</div>
+                      placeholder=""
+                    ></div>
                   </div>
                 </div>
 
@@ -1355,7 +1355,8 @@
                       onchange="handleCategoryChange(this.value)"
                       class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-stone-800 font-medium focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition cursor-pointer"
                     >
-                      <option value="Kurtis" selected>Kurtis</option>
+                      <option value="" disabled selected>-- Select Category --</option>
+                      <option value="Kurtis">Kurtis</option>
                       <option value="Sarees">Sarees</option>
                       <option value="Lehengas">Lehengas</option>
                       <option value="Dresses">Dresses</option>
@@ -1371,7 +1372,8 @@
                       id="product-subcategory" 
                       class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-stone-800 font-medium focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition cursor-pointer"
                     >
-                      <option value="Anarkali Kurta" selected>Anarkali Kurta</option>
+                      <option value="" disabled selected>-- Select Sub Category --</option>
+                      <option value="Anarkali Kurta">Anarkali Kurta</option>
                       <option value="Straight Kurta">Straight Kurta</option>
                       <option value="A-Line Kurta">A-Line Kurta</option>
                       <option value="Short Kurti">Short Kurti</option>
@@ -1384,7 +1386,8 @@
                       id="product-brand" 
                       class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-stone-800 font-medium focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition cursor-pointer"
                     >
-                      <option value="PondyVastra" selected>PondyVastra</option>
+                      <option value="" disabled selected>-- Select Brand --</option>
+                      <option value="PondyVastra">PondyVastra</option>
                       <option value="Heritage Silk">Heritage Silk</option>
                       <option value="Auroville Cottons">Auroville Cottons</option>
                       <option value="Custom Artisan">Custom Artisan</option>
@@ -1413,7 +1416,8 @@
                   <input 
                     type="text" 
                     id="product-tags" 
-                    placeholder="e.g. cotton, festive, summer"
+                    value=""
+                    placeholder=""
                     class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition"
                   >
                 </div>
@@ -1447,7 +1451,8 @@
                         <!-- Color Selector Pill with Circle -->
                         <div class="relative">
                           <select onchange="handleColorVariantChange(this)" class="appearance-none bg-stone-50 border border-stone-200 hover:border-stone-300 rounded-xl pl-8 pr-8 py-1.5 text-xs font-semibold text-stone-800 focus:outline-none focus:border-[#e11467] transition cursor-pointer">
-                            <option value="Pink" selected>Pink</option>
+                            <option value="" disabled selected>-- Select Color --</option>
+                            <option value="Pink">Pink</option>
                             <option value="Sky Blue">Sky Blue</option>
                             <option value="Red">Red</option>
                             <option value="Green">Green</option>
@@ -1456,7 +1461,7 @@
                             <option value="Maroon">Maroon</option>
                             <option value="Black">Black</option>
                           </select>
-                          <span class="variant-color-dot absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#e11467] pointer-events-none"></span>
+                          <span class="variant-color-dot absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-stone-300 pointer-events-none"></span>
                           <i class="fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-stone-400 pointer-events-none"></i>
                         </div>
 
@@ -1570,15 +1575,15 @@
                   <!-- Checkboxes Row Matching Screenshot -->
                   <div id="size-variants-list" class="flex items-center gap-3 sm:gap-4 flex-wrap text-xs sm:text-sm font-semibold text-stone-700">
                     <label class="inline-flex items-center gap-2 cursor-pointer select-none">
-                      <input type="checkbox" name="sizes" value="S" checked class="w-4 h-4 rounded text-[#e11467] focus:ring-[#e11467] border-stone-300 cursor-pointer">
+                      <input type="checkbox" name="sizes" value="S" class="w-4 h-4 rounded text-[#e11467] focus:ring-[#e11467] border-stone-300 cursor-pointer">
                       <span>S</span>
                     </label>
                     <label class="inline-flex items-center gap-2 cursor-pointer select-none">
-                      <input type="checkbox" name="sizes" value="M" checked class="w-4 h-4 rounded text-[#e11467] focus:ring-[#e11467] border-stone-300 cursor-pointer">
+                      <input type="checkbox" name="sizes" value="M" class="w-4 h-4 rounded text-[#e11467] focus:ring-[#e11467] border-stone-300 cursor-pointer">
                       <span>M</span>
                     </label>
                     <label class="inline-flex items-center gap-2 cursor-pointer select-none">
-                      <input type="checkbox" name="sizes" value="L" checked class="w-4 h-4 rounded text-[#e11467] focus:ring-[#e11467] border-stone-300 cursor-pointer">
+                      <input type="checkbox" name="sizes" value="L" class="w-4 h-4 rounded text-[#e11467] focus:ring-[#e11467] border-stone-300 cursor-pointer">
                       <span>L</span>
                     </label>
                     <label class="inline-flex items-center gap-2 cursor-pointer select-none">
@@ -1614,7 +1619,8 @@
                       id="price-input" 
                       required 
                       min="0"
-                      value="1299"
+                      value=""
+                      placeholder=""
                       oninput="recalculateDiscount()"
                       class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-stone-800 font-bold focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition"
                     >
@@ -1626,7 +1632,8 @@
                       type="number" 
                       id="compare-price-input" 
                       min="0"
-                      value="1999"
+                      value=""
+                      placeholder=""
                       oninput="recalculateDiscount()"
                       class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-stone-800 focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition"
                     >
@@ -1642,7 +1649,8 @@
                       <input 
                         type="number" 
                         id="discount-val" 
-                        value="35" 
+                        value="" 
+                        placeholder=""
                         readonly 
                         class="w-16 bg-[#f8fafc] border border-stone-200/90 rounded-xl px-2.5 py-2.5 text-xs sm:text-sm text-stone-800 font-bold text-center"
                       >
@@ -1656,8 +1664,9 @@
                   <div>
                     <label class="block text-xs font-semibold text-stone-700 mb-1.5">Tax (GST %)</label>
                     <select id="tax-rate" class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-stone-800 font-medium focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition cursor-pointer">
+                      <option value="" disabled selected>-- Select Tax --</option>
                       <option value="0%">0% (Exempt)</option>
-                      <option value="5%" selected>5%</option>
+                      <option value="5%">5%</option>
                       <option value="12%">12%</option>
                       <option value="18%">18%</option>
                       <option value="28%">28%</option>
@@ -1673,7 +1682,8 @@
                       id="stock-quantity" 
                       required 
                       min="0"
-                      value="25" 
+                      value="" 
+                      placeholder=""
                       class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-stone-800 font-bold focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition"
                     >
                   </div>
@@ -1684,7 +1694,8 @@
                       type="number" 
                       id="low-stock-alert" 
                       min="1"
-                      value="5" 
+                      value="" 
+                      placeholder=""
                       class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-stone-800 focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition"
                     >
                   </div>
@@ -1855,20 +1866,21 @@
         </button>
       </div>
 
-      <form id="new-product-form" onsubmit="handleAddNewProduct(event)" class="overflow-y-auto flex-1 py-4 space-y-4 text-xs pr-1">
+      <form id="new-product-form" autocomplete="off" onsubmit="handleAddNewProduct(event)" class="overflow-y-auto flex-1 py-4 space-y-4 text-xs pr-1">
         <div>
           <label class="block font-semibold text-stone-700 mb-1.5">Product Title *</label>
-          <input type="text" id="form-title" required placeholder="e.g. Pondicherry Pure Silk Saree" class="w-full bg-[#f8fafc] border border-stone-200 rounded-xl px-3.5 py-2.5 text-stone-800 text-xs sm:text-sm focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition">
+          <input type="text" id="form-title" required value="" placeholder="" class="w-full bg-[#f8fafc] border border-stone-200 rounded-xl px-3.5 py-2.5 text-stone-800 text-xs sm:text-sm focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition">
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label class="block font-semibold text-stone-700 mb-1.5">SKU Code *</label>
-            <input type="text" id="form-sku" required placeholder="e.g. PPS-PNK-FS" class="w-full bg-[#f8fafc] border border-stone-200 rounded-xl px-3.5 py-2.5 text-stone-800 text-xs sm:text-sm focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition uppercase">
+            <input type="text" id="form-sku" required value="" placeholder="" class="w-full bg-[#f8fafc] border border-stone-200 rounded-xl px-3.5 py-2.5 text-stone-800 text-xs sm:text-sm focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition uppercase">
           </div>
           <div>
             <label class="block font-semibold text-stone-700 mb-1.5">Category *</label>
             <select id="form-category" required class="w-full bg-[#f8fafc] border border-stone-200 rounded-xl px-3.5 py-2.5 text-stone-800 text-xs sm:text-sm focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition cursor-pointer">
+              <option value="" disabled selected>-- Select Category --</option>
               <option value="Kurtis">Kurtis</option>
               <option value="Sarees">Sarees</option>
               <option value="Lehengas">Lehengas</option>
@@ -1882,11 +1894,11 @@
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label class="block font-semibold text-stone-700 mb-1.5">Price (₹) *</label>
-            <input type="number" id="form-price" required placeholder="1999" min="0" class="w-full bg-[#f8fafc] border border-stone-200 rounded-xl px-3.5 py-2.5 text-stone-800 text-xs sm:text-sm focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition">
+            <input type="number" id="form-price" required value="" placeholder="" min="0" class="w-full bg-[#f8fafc] border border-stone-200 rounded-xl px-3.5 py-2.5 text-stone-800 text-xs sm:text-sm focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition">
           </div>
           <div>
             <label class="block font-semibold text-stone-700 mb-1.5">Stock Units *</label>
-            <input type="number" id="form-stock" required placeholder="20" min="0" class="w-full bg-[#f8fafc] border border-stone-200 rounded-xl px-3.5 py-2.5 text-stone-800 text-xs sm:text-sm focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition">
+            <input type="number" id="form-stock" required value="" placeholder="" min="0" class="w-full bg-[#f8fafc] border border-stone-200 rounded-xl px-3.5 py-2.5 text-stone-800 text-xs sm:text-sm focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition">
           </div>
           <div>
             <label class="block font-semibold text-stone-700 mb-1.5">Status</label>
@@ -1906,15 +1918,15 @@
               <span>XS</span>
             </label>
             <label class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-stone-50 border border-stone-200 rounded-lg cursor-pointer hover:bg-stone-100">
-              <input type="checkbox" name="sizes" value="S" checked class="rounded text-[#e11467]">
+              <input type="checkbox" name="sizes" value="S" class="rounded text-[#e11467]">
               <span>S</span>
             </label>
             <label class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-stone-50 border border-stone-200 rounded-lg cursor-pointer hover:bg-stone-100">
-              <input type="checkbox" name="sizes" value="M" checked class="rounded text-[#e11467]">
+              <input type="checkbox" name="sizes" value="M" class="rounded text-[#e11467]">
               <span>M</span>
             </label>
             <label class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-stone-50 border border-stone-200 rounded-lg cursor-pointer hover:bg-stone-100">
-              <input type="checkbox" name="sizes" value="L" checked class="rounded text-[#e11467]">
+              <input type="checkbox" name="sizes" value="L" class="rounded text-[#e11467]">
               <span>L</span>
             </label>
             <label class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-stone-50 border border-stone-200 rounded-lg cursor-pointer hover:bg-stone-100">
