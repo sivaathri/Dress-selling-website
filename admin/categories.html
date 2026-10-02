@@ -1887,9 +1887,7 @@
 
           <!-- Interactive Chips Area -->
           <div class="bg-white border border-stone-200/90 rounded-xl p-3 min-h-[96px] focus-within:border-[#e11467] focus-within:ring-1 focus-within:ring-[#e11467] transition">
-            <div id="filter-subcategories-chips" class="flex flex-wrap gap-1.5 mb-2">
-              <span class="text-[11px] text-stone-400 italic">No sub categories added yet. Type below and press Enter or click suggestions.</span>
-            </div>
+           
             <div class="flex items-center gap-2 pt-1 border-t border-stone-100">
               <input 
                 type="text" 
@@ -1919,32 +1917,11 @@
           </div>
         </div>
 
-        <!-- Display Order & Icon Row -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block font-semibold text-stone-700 mb-1">Display Order Position (1st, 2nd...)</label>
-            <input 
-              type="number" 
-              id="filter-cat-order" 
-              min="1" 
-              value="1" 
-              class="w-full bg-[#f8fafc] border border-stone-200 rounded-xl px-3.5 py-2.5 text-stone-800 text-xs font-bold text-[#e11467] focus:outline-none focus:border-[#e11467] transition"
-            >
-          </div>
-          
-        </div>
+        <!-- Hidden Helper Fields -->
+        <input type="hidden" id="filter-cat-order" value="1">
+        <input type="hidden" id="filter-cat-icon" value="fa-vest-patches">
 
-        <!-- Status Toggle -->
-        <div class="flex items-center justify-between p-3 bg-stone-50 rounded-xl border border-stone-200/70">
-          <div>
-            <p class="font-semibold text-stone-800 text-xs">Filter Category Active</p>
-            <p class="text-[11px] text-stone-400">Controls visibility in the storefront filter drawer</p>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" id="filter-cat-status" checked class="sr-only peer">
-            <div class="w-9 h-5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#e11467]"></div>
-          </label>
-        </div>
+       
 
         <!-- Footer Buttons -->
         <div class="flex items-center justify-end gap-2.5 pt-3 border-t border-stone-100">
@@ -2959,8 +2936,10 @@
 
       const grid = document.getElementById('filter-categories-grid');
       const count = grid ? grid.querySelectorAll('.filter-card').length : 0;
-      document.getElementById('filter-cat-order').value = count + 1;
-      document.getElementById('filter-cat-status').checked = true;
+      const orderEl = document.getElementById('filter-cat-order');
+      if (orderEl) orderEl.value = count + 1;
+      const statusEl = document.getElementById('filter-cat-status');
+      if (statusEl) statusEl.checked = true;
 
       modal.classList.remove('hidden');
       setTimeout(() => {
@@ -3012,10 +2991,12 @@
       renderPresetChips(presets);
 
       const currentOrder = card.getAttribute('data-order') || '1';
-      document.getElementById('filter-cat-order').value = currentOrder;
+      const orderEl = document.getElementById('filter-cat-order');
+      if (orderEl) orderEl.value = currentOrder;
 
       const currentStatus = card.getAttribute('data-status') || 'active';
-      document.getElementById('filter-cat-status').checked = (currentStatus === 'active');
+      const statusEl = document.getElementById('filter-cat-status');
+      if (statusEl) statusEl.checked = (currentStatus === 'active');
 
       modal.classList.remove('hidden');
       setTimeout(() => {
@@ -3095,11 +3076,14 @@
         return;
       }
 
-      const mode = document.getElementById('filter-modal-mode').value;
-      const origParent = document.getElementById('filter-original-parent').value;
-      const targetOrder = parseInt(document.getElementById('filter-cat-order').value, 10) || 1;
-      const isActive = document.getElementById('filter-cat-status').checked;
-      const iconClass = document.getElementById('filter-cat-icon').value || 'fa-vest-patches';
+      const mode = document.getElementById('filter-modal-mode')?.value || 'add';
+      const origParent = document.getElementById('filter-original-parent')?.value || '';
+      const orderEl = document.getElementById('filter-cat-order');
+      const targetOrder = orderEl ? (parseInt(orderEl.value, 10) || 1) : 1;
+      const statusEl = document.getElementById('filter-cat-status');
+      const isActive = statusEl ? statusEl.checked : true;
+      const iconEl = document.getElementById('filter-cat-icon');
+      const iconClass = (iconEl && iconEl.value) ? iconEl.value : 'fa-vest-patches';
 
       const subcategoriesStr = filterSubcategories.join(', ');
       const count = filterSubcategories.length;
