@@ -1190,6 +1190,129 @@
       showToast('Import products CSV / Excel template opened!', 'info');
     }
 
+    // ================= REAL DATABASE CONNECTION =================
+    async function loadProductsFromDB() {
+      try {
+        const res = await fetch('../backend/get_products.php');
+        const json = await res.json();
+        if (json.success && json.data.products && json.data.products.length > 0) {
+          const tbody = document.getElementById('products-table-body');
+          if (!tbody) return;
+          
+          tbody.innerHTML = '';
+          
+          let activeCount = 0;
+          let lowStockCount = 0;
+          let outStockCount = 0;
+
+          json.data.products.forEach(p => {
+            const price = parseFloat(p.price) || 0;
+            const stock = parseInt(p.stock_quantity) || 0;
+            const status = p.status || (stock <= 0 ? 'Out of Stock' : (stock < 10 ? 'Low Stock' : 'Active'));
+            
+            if (status === 'Active') activeCount++;
+            else if (status === 'Low Stock' || (stock < 10 && stock > 0)) lowStockCount++;
+            else if (status === 'Out of Stock' || stock <= 0) outStockCount++;
+
+            let statusBadge = '';
+            if (status === 'Active') {
+              statusBadge = '<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#dcfce7] text-[#16a34a]">Active</span>';
+            } else if (status === 'Low Stock') {
+              statusBadge = '<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#fef3c7] text-[#d97706]">Low Stock</span>';
+            } else {
+              statusBadge = '<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#ffe4e6] text-[#e11467]">Out of Stock</span>';
+            }
+
+            const variantCount = (p.variants && p.variants.length) ? p.variants.length : 1;
+            const sizesStr = Array.isArray(p.sizes) ? p.sizes.join(', ') : (p.sizes || 'Free Size');
+            
+            // Image resolution
+            let imgUrl = p.primary_image || '../assets/images/prod-1-anarkali.png';
+            if (!imgUrl.startsWith('http') && !imgUrl.startsWith('../')) {
+              imgUrl = '../' + imgUrl;
+            }
+
+            // Formatted date
+            const dateObj = new Date(p.created_at || Date.now());
+            const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            const dateStr = `${String(dateObj.getDate()).padStart(2,'0')} ${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+
+            const tr = document.createElement('tr');
+            tr.className = 'product-row hover:bg-stone-50/70 transition';
+            tr.setAttribute('data-category', p.category || 'Kurtis');
+            tr.setAttribute('data-status', status);
+            tr.setAttribute('data-stock', stock);
+            tr.setAttribute('data-price', price);
+
+            tr.innerHTML = `
+              <td class="py-3 px-4 text-center">
+                <input type="checkbox" class="product-item-checkbox w-3.5 h-3.5 rounded text-[#e11467] focus:ring-[#e11467] border-stone-300 cursor-pointer">
+              </td>
+              <td class="py-3 px-3">
+                <div class="flex items-center gap-3">
+                  <img src="${imgUrl}" alt="${p.name}" class="w-9 h-9 rounded-xl object-cover border border-stone-200 bg-stone-50 flex-shrink-0" onerror="this.src='../assets/images/prod-1-anarkali.png'">
+                  <div>
+                    <h4 class="font-bold text-stone-900 leading-snug">${p.name}</h4>
+                    <p class="text-[11px] text-stone-400">${variantCount} variant${variantCount > 1 ? 's' : ''} • ${sizesStr}</p>
+                  </div>
+                </div>
+              </td>
+              <td class="py-3 px-3 text-stone-500 whitespace-nowrap font-mono text-[11px] font-semibold">${p.sku}</td>
+              <td class="py-3 px-3 text-stone-600">${p.category}</td>
+              <td class="py-3 px-3 font-bold text-stone-900 whitespace-nowrap">₹${Math.round(price).toLocaleString('en-IN')}</td>
+              <td class="py-3 px-3 ${stock === 0 ? 'text-[#ef4444] font-bold' : 'text-stone-700'}">${stock}</td>
+              <td class="py-3 px-3">${statusBadge}</td>
+              <td class="py-3 px-3 text-stone-500 whitespace-nowrap">${dateStr}</td>
+              <td class="py-3 px-4 text-right whitespace-nowrap">
+                <div class="inline-flex items-center gap-1">
+                  <button onclick="editProduct('${p.sku}')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition" title="Edit Product">
+                    <i class="fa-regular fa-pen-to-square text-xs"></i>
+                  </button>
+                  <button onclick="previewProduct('${p.name.replace(/'/g, "\\'")}', '${p.sku}', '${price}', '${imgUrl}')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition" title="View Product">
+                    <i class="fa-regular fa-eye text-xs"></i>
+                  </button>
+                  <button onclick="deleteProduct('${p.sku}')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-rose-600 hover:bg-rose-50 flex items-center justify-center transition" title="Delete Product">
+                    <i class="fa-regular fa-trash-can text-xs"></i>
+                  </button>
+                </div>
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+
+          // Update header stats
+          const totalEl = document.getElementById('stat-total-products');
+          if (totalEl) totalEl.innerText = json.data.total;
+          const activeEl = document.getElementById('stat-active-products');
+          if (activeEl) activeEl.innerText = activeCount;
+          const lowStockEl = document.getElementById('stat-low-stock');
+          if (lowStockEl) lowStockEl.innerText = lowStockCount;
+          const outStockEl = document.getElementById('stat-out-stock');
+          if (outStockEl) outStockEl.innerText = outStockCount;
+
+          filterProductsTable();
+        }
+      } catch (err) {
+        console.warn('Could not load products from database:', err);
+      }
+    }
+
+    async function deleteProduct(sku) {
+      if (!confirm(`Are you sure you want to delete product SKU: ${sku} from database?`)) return;
+      try {
+        const res = await fetch(`../backend/delete_product.php?sku=${encodeURIComponent(sku)}`, { method: 'POST' });
+        const json = await res.json();
+        if (json.success) {
+          showToast(`Product ${sku} deleted successfully!`, 'success');
+          loadProductsFromDB();
+        } else {
+          showToast(json.message || 'Error deleting product', 'error');
+        }
+      } catch (err) {
+        showToast('Error deleting product: ' + err.message, 'error');
+      }
+    }
+
     function showToast(msg, type = 'success') {
       const container = document.getElementById('toast-container');
       const toast = document.createElement('div');
@@ -1212,6 +1335,10 @@
         const userMenu = document.getElementById('admin-user-menu');
         if (userMenu) userMenu.classList.add('hidden');
       }
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadProductsFromDB();
     });
   </script>
 

@@ -1,0 +1,8 @@
+# Allow direct viewing of images in uploads directory
+<IfModule authz_core_module>
+    Require all granted
+</IfModule>
+<IfModule !authz_core_module>
+    Order Allow,Deny
+    Allow from all
+</IfModule>

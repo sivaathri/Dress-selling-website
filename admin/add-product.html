@@ -752,16 +752,19 @@
         <div class="flex items-center justify-end gap-3 pt-4 border-t border-stone-200/80">
           <button 
             type="button" 
+            id="save-draft-btn"
             onclick="handleSaveDraft()"
-            class="bg-white border border-stone-200 hover:border-stone-300 text-stone-700 font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow-2xs hover:bg-stone-50 transition cursor-pointer"
+            class="bg-white border border-stone-200 hover:border-stone-300 text-stone-700 font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow-2xs hover:bg-stone-50 transition cursor-pointer flex items-center gap-2"
           >
-            Save as Draft
+            <span>Save as Draft</span>
           </button>
 
           <button 
             type="submit" 
+            id="save-product-btn"
             class="bg-[#e11467] hover:bg-[#be123c] text-white font-bold text-xs sm:text-sm px-6 py-2.5 rounded-xl shadow-md hover:shadow-lg transition cursor-pointer flex items-center gap-2"
           >
+            <i class="fa-solid fa-cloud-arrow-up text-xs"></i>
             <span>Save Product</span>
           </button>
         </div>
@@ -1323,24 +1326,200 @@
       }
     }
 
+    // ================= REAL PHP BACKEND DATABASE INTEGRATION =================
+    function dataURItoBlob(dataURI) {
+      const parts = dataURI.split(',');
+      const byteString = atob(parts[1]);
+      const mimeMatch = parts[0].match(/:(.*?);/);
+      const mimeString = mimeMatch ? mimeMatch[1] : 'image/png';
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+      for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+      return new Blob([ab], { type: mimeString });
+    }
+
+    async function submitProductForm(status = 'Active') {
+      const form = document.getElementById('add-product-form');
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const name = document.getElementById('product-name').value.trim();
+      const sku = document.getElementById('product-sku').value.trim().toUpperCase();
+      const shortDesc = document.getElementById('short-description').value.trim();
+      const richEditor = document.getElementById('rich-description-editor');
+      const description = richEditor ? richEditor.innerHTML.trim() : '';
+
+      const category = document.getElementById('product-category').value;
+      const subcategory = document.getElementById('product-subcategory').value || '';
+      const brand = document.getElementById('product-brand').value || 'PondyVastra';
+      
+      const productTypeRadio = document.querySelector('input[name="product_type"]:checked');
+      const productType = productTypeRadio ? productTypeRadio.value : 'variants';
+      
+      const tags = document.getElementById('product-tags').value.trim();
+
+      // Pricing & Inventory
+      const price = document.getElementById('price-input').value;
+      const comparePrice = document.getElementById('compare-price-input').value;
+      const discountType = document.getElementById('discount-type').value;
+      const discountVal = document.getElementById('discount-val').value;
+      const taxRate = document.getElementById('tax-rate').value;
+      const stockQty = document.getElementById('stock-quantity').value;
+      const lowStockAlert = document.getElementById('low-stock-alert').value;
+
+      // Sizes
+      const sizeEls = document.querySelectorAll('#size-variants-list input[name="sizes"]:checked');
+      const sizes = Array.from(sizeEls).map(el => el.value);
+
+      // Build FormData payload
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('sku', sku);
+      formData.append('short_description', shortDesc);
+      formData.append('description', description);
+      formData.append('category', category);
+      formData.append('subcategory', subcategory);
+      formData.append('brand', brand);
+      formData.append('product_type', productType);
+      formData.append('tags', tags);
+      formData.append('price', price);
+      formData.append('compare_price', comparePrice);
+      formData.append('discount_type', discountType);
+      formData.append('discount_val', discountVal);
+      formData.append('tax_rate', taxRate);
+      formData.append('stock_quantity', stockQty);
+      formData.append('low_stock_alert', lowStockAlert);
+      formData.append('sizes', JSON.stringify(sizes));
+      formData.append('status', status);
+
+      // Validate and Process Color Variants
+      const variantBoxes = document.querySelectorAll('#color-variants-container .color-variant-box');
+      const variantsMeta = [];
+      const slotKeys = ['front', 'side', 'back', 'closeup'];
+
+      let hasInvalidVariantColor = false;
+      variantBoxes.forEach((box, vIdx) => {
+        const select = box.querySelector('select');
+        const colorName = select ? select.value.trim() : '';
+        if (!colorName || colorName === '__add_custom__') {
+          hasInvalidVariantColor = true;
+          return;
+        }
+        const colorHex = colorHexesMap[colorName] || '#000000';
+        const vMeta = {
+          color_name: colorName,
+          color_hex: colorHex
+        };
+
+        const slotBoxes = box.querySelectorAll('.upload-slot-box');
+        slotBoxes.forEach((slot, sIdx) => {
+          const slotKey = slotKeys[sIdx] || `slot_${sIdx}`;
+          const fileInput = slot.querySelector('.slot-file-input');
+          const filledView = slot.querySelector('.slot-filled-view');
+          const img = filledView ? filledView.querySelector('img') : null;
+
+          if (fileInput && fileInput.files && fileInput.files[0]) {
+            // Append binary file with unique key
+            formData.append(`variant_${vIdx}_${slotKey}`, fileInput.files[0]);
+          } else if (img && img.src && !filledView.classList.contains('hidden')) {
+            if (img.src.startsWith('data:image/')) {
+              try {
+                const blob = dataURItoBlob(img.src);
+                formData.append(`variant_${vIdx}_${slotKey}`, blob, `variant_${vIdx}_${slotKey}.png`);
+              } catch (e) {
+                console.warn('Error converting image dataURI to blob', e);
+              }
+            } else {
+              vMeta[`${slotKey}_image`] = img.src;
+            }
+          }
+        });
+
+        variantsMeta.push(vMeta);
+      });
+
+      if (hasInvalidVariantColor) {
+        showToast('Please select a valid color for each color variant.', 'error');
+        return;
+      }
+
+      formData.append('variants_data', JSON.stringify(variantsMeta));
+
+      // UI Loading State
+      const saveBtn = document.getElementById('save-product-btn');
+      const draftBtn = document.getElementById('save-draft-btn');
+      const originalSaveHtml = saveBtn ? saveBtn.innerHTML : '';
+      const originalDraftHtml = draftBtn ? draftBtn.innerHTML : '';
+
+      if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.classList.add('opacity-75', 'cursor-not-allowed');
+      }
+      if (draftBtn) {
+        draftBtn.disabled = true;
+        draftBtn.classList.add('opacity-75', 'cursor-not-allowed');
+      }
+
+      if (status === 'Draft' && draftBtn) {
+        draftBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-xs"></i> <span>Saving Draft...</span>`;
+      } else if (saveBtn) {
+        saveBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-xs"></i> <span>Saving to DB...</span>`;
+      }
+
+      try {
+        const response = await fetch('../backend/save_product.php', {
+          method: 'POST',
+          body: formData
+        });
+
+        const resData = await response.json();
+
+        if (resData.success) {
+          showToast(`Success: ${resData.message} (SKU: ${sku})`, 'success');
+          if (saveBtn) {
+            saveBtn.innerHTML = `<i class="fa-solid fa-circle-check text-xs"></i> <span>Saved!</span>`;
+            saveBtn.classList.remove('bg-[#e11467]', 'hover:bg-[#be123c]');
+            saveBtn.classList.add('bg-emerald-600');
+          }
+          setTimeout(() => {
+            window.location.href = 'products.html';
+          }, 1400);
+        } else {
+          showToast(resData.message || 'Error saving product.', 'error');
+          resetButtons();
+        }
+      } catch (err) {
+        console.error('Save to Database Error:', err);
+        showToast('Network/Backend Error: ' + err.message, 'error');
+        resetButtons();
+      }
+
+      function resetButtons() {
+        if (saveBtn) {
+          saveBtn.disabled = false;
+          saveBtn.classList.remove('opacity-75', 'cursor-not-allowed', 'bg-emerald-600');
+          saveBtn.classList.add('bg-[#e11467]', 'hover:bg-[#be123c]');
+          saveBtn.innerHTML = originalSaveHtml;
+        }
+        if (draftBtn) {
+          draftBtn.disabled = false;
+          draftBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+          draftBtn.innerHTML = originalDraftHtml;
+        }
+      }
+    }
+
     function handleSaveDraft() {
-      const name = document.getElementById('product-name').value.trim() || 'Untitled Product';
-      showToast(`Draft "${name}" saved successfully!`, 'info');
-      setTimeout(() => {
-        window.location.href = 'products.html';
-      }, 1200);
+      submitProductForm('Draft');
     }
 
     function handleSaveProduct(e) {
-      e.preventDefault();
-      const name = document.getElementById('product-name').value.trim();
-      const sku = document.getElementById('product-sku').value.trim();
-      const price = document.getElementById('price-input').value;
-
-      showToast(`Product "${name}" (${sku}) published successfully!`);
-      setTimeout(() => {
-        window.location.href = 'products.html';
-      }, 1500);
+      if (e) e.preventDefault();
+      submitProductForm('Active');
     }
 
     function showToast(msg, type = 'success') {
