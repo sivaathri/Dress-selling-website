@@ -472,6 +472,10 @@
                   <h2 class="font-bold text-base sm:text-lg text-[#0f172a]">Color Variants &amp; Images</h2>
                   <i class="fa-solid fa-circle-info text-stone-400 text-xs cursor-pointer hover:text-stone-600" title="Add color variants with multiple angle product images"></i>
                 </div>
+                <button type="button" onclick="openCustomColorModal()" class="inline-flex items-center gap-1.5 bg-white border border-stone-200 hover:border-stone-300 px-3 py-1.5 rounded-xl text-xs font-semibold text-stone-700 hover:bg-stone-50 transition cursor-pointer">
+                  <i class="fa-solid fa-palette text-xs text-[#e11467]"></i>
+                  <span>Add Custom Color</span>
+                </button>
               </div>
 
               <!-- Container for Color Variants List -->
@@ -496,6 +500,7 @@
                           <option value="White">White</option>
                           <option value="Maroon">Maroon</option>
                           <option value="Black">Black</option>
+                          <option value="__add_custom__" class="font-bold text-[#e11467] bg-rose-50/50">+ Add Custom Color...</option>
                         </select>
                         <span class="variant-color-dot absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-stone-300 pointer-events-none"></span>
                         <i class="fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-stone-400 pointer-events-none"></i>
@@ -770,6 +775,151 @@
   <!-- Toast Notification Container -->
   <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
 
+  <!-- ================= CUSTOM COLOR MODAL ================= -->
+  <div id="custom-color-modal" class="hidden fixed inset-0 bg-stone-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative my-8 animate-in fade-in zoom-in-95 duration-200">
+      <!-- Header -->
+      <div class="flex items-center justify-between pb-4 border-b border-stone-100">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-rose-50 flex items-center justify-center text-[#e11467]">
+            <i class="fa-solid fa-palette text-base"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-stone-900">Add Custom Color</h3>
+            <p class="text-xs text-stone-500">Create a new color for product variants</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeCustomColorModal()" class="w-8 h-8 rounded-full hover:bg-stone-100 flex items-center justify-center text-stone-400 hover:text-stone-700 cursor-pointer">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="py-4 space-y-4">
+        <!-- Live Color Preview Card -->
+        <div class="bg-stone-50 border border-stone-200/80 rounded-2xl p-4 flex items-center gap-4">
+          <div id="custom-color-preview-circle" class="w-14 h-14 rounded-2xl shadow-inner border border-stone-300 flex-shrink-0 transition-colors" style="background-color: #9333ea;"></div>
+          <div>
+            <span class="text-[11px] font-semibold text-stone-400 uppercase tracking-wider block">Preview</span>
+            <h4 id="custom-color-preview-name" class="font-bold text-stone-900 text-sm sm:text-base leading-tight">Purple</h4>
+            <span id="custom-color-preview-hex" class="text-xs font-mono text-stone-500 font-semibold">#9333EA</span>
+          </div>
+        </div>
+
+        <!-- Color Name Input -->
+        <div>
+          <label class="block text-xs font-semibold text-stone-700 mb-1.5">
+            Color Name <span class="text-rose-500">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="custom-color-name-input" 
+            placeholder="e.g. Lavender, Teal, Mustard, Navy Blue..." 
+            oninput="updateCustomColorPreview()"
+            class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] transition"
+          >
+        </div>
+
+        <!-- Color Picker & Hex Code -->
+        <div>
+          <label class="block text-xs font-semibold text-stone-700 mb-1.5">
+            Color Shade / Hex Code <span class="text-rose-500">*</span>
+          </label>
+          <div class="flex items-center gap-3">
+            <!-- HTML5 Native Color Picker with custom wrapper -->
+            <div class="relative w-12 h-10 rounded-xl overflow-hidden border border-stone-200 shadow-2xs flex-shrink-0 cursor-pointer">
+              <input 
+                type="color" 
+                id="custom-color-native-picker" 
+                value="#9333ea" 
+                oninput="syncCustomColorHex(this.value)"
+                class="absolute -top-3 -left-3 w-20 h-20 cursor-pointer border-0"
+              >
+            </div>
+            <div class="relative flex-1">
+              <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 font-mono text-xs">#</span>
+              <input 
+                type="text" 
+                id="custom-color-hex-input" 
+                value="9333EA" 
+                maxlength="7"
+                oninput="syncCustomColorPicker(this.value)"
+                placeholder="9333EA" 
+                class="w-full bg-[#f8fafc] border border-stone-200/90 rounded-xl pl-8 pr-3.5 py-2.5 text-xs sm:text-sm font-mono text-stone-800 placeholder:text-stone-400 focus:outline-none focus:border-[#e11467] focus:ring-1 focus:ring-[#e11467] uppercase transition"
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Preset Suggestions -->
+        <div>
+          <span class="block text-[11px] font-semibold text-stone-500 mb-2">Or choose a popular preset:</span>
+          <div class="grid grid-cols-4 sm:grid-cols-6 gap-2">
+            <button type="button" onclick="selectQuickPreset('Purple', '#9333ea')" class="flex flex-col items-center gap-1 p-1.5 rounded-xl border border-stone-200 hover:border-[#e11467] hover:bg-stone-50 transition cursor-pointer">
+              <span class="w-6 h-6 rounded-lg shadow-xs" style="background:#9333ea;"></span>
+              <span class="text-[10px] text-stone-600 font-medium">Purple</span>
+            </button>
+            <button type="button" onclick="selectQuickPreset('Navy Blue', '#1e3a8a')" class="flex flex-col items-center gap-1 p-1.5 rounded-xl border border-stone-200 hover:border-[#e11467] hover:bg-stone-50 transition cursor-pointer">
+              <span class="w-6 h-6 rounded-lg shadow-xs" style="background:#1e3a8a;"></span>
+              <span class="text-[10px] text-stone-600 font-medium truncate max-w-full">Navy</span>
+            </button>
+            <button type="button" onclick="selectQuickPreset('Teal', '#0d9488')" class="flex flex-col items-center gap-1 p-1.5 rounded-xl border border-stone-200 hover:border-[#e11467] hover:bg-stone-50 transition cursor-pointer">
+              <span class="w-6 h-6 rounded-lg shadow-xs" style="background:#0d9488;"></span>
+              <span class="text-[10px] text-stone-600 font-medium">Teal</span>
+            </button>
+            <button type="button" onclick="selectQuickPreset('Lavender', '#c084fc')" class="flex flex-col items-center gap-1 p-1.5 rounded-xl border border-stone-200 hover:border-[#e11467] hover:bg-stone-50 transition cursor-pointer">
+              <span class="w-6 h-6 rounded-lg shadow-xs" style="background:#c084fc;"></span>
+              <span class="text-[10px] text-stone-600 font-medium truncate max-w-full">Lavender</span>
+            </button>
+            <button type="button" onclick="selectQuickPreset('Mustard', '#d97706')" class="flex flex-col items-center gap-1 p-1.5 rounded-xl border border-stone-200 hover:border-[#e11467] hover:bg-stone-50 transition cursor-pointer">
+              <span class="w-6 h-6 rounded-lg shadow-xs" style="background:#d97706;"></span>
+              <span class="text-[10px] text-stone-600 font-medium">Mustard</span>
+            </button>
+            <button type="button" onclick="selectQuickPreset('Olive Green', '#65a30d')" class="flex flex-col items-center gap-1 p-1.5 rounded-xl border border-stone-200 hover:border-[#e11467] hover:bg-stone-50 transition cursor-pointer">
+              <span class="w-6 h-6 rounded-lg shadow-xs" style="background:#65a30d;"></span>
+              <span class="text-[10px] text-stone-600 font-medium">Olive</span>
+            </button>
+            <button type="button" onclick="selectQuickPreset('Coral', '#f43f5e')" class="flex flex-col items-center gap-1 p-1.5 rounded-xl border border-stone-200 hover:border-[#e11467] hover:bg-stone-50 transition cursor-pointer">
+              <span class="w-6 h-6 rounded-lg shadow-xs" style="background:#f43f5e;"></span>
+              <span class="text-[10px] text-stone-600 font-medium">Coral</span>
+            </button>
+            <button type="button" onclick="selectQuickPreset('Peach', '#fdba74')" class="flex flex-col items-center gap-1 p-1.5 rounded-xl border border-stone-200 hover:border-[#e11467] hover:bg-stone-50 transition cursor-pointer">
+              <span class="w-6 h-6 rounded-lg shadow-xs" style="background:#fdba74;"></span>
+              <span class="text-[10px] text-stone-600 font-medium">Peach</span>
+            </button>
+            <button type="button" onclick="selectQuickPreset('Wine', '#701a75')" class="flex flex-col items-center gap-1 p-1.5 rounded-xl border border-stone-200 hover:border-[#e11467] hover:bg-stone-50 transition cursor-pointer">
+              <span class="w-6 h-6 rounded-lg shadow-xs" style="background:#701a75;"></span>
+              <span class="text-[10px] text-stone-600 font-medium">Wine</span>
+            </button>
+            <button type="button" onclick="selectQuickPreset('Mint Green', '#2dd4bf')" class="flex flex-col items-center gap-1 p-1.5 rounded-xl border border-stone-200 hover:border-[#e11467] hover:bg-stone-50 transition cursor-pointer">
+              <span class="w-6 h-6 rounded-lg shadow-xs" style="background:#2dd4bf;"></span>
+              <span class="text-[10px] text-stone-600 font-medium">Mint</span>
+            </button>
+            <button type="button" onclick="selectQuickPreset('Beige', '#e7e5e4')" class="flex flex-col items-center gap-1 p-1.5 rounded-xl border border-stone-200 hover:border-[#e11467] hover:bg-stone-50 transition cursor-pointer">
+              <span class="w-6 h-6 rounded-lg shadow-xs border border-stone-300" style="background:#e7e5e4;"></span>
+              <span class="text-[10px] text-stone-600 font-medium">Beige</span>
+            </button>
+            <button type="button" onclick="selectQuickPreset('Rust', '#c2410c')" class="flex flex-col items-center gap-1 p-1.5 rounded-xl border border-stone-200 hover:border-[#e11467] hover:bg-stone-50 transition cursor-pointer">
+              <span class="w-6 h-6 rounded-lg shadow-xs" style="background:#c2410c;"></span>
+              <span class="text-[10px] text-stone-600 font-medium">Rust</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Actions -->
+      <div class="pt-4 border-t border-stone-100 flex items-center justify-end gap-2.5">
+        <button type="button" onclick="closeCustomColorModal()" class="px-4 py-2 rounded-xl border border-stone-200 text-stone-600 font-semibold text-xs hover:bg-stone-50 transition cursor-pointer">
+          Cancel
+        </button>
+        <button type="button" onclick="saveCustomColor()" class="px-4 py-2 rounded-xl bg-[#e11467] hover:bg-[#be123c] text-white font-semibold text-xs shadow-xs hover:shadow transition cursor-pointer flex items-center gap-1.5">
+          <i class="fa-solid fa-check text-xs"></i>
+          <span>Save &amp; Apply Color</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Interactive JavaScript Logic -->
   <script>
     function toggleMobileSidebar() {
@@ -840,8 +990,8 @@
       });
     }
 
-    // Color Swatches
-    const colorHexes = {
+    // ================= CUSTOM COLOR SYSTEM & PERSISTENCE =================
+    const DEFAULT_COLORS_MAP = {
       'Pink': '#e11467',
       'Sky Blue': '#0ea5e9',
       'Red': '#ef4444',
@@ -852,14 +1002,184 @@
       'Black': '#0f172a'
     };
 
-    function handleColorVariantChange(selectEl) {
-      const color = selectEl.value;
-      const dot = selectEl.closest('.relative').querySelector('.variant-color-dot');
-      if (dot && colorHexes[color]) {
-        dot.style.backgroundColor = colorHexes[color];
-        if (color === 'White') dot.style.border = '1px solid #cbd5e1';
-        else dot.style.border = 'none';
+    const CUSTOM_COLORS_STORAGE_KEY = 'pondyvastra_custom_colors';
+
+    function getCustomColors() {
+      try {
+        return JSON.parse(localStorage.getItem(CUSTOM_COLORS_STORAGE_KEY) || '{}');
+      } catch (e) {
+        return {};
       }
+    }
+
+    function saveCustomColors(map) {
+      try {
+        localStorage.setItem(CUSTOM_COLORS_STORAGE_KEY, JSON.stringify(map));
+      } catch (e) {
+        console.error('Failed to save custom colors', e);
+      }
+    }
+
+    let colorHexesMap = { ...DEFAULT_COLORS_MAP, ...getCustomColors() };
+    let currentTargetColorSelect = null;
+
+    function renderColorOptionsHTML(selectedVal = '') {
+      let options = `<option value="" disabled ${!selectedVal ? 'selected' : ''}>-- Select Color --</option>`;
+      for (const [name, hex] of Object.entries(colorHexesMap)) {
+        const isSel = selectedVal && selectedVal.toLowerCase() === name.toLowerCase() ? 'selected' : '';
+        options += `<option value="${name}" data-hex="${hex}" ${isSel}>${name}</option>`;
+      }
+      options += `<option value="__add_custom__" class="font-bold text-[#e11467] bg-rose-50/50">+ Add Custom Color...</option>`;
+      return options;
+    }
+
+    function refreshAllColorDropdowns(selectNewColor = '') {
+      colorHexesMap = { ...DEFAULT_COLORS_MAP, ...getCustomColors() };
+      document.querySelectorAll('#color-variants-container .color-variant-box select').forEach(sel => {
+        const curVal = (sel === currentTargetColorSelect && selectNewColor) ? selectNewColor : (sel.value === '__add_custom__' ? '' : sel.value);
+        sel.innerHTML = renderColorOptionsHTML(curVal);
+        if (curVal) {
+          sel.value = curVal;
+        }
+        handleColorVariantChange(sel, false);
+      });
+    }
+
+    function handleColorVariantChange(selectEl, triggerModalIfCustom = true) {
+      const color = selectEl.value;
+      if (color === '__add_custom__') {
+        if (triggerModalIfCustom) {
+          openCustomColorModal(selectEl);
+        }
+        return;
+      }
+      const dot = selectEl.closest('.relative')?.querySelector('.variant-color-dot');
+      if (dot) {
+        if (colorHexesMap[color]) {
+          dot.style.backgroundColor = colorHexesMap[color];
+          if (color.toLowerCase() === 'white' || colorHexesMap[color].toLowerCase() === '#ffffff') {
+            dot.style.border = '1px solid #cbd5e1';
+          } else {
+            dot.style.border = 'none';
+          }
+        } else {
+          dot.style.backgroundColor = '#cbd5e1';
+          dot.style.border = 'none';
+        }
+      }
+    }
+
+    function openCustomColorModal(selectEl = null) {
+      currentTargetColorSelect = selectEl;
+      const modal = document.getElementById('custom-color-modal');
+      if (!modal) return;
+      
+      const nameInput = document.getElementById('custom-color-name-input');
+      const hexInput = document.getElementById('custom-color-hex-input');
+      const picker = document.getElementById('custom-color-native-picker');
+      
+      if (nameInput) nameInput.value = '';
+      if (hexInput) hexInput.value = '9333EA';
+      if (picker) picker.value = '#9333ea';
+      
+      updateCustomColorPreview();
+      modal.classList.remove('hidden');
+      setTimeout(() => nameInput && nameInput.focus(), 60);
+    }
+
+    function closeCustomColorModal() {
+      const modal = document.getElementById('custom-color-modal');
+      if (modal) modal.classList.add('hidden');
+      if (currentTargetColorSelect && currentTargetColorSelect.value === '__add_custom__') {
+        currentTargetColorSelect.value = '';
+        handleColorVariantChange(currentTargetColorSelect, false);
+      }
+      currentTargetColorSelect = null;
+    }
+
+    function selectQuickPreset(name, hex) {
+      const nameInput = document.getElementById('custom-color-name-input');
+      const hexInput = document.getElementById('custom-color-hex-input');
+      const picker = document.getElementById('custom-color-native-picker');
+      
+      if (nameInput) nameInput.value = name;
+      const cleanHex = hex.replace('#', '').toUpperCase();
+      if (hexInput) hexInput.value = cleanHex;
+      if (picker) picker.value = hex;
+      updateCustomColorPreview();
+    }
+
+    function syncCustomColorHex(hex) {
+      const hexInput = document.getElementById('custom-color-hex-input');
+      if (hexInput) hexInput.value = hex.replace('#', '').toUpperCase();
+      updateCustomColorPreview();
+    }
+
+    function syncCustomColorPicker(val) {
+      val = val.trim().replace('#', '');
+      if (val.length === 6 || val.length === 3) {
+        const fullHex = val.length === 3 ? `#${val[0]}${val[0]}${val[1]}${val[1]}${val[2]}${val[2]}` : `#${val}`;
+        const picker = document.getElementById('custom-color-native-picker');
+        if (picker) picker.value = fullHex;
+      }
+      updateCustomColorPreview();
+    }
+
+    function updateCustomColorPreview() {
+      const nameInput = document.getElementById('custom-color-name-input');
+      const hexInput = document.getElementById('custom-color-hex-input');
+      const previewCircle = document.getElementById('custom-color-preview-circle');
+      const previewName = document.getElementById('custom-color-preview-name');
+      const previewHex = document.getElementById('custom-color-preview-hex');
+      
+      const rawHex = (hexInput?.value || '9333EA').trim().replace('#', '');
+      const validHex = `#${rawHex.padEnd(6, '0').slice(0, 6)}`;
+      const name = nameInput?.value.trim() || 'Custom Color';
+
+      if (previewCircle) {
+        previewCircle.style.backgroundColor = validHex;
+        if (validHex.toLowerCase() === '#ffffff') {
+          previewCircle.style.border = '1px solid #cbd5e1';
+        } else {
+          previewCircle.style.border = 'none';
+        }
+      }
+      if (previewName) previewName.innerText = name;
+      if (previewHex) previewHex.innerText = validHex.toUpperCase();
+    }
+
+    function saveCustomColor() {
+      const nameInput = document.getElementById('custom-color-name-input');
+      const hexInput = document.getElementById('custom-color-hex-input');
+      const name = nameInput?.value.trim();
+      
+      if (!name) {
+        showToast('Please enter a color name', 'error');
+        if (nameInput) nameInput.focus();
+        return;
+      }
+
+      let rawHex = (hexInput?.value || '').trim().replace('#', '');
+      if (!rawHex || rawHex.length < 3) {
+        rawHex = '9333EA';
+      }
+      const fullHex = `#${rawHex.padEnd(6, '0').slice(0, 6).toUpperCase()}`;
+
+      // Save into custom colors map
+      const customColors = getCustomColors();
+      customColors[name] = fullHex;
+      saveCustomColors(customColors);
+      colorHexesMap[name] = fullHex;
+
+      // Update dropdowns across all variants and select this color
+      refreshAllColorDropdowns(name);
+      
+      // Close modal
+      const modal = document.getElementById('custom-color-modal');
+      if (modal) modal.classList.add('hidden');
+      currentTargetColorSelect = null;
+
+      showToast(`Color "${name}" added successfully!`, 'info');
     }
 
     function removeColorVariant(btn) {
@@ -891,15 +1211,7 @@
           <div class="flex items-center gap-2.5">
             <div class="relative">
               <select onchange="handleColorVariantChange(this)" class="appearance-none bg-stone-50 border border-stone-200 hover:border-stone-300 rounded-xl pl-8 pr-8 py-1.5 text-xs font-semibold text-stone-800 focus:outline-none focus:border-[#e11467] transition cursor-pointer">
-                <option value="" disabled selected>-- Select Color --</option>
-                <option value="Sky Blue">Sky Blue</option>
-                <option value="Pink">Pink</option>
-                <option value="Red">Red</option>
-                <option value="Green">Green</option>
-                <option value="Yellow">Yellow</option>
-                <option value="White">White</option>
-                <option value="Maroon">Maroon</option>
-                <option value="Black">Black</option>
+                ${renderColorOptionsHTML()}
               </select>
               <span class="variant-color-dot absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-stone-300 pointer-events-none"></span>
               <i class="fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-stone-400 pointer-events-none"></i>
@@ -1043,6 +1355,10 @@
         setTimeout(() => toast.remove(), 300);
       }, 3000);
     }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      refreshAllColorDropdowns();
+    });
   </script>
 
 </body>
