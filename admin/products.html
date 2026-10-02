@@ -1260,8 +1260,73 @@
       showToast(`Opening product editor for SKU: ${sku}`, 'info');
     }
 
-    function previewProduct(name, sku, price, img) {
-      showToast(`Previewing: ${name} (₹${price})`, 'info');
+    function previewProduct(sku) {
+      const prod = (window.allLoadedProducts || []).find(x => x.sku === sku);
+      if (prod) {
+        openImagePreviewModal(prod);
+      } else {
+        showToast(`Previewing SKU: ${sku}`, 'info');
+      }
+    }
+
+    function openImagePreviewModal(prod) {
+      const modal = document.getElementById('image-preview-modal');
+      if (!modal) return;
+
+      document.getElementById('modal-preview-title').innerText = prod.name;
+      document.getElementById('modal-preview-sku').innerText = `SKU: ${prod.sku}`;
+      document.getElementById('modal-preview-price').innerText = `₹${Math.round(parseFloat(prod.price) || 0).toLocaleString('en-IN')}`;
+      document.getElementById('modal-preview-category').innerText = prod.category || 'Apparel';
+
+      let initialImg = prod.primary_image || '../assets/images/prod-1-anarkali.png';
+      if (!initialImg.startsWith('http') && !initialImg.startsWith('../')) {
+        initialImg = '../' + initialImg;
+      }
+
+      setMainPreviewImage(initialImg, 'Primary / Front Angle');
+
+      // Setup Thumbnails
+      const thumbsContainer = document.getElementById('modal-preview-thumbs');
+      thumbsContainer.innerHTML = '';
+
+      if (prod.images && prod.images.length > 0) {
+        prod.images.forEach(img => {
+          let thumbUrl = img.preview_url;
+          if (!thumbUrl.startsWith('http') && !thumbUrl.startsWith('../')) {
+            thumbUrl = '../' + thumbUrl;
+          }
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'w-12 h-12 rounded-xl border-2 border-stone-200 hover:border-[#e11467] p-0.5 overflow-hidden transition cursor-pointer';
+          btn.title = `${img.color_name || ''} - ${img.angle || 'angle'}`;
+          btn.onclick = () => setMainPreviewImage(thumbUrl, `${img.color_name ? img.color_name + ' • ' : ''}${img.angle} Angle`);
+          btn.innerHTML = `<img src="${thumbUrl}" alt="${img.angle}" class="w-full h-full object-cover rounded-lg">`;
+          thumbsContainer.appendChild(btn);
+        });
+      } else {
+        thumbsContainer.innerHTML = '<span class="text-[11px] text-stone-400 italic">No additional angle images in DB</span>';
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function setMainPreviewImage(url, angleText = 'Front Angle') {
+      const mainImg = document.getElementById('modal-preview-main-img');
+      const angleTag = document.getElementById('modal-preview-angle-tag');
+      const openApiBtn = document.getElementById('modal-open-api-btn');
+      const openJsonBtn = document.getElementById('modal-open-json-btn');
+
+      if (mainImg) mainImg.src = url;
+      if (angleTag) angleTag.innerText = angleText;
+
+      let rawUrl = url.replace(/^\.\.\//, '');
+      if (openApiBtn) openApiBtn.href = '../' + rawUrl;
+      if (openJsonBtn) openJsonBtn.href = '../' + rawUrl + (rawUrl.includes('?') ? '&format=json' : '?format=json');
+    }
+
+    function closeImagePreviewModal() {
+      const modal = document.getElementById('image-preview-modal');
+      if (modal) modal.classList.add('hidden');
     }
 
     function openRowActions(event, sku) {
@@ -1279,6 +1344,7 @@
         const res = await fetch('../backend/get_products.php');
         const json = await res.json();
         if (json.success && json.data.products && json.data.products.length > 0) {
+          window.allLoadedProducts = json.data.products;
           const tbody = document.getElementById('products-table-body');
           if (!tbody) return;
           
@@ -1351,7 +1417,7 @@
                   <button onclick="editProduct('${p.sku}')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition" title="Edit Product">
                     <i class="fa-regular fa-pen-to-square text-xs"></i>
                   </button>
-                  <button onclick="previewProduct('${p.name.replace(/'/g, "\\'")}', '${p.sku}', '${price}', '${imgUrl}')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition" title="View Product">
+                  <button onclick="previewProduct('${p.sku}')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 flex items-center justify-center transition" title="View Product Preview">
                     <i class="fa-regular fa-eye text-xs"></i>
                   </button>
                   <button onclick="deleteProduct('${p.sku}')" class="w-7 h-7 rounded-lg text-stone-400 hover:text-rose-600 hover:bg-rose-50 flex items-center justify-center transition" title="Delete Product">
