@@ -2,6 +2,7 @@
 /**
  * Save Product Endpoint
  * Handles creating / updating products, sizes, prices, inventory, and color variants with images.
+ * Stores raw image bytes directly into the `product_images` table as LONGBLOB.
  */
 
 // Enable CORS if requested from another port/domain in dev
@@ -9,7 +10,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
     http_response_code(200);
     exit;
 }
@@ -17,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require_once __DIR__ . '/config/db.php';
 
 // Only accept POST requests
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
     sendJsonResponse(false, 'Invalid request method. POST required.', [], 405);
 }
 
@@ -96,45 +97,73 @@ try {
         $status = 'Low Stock';
     }
 
-    // Prepare upload directory
-    $uploadDir = __DIR__ . '/uploads/';
-    if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0755, true);
-    }
-
-    // Helper function to process uploaded files or existing path
-    $processUploadedFile = function($fileKey, $fallbackPath = null) use ($uploadDir, $sku) {
+    // Helper function to extract raw binary bytes from $_FILES, base64 dataURI, or local disk path
+    $extractImageBinary = function($fileKey, $fallbackVal = null, $defaultFileName = 'image.jpg') {
+        // 1. Check real file upload from FormData
         if (isset($_FILES[$fileKey]) && $_FILES[$fileKey]['error'] === UPLOAD_ERR_OK) {
             $file = $_FILES[$fileKey];
-            $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-            $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
-            if (!in_array($ext, $allowedExtensions)) {
-                return $fallbackPath;
-            }
-
-            $cleanSku = preg_replace('/[^A-Za-z0-9_-]/', '', $sku);
-            $cleanKey = preg_replace('/[^A-Za-z0-9_-]/', '', $fileKey);
-            $uniqueFilename = 'prod_' . $cleanSku . '_' . $cleanKey . '_' . uniqid() . '.' . $ext;
-            $destPath = $uploadDir . $uniqueFilename;
-
-            if (move_uploaded_file($file['tmp_name'], $destPath)) {
-                // Return path relative to project root
-                return 'backend/uploads/' . $uniqueFilename;
+            $binary = file_get_contents($file['tmp_name']);
+            if (!empty($binary)) {
+                $finfo = new finfo(FILEINFO_MIME_TYPE);
+                $mime  = $finfo->buffer($binary) ?: ($file['type'] ?: 'image/jpeg');
+                $name  = basename($file['name']);
+                return [
+                    'binary'    => $binary,
+                    'mime_type' => $mime,
+                    'file_name' => $name,
+                    'file_size' => strlen($binary)
+                ];
             }
         }
 
-        // Clean fallback path if provided
-        if (!empty($fallbackPath)) {
-            // Strip leading ../ if present
-            $cleaned = preg_replace('/^\.\.\//', '', trim($fallbackPath));
-            return $cleaned;
+        // 2. Check fallback (dataURI or server file path)
+        if (!empty($fallbackVal) && is_string($fallbackVal)) {
+            // Check base64 dataURI
+            if (preg_match('#^data:(image/[\w+-]+);base64,(.*)$#is', $fallbackVal, $m)) {
+                $mime = $m[1];
+                $binary = base64_decode($m[2]);
+                if ($binary !== false && strlen($binary) > 0) {
+                    $ext = explode('/', $mime)[1] ?? 'jpg';
+                    return [
+                        'binary'    => $binary,
+                        'mime_type' => $mime,
+                        'file_name' => $defaultFileName . '.' . $ext,
+                        'file_size' => strlen($binary)
+                    ];
+                }
+            }
+
+            // Check if it's already an existing get_image.php URL (e.g. backend/get_image.php?id=...)
+            if (strpos($fallbackVal, 'get_image.php?id=') !== false) {
+                // Keep the reference URL as string
+                return [
+                    'is_existing_url' => true,
+                    'url'             => $fallbackVal
+                ];
+            }
+
+            // Check local file on disk (e.g. assets/images/...)
+            $cleaned = preg_replace('/^\.\.\//', '', trim($fallbackVal));
+            $fullPath = dirname(__DIR__) . '/' . $cleaned;
+            if (file_exists($fullPath) && is_file($fullPath)) {
+                $binary = file_get_contents($fullPath);
+                if (!empty($binary)) {
+                    $finfo = new finfo(FILEINFO_MIME_TYPE);
+                    $mime  = $finfo->buffer($binary) ?: 'image/jpeg';
+                    return [
+                        'binary'    => $binary,
+                        'mime_type' => $mime,
+                        'file_name' => basename($fullPath),
+                        'file_size' => strlen($binary)
+                    ];
+                }
+            }
         }
 
         return null;
     };
 
     // Decode variants metadata
-    // In FormData, variants can be passed as JSON string in 'variants_data' or as array in JSON body
     $variantsList = [];
     if (!empty($inputData['variants_data'])) {
         $rawVar = $inputData['variants_data'];
@@ -146,55 +175,6 @@ try {
         $variantsList = $inputData['variants'];
     }
 
-    // Process each variant and its 4 image slots
-    $processedVariants = [];
-    $primaryImage = null;
-
-    if (!empty($variantsList) && is_array($variantsList)) {
-        foreach ($variantsList as $idx => $v) {
-            $colorName = trim($v['color_name'] ?? ('Variant ' . ($idx + 1)));
-            $colorHex  = trim($v['color_hex'] ?? '#000000');
-
-            // Check slots for this variant
-            $frontKey   = "variant_{$idx}_front";
-            $sideKey    = "variant_{$idx}_side";
-            $backKey    = "variant_{$idx}_back";
-            $closeupKey = "variant_{$idx}_closeup";
-
-            $frontImg   = $processUploadedFile($frontKey, $v['front_image'] ?? null);
-            $sideImg    = $processUploadedFile($sideKey, $v['side_image'] ?? null);
-            $backImg    = $processUploadedFile($backKey, $v['back_image'] ?? null);
-            $closeupImg = $processUploadedFile($closeupKey, $v['closeup_image'] ?? null);
-
-            $processedVariants[] = [
-                'color_name'    => $colorName,
-                'color_hex'     => $colorHex,
-                'front_image'   => $frontImg,
-                'side_image'    => $sideImg,
-                'back_image'    => $backImg,
-                'closeup_image' => $closeupImg
-            ];
-
-            // Set primary image from first available front image
-            if (!$primaryImage && $frontImg) {
-                $primaryImage = $frontImg;
-            }
-        }
-    }
-
-    // Fallback primary image
-    if (!$primaryImage && !empty($inputData['primary_image'])) {
-        $primaryImage = preg_replace('/^\.\.\//', '', trim($inputData['primary_image']));
-    }
-    if (!$primaryImage && !empty($processedVariants)) {
-        // Use any available image from the first variant
-        $first = $processedVariants[0];
-        $primaryImage = $first['front_image'] ?: ($first['side_image'] ?: ($first['back_image'] ?: $first['closeup_image']));
-    }
-    if (!$primaryImage) {
-        $primaryImage = 'assets/images/prod-1-anarkali.png';
-    }
-
     // Start database transaction
     $pdo->beginTransaction();
 
@@ -203,9 +183,10 @@ try {
     $stmtCheck->execute([$sku]);
     $existingProduct = $stmtCheck->fetch();
 
+    $primaryImage = null;
+
     if ($existingProduct) {
-        // Update existing product
-        $productId = $existingProduct['id'];
+        $productId = (int)$existingProduct['id'];
         $sqlUpdate = "
             UPDATE `products` SET
                 `name` = ?,
@@ -224,8 +205,7 @@ try {
                 `stock_quantity` = ?,
                 `low_stock_alert` = ?,
                 `sizes` = ?,
-                `status` = ?,
-                `primary_image` = ?
+                `status` = ?
             WHERE `id` = ?
         ";
         $stmtUpdate = $pdo->prepare($sqlUpdate);
@@ -247,15 +227,13 @@ try {
             $lowStock,
             $sizesJson,
             $status,
-            $primaryImage,
             $productId
         ]);
 
-        // Delete old variants to re-insert fresh list
-        $stmtDelVariants = $pdo->prepare("DELETE FROM `product_color_variants` WHERE `product_id` = ?");
-        $stmtDelVariants->execute([$productId]);
+        // Delete old variants & images to cleanly replace with current set
+        $pdo->prepare("DELETE FROM `product_color_variants` WHERE `product_id` = ?")->execute([$productId]);
+        $pdo->prepare("DELETE FROM `product_images` WHERE `product_id` = ?")->execute([$productId]);
     } else {
-        // Insert new product
         $sqlInsert = "
             INSERT INTO `products` (
                 `name`, `sku`, `short_description`, `description`,
@@ -291,44 +269,156 @@ try {
             $lowStock,
             $sizesJson,
             $status,
-            $primaryImage
+            'assets/images/prod-1-anarkali.png' // temporary placeholder until images processed below
         ]);
         $productId = (int)$pdo->lastInsertId();
     }
 
-    // Insert color variants
-    if (!empty($processedVariants)) {
-        $sqlVariantInsert = "
-            INSERT INTO `product_color_variants` (
-                `product_id`, `color_name`, `color_hex`,
-                `front_image`, `side_image`, `back_image`, `closeup_image`
-            ) VALUES (?, ?, ?, ?, ?, ?, ?)
-        ";
-        $stmtVar = $pdo->prepare($sqlVariantInsert);
+    // Prepared statements for Variants & BLOB Image saving
+    $stmtInsertVariant = $pdo->prepare("
+        INSERT INTO `product_color_variants` (
+            `product_id`, `color_name`, `color_hex`,
+            `front_image`, `side_image`, `back_image`, `closeup_image`
+        ) VALUES (?, ?, ?, ?, ?, ?, ?)
+    ");
 
-        foreach ($processedVariants as $var) {
-            $stmtVar->execute([
+    $stmtInsertImage = $pdo->prepare("
+        INSERT INTO `product_images` (
+            `product_id`, `variant_id`, `color_name`, `angle`,
+            `file_name`, `mime_type`, `file_size`, `image_data`
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ");
+
+    $processedVariantsCount = 0;
+    $totalBlobImagesSaved   = 0;
+
+    if (!empty($variantsList) && is_array($variantsList)) {
+        foreach ($variantsList as $idx => $v) {
+            $colorName = trim($v['color_name'] ?? ('Variant ' . ($idx + 1)));
+            $colorHex  = trim($v['color_hex'] ?? '#000000');
+
+            // 1. Insert placeholder variant to acquire variant_id
+            $stmtInsertVariant->execute([
                 $productId,
-                $var['color_name'],
-                $var['color_hex'],
-                $var['front_image'],
-                $var['side_image'],
-                $var['back_image'],
-                $var['closeup_image']
+                $colorName,
+                $colorHex,
+                null, null, null, null
             ]);
+            $variantId = (int)$pdo->lastInsertId();
+
+            // 2. Process each of the 4 angles: Front, Side, Back, Close-up
+            $slotKeys = ['front', 'side', 'back', 'closeup'];
+            $slotUrls = [];
+
+            foreach ($slotKeys as $slotKey) {
+                $fileKey = "variant_{$idx}_{$slotKey}";
+                $fallback = $v["{$slotKey}_image"] ?? null;
+                $defaultName = "prod_{$sku}_{$colorName}_{$slotKey}";
+
+                $imgData = $extractImageBinary($fileKey, $fallback, $defaultName);
+
+                if ($imgData) {
+                    if (!empty($imgData['is_existing_url'])) {
+                        $slotUrls[$slotKey] = $imgData['url'];
+                    } else {
+                        // Insert raw binary into MySQL LONGBLOB
+                        $stmtInsertImage->execute([
+                            $productId,
+                            $variantId,
+                            $colorName,
+                            $slotKey,
+                            $imgData['file_name'],
+                            $imgData['mime_type'],
+                            $imgData['file_size'],
+                            $imgData['binary']
+                        ]);
+                        $newImgId = (int)$pdo->lastInsertId();
+                        $totalBlobImagesSaved++;
+
+                        // The preview URL dynamically renders the BLOB from MySQL
+                        $slotUrls[$slotKey] = "backend/get_image.php?id=" . $newImgId;
+
+                        if (!$primaryImage && $slotKey === 'front') {
+                            $primaryImage = $slotUrls[$slotKey];
+                        }
+                    }
+                } else {
+                    $slotUrls[$slotKey] = null;
+                }
+            }
+
+            // Fallback primary image to any variant slot if front was empty
+            if (!$primaryImage) {
+                foreach ($slotUrls as $url) {
+                    if ($url) {
+                        $primaryImage = $url;
+                        break;
+                    }
+                }
+            }
+
+            // 3. Update the variant with the BLOB preview URLs
+            $stmtUpdateVar = $pdo->prepare("
+                UPDATE `product_color_variants` SET
+                    `front_image` = ?,
+                    `side_image` = ?,
+                    `back_image` = ?,
+                    `closeup_image` = ?
+                WHERE `id` = ?
+            ");
+            $stmtUpdateVar->execute([
+                $slotUrls['front'] ?? null,
+                $slotUrls['side'] ?? null,
+                $slotUrls['back'] ?? null,
+                $slotUrls['closeup'] ?? null,
+                $variantId
+            ]);
+
+            $processedVariantsCount++;
         }
     }
+
+    // Process explicit primary image if provided and no variant image was selected
+    if (!$primaryImage && !empty($inputData['primary_image'])) {
+        $primData = $extractImageBinary('primary_image', $inputData['primary_image'], "prod_{$sku}_primary");
+        if ($primData && empty($primData['is_existing_url'])) {
+            $stmtInsertImage->execute([
+                $productId,
+                null,
+                null,
+                'primary',
+                $primData['file_name'],
+                $primData['mime_type'],
+                $primData['file_size'],
+                $primData['binary']
+            ]);
+            $primaryImage = "backend/get_image.php?id=" . $pdo->lastInsertId();
+            $totalBlobImagesSaved++;
+        } elseif ($primData && !empty($primData['is_existing_url'])) {
+            $primaryImage = $primData['url'];
+        }
+    }
+
+    // Default primary image fallback if none was uploaded
+    if (!$primaryImage) {
+        $primaryImage = 'assets/images/prod-1-anarkali.png';
+    }
+
+    // Update primary image in products table
+    $stmtUpdateProdImg = $pdo->prepare("UPDATE `products` SET `primary_image` = ? WHERE `id` = ?");
+    $stmtUpdateProdImg->execute([$primaryImage, $productId]);
 
     // Commit all changes
     $pdo->commit();
 
-    sendJsonResponse(true, "Product saved successfully into database!", [
-        'product_id'    => $productId,
-        'sku'           => $sku,
-        'name'          => $name,
-        'status'        => $status,
-        'primary_image' => $primaryImage,
-        'variant_count' => count($processedVariants)
+    sendJsonResponse(true, "Product and BLOB images saved successfully into database!", [
+        'product_id'       => $productId,
+        'sku'              => $sku,
+        'name'             => $name,
+        'status'           => $status,
+        'primary_image'    => $primaryImage,
+        'blob_images_count'=> $totalBlobImagesSaved,
+        'variant_count'    => $processedVariantsCount
     ], 200);
 
 } catch (PDOException $e) {

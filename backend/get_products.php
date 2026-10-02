@@ -50,6 +50,11 @@ try {
         $stmtVar->execute([$product['id']]);
         $product['variants'] = $stmtVar->fetchAll();
 
+        // Fetch images metadata (excluding heavy BLOB bytes)
+        $stmtImgs = $pdo->prepare("SELECT `id`, `product_id`, `variant_id`, `color_name`, `angle`, `file_name`, `mime_type`, `file_size`, CONCAT('backend/get_image.php?id=', `id`) as `preview_url` FROM `product_images` WHERE `product_id` = ? ORDER BY `id` ASC");
+        $stmtImgs->execute([$product['id']]);
+        $product['images'] = $stmtImgs->fetchAll();
+
         sendJsonResponse(true, "Product retrieved successfully.", $product);
     }
 
@@ -110,9 +115,21 @@ try {
             $variantsByProduct[$var['product_id']][] = $var;
         }
 
+        // Fetch image metadata (excluding heavy BLOB data)
+        $imgSql = "SELECT `id`, `product_id`, `variant_id`, `color_name`, `angle`, `file_name`, `mime_type`, `file_size`, CONCAT('backend/get_image.php?id=', `id`) as `preview_url` FROM `product_images` WHERE `product_id` IN ($inQuery) ORDER BY `id` ASC";
+        $stmtImgs = $pdo->prepare($imgSql);
+        $stmtImgs->execute($productIds);
+        $allImages = $stmtImgs->fetchAll();
+
+        $imagesByProduct = [];
+        foreach ($allImages as $im) {
+            $imagesByProduct[$im['product_id']][] = $im;
+        }
+
         foreach ($products as &$prod) {
             $prod['sizes'] = json_decode($prod['sizes'] ?? '[]', true) ?: [];
             $prod['variants'] = $variantsByProduct[$prod['id']] ?? [];
+            $prod['images'] = $imagesByProduct[$prod['id']] ?? [];
         }
         unset($prod);
     }

@@ -987,6 +987,89 @@
 
       </form>
 
+  <!-- ================= PRODUCT IMAGE BLOB PREVIEW MODAL ================= -->
+  <div id="image-preview-modal" class="hidden fixed inset-0 bg-stone-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl relative my-8 animate-in fade-in zoom-in-95 duration-200 space-y-5">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-stone-100">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-rose-50 flex items-center justify-center text-[#e11467]">
+            <i class="fa-regular fa-image text-lg"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 id="modal-preview-title" class="text-base font-bold text-stone-900 leading-tight">Product Preview</h3>
+              <span id="modal-preview-badge" class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200">
+                <i class="fa-solid fa-database text-[9px]"></i> Database BLOB Image
+              </span>
+            </div>
+            <p id="modal-preview-sku" class="text-xs font-mono text-stone-400 mt-0.5">SKU: ---</p>
+          </div>
+        </div>
+
+        <button type="button" onclick="closeImagePreviewModal()" class="w-8 h-8 rounded-full hover:bg-stone-100 flex items-center justify-center text-stone-400 hover:text-stone-700 transition cursor-pointer">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <!-- Main Image Stage & Details Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 items-center">
+        <!-- Main Image Container -->
+        <div class="bg-stone-50 border border-stone-200/80 rounded-2xl p-2 flex items-center justify-center min-h-[260px] max-h-[340px] overflow-hidden group relative">
+          <img id="modal-preview-main-img" src="" alt="Product Preview" class="max-h-[320px] w-auto object-contain rounded-xl shadow-xs transition group-hover:scale-102">
+          <div class="absolute bottom-3 left-3 bg-black/70 backdrop-blur-xs text-white text-[10px] font-semibold px-2 py-1 rounded-lg">
+            <span id="modal-preview-angle-tag">Front Angle</span>
+          </div>
+        </div>
+
+        <!-- Meta Details & Angle Thumbnails -->
+        <div class="space-y-4">
+          <div>
+            <span class="text-[11px] font-semibold text-stone-400 uppercase tracking-wider block">Price &amp; Stock</span>
+            <div class="flex items-baseline gap-2 mt-0.5">
+              <span id="modal-preview-price" class="text-2xl font-black text-stone-900">₹0</span>
+              <span id="modal-preview-category" class="text-xs font-semibold text-stone-500 bg-stone-100 px-2 py-0.5 rounded-md">Category</span>
+            </div>
+          </div>
+
+          <!-- Stored Image Angles from DB -->
+          <div>
+            <label class="block text-xs font-semibold text-stone-700 mb-2">Available Angles in Database:</label>
+            <div id="modal-preview-thumbs" class="flex items-center gap-2 flex-wrap">
+              <!-- Thumbnails populated dynamically -->
+            </div>
+          </div>
+
+          <!-- API Endpoints Info Box -->
+          <div class="bg-stone-50 border border-stone-200/90 rounded-2xl p-3.5 space-y-2 text-xs">
+            <span class="font-bold text-stone-800 flex items-center gap-1.5">
+              <i class="fa-solid fa-code text-[#e11467]"></i> Direct Image API
+            </span>
+            <p class="text-[11px] text-stone-500 leading-relaxed">
+              Image bytes are served on-the-fly directly from MySQL <code class="bg-stone-200/70 px-1 py-0.5 rounded text-[10px] font-mono">LONGBLOB</code> column via <code class="text-stone-700 font-mono">get_image.php</code>.
+            </p>
+            <div class="flex items-center gap-2 pt-1">
+              <a id="modal-open-api-btn" href="#" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-semibold text-[11px] transition">
+                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                <span>Open Raw Image</span>
+              </a>
+              <a id="modal-open-json-btn" href="#" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-stone-200 hover:border-stone-300 text-stone-700 font-semibold text-[11px] transition">
+                <i class="fa-solid fa-file-code text-[10px] text-[#e11467]"></i>
+                <span>View JSON (Base64)</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="pt-3 border-t border-stone-100 flex items-center justify-end">
+        <button type="button" onclick="closeImagePreviewModal()" class="px-5 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 font-semibold text-xs transition cursor-pointer">
+          Close Preview
+        </button>
+      </div>
+
     </div>
   </div>
 

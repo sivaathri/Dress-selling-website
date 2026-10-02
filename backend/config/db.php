@@ -110,6 +110,30 @@ function createTablesIfNotExist(PDO $pdo) {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     ";
     $pdo->exec($sqlVariants);
+
+    // 3. Separate Product Images BLOB table (Stores raw image bytes directly in DB)
+    $sqlImages = "
+    CREATE TABLE IF NOT EXISTS `product_images` (
+        `id` INT AUTO_INCREMENT PRIMARY KEY,
+        `product_id` INT NOT NULL,
+        `variant_id` INT DEFAULT NULL,
+        `color_name` VARCHAR(100) DEFAULT NULL,
+        `angle` ENUM('front', 'side', 'back', 'closeup', 'primary', 'general') DEFAULT 'front',
+        `file_name` VARCHAR(255) NOT NULL,
+        `mime_type` VARCHAR(100) NOT NULL DEFAULT 'image/jpeg',
+        `file_size` INT NOT NULL DEFAULT 0,
+        `image_data` LONGBLOB NOT NULL,
+        `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_prod_angle (`product_id`, `angle`),
+        INDEX idx_variant_id (`variant_id`),
+        CONSTRAINT `fk_product_images_prod`
+            FOREIGN KEY (`product_id`) 
+            REFERENCES `products`(`id`) 
+            ON DELETE CASCADE 
+            ON UPDATE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    ";
+    $pdo->exec($sqlImages);
 }
 
 /**
